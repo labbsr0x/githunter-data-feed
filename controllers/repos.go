@@ -13,7 +13,6 @@ func GetRepos(c *fiber.Ctx) {
 
 	// param passed by param URL
 	accessToken := c.Params("access_token")
-	println(accessToken)
 
 	repos := github.GetLastRepos(10, accessToken)
 	if repos == nil {

@@ -18,11 +18,7 @@ type ResponseFail struct {
 	documentationURL string `json:"documentation_url"`
 }
 
-// Repo Response
-// type ReposResponse struct {
-// 	Data data `json:"data"`
-// }
-
+// Repos Response
 type ReposResponse struct {
 	Viewer viewer `json:"viewer"`
 }
