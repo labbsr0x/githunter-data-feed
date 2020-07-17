@@ -10,7 +10,8 @@ func Register(app *fiber.App, version string) {
 
 	v1 := app.Group("/" + version)
 
-	v1.Get("/repos/:access_token", func(c *fiber.Ctx) {
+	//TODO: JWT //:email?:provider
+	v1.Get("/repos", func(c *fiber.Ctx) {
 		controllers.GetRepos(c)
 	})
 
