@@ -1,1 +1,1 @@
-# githunter-repos
+# githunter-api

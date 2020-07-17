@@ -1,8 +1,9 @@
 package infra
 
 import (
-	"github.com/labbsr0x/githunter-repos/infra/server"
-	"github.com/rs/zerolog/log"
+	"github.com/labbsr0x/githunter-api/infra/env"
+	"github.com/labbsr0x/githunter-api/infra/server"
+	"github.com/sirupsen/logrus"
 )
 
 // this Version value
@@ -11,6 +12,8 @@ var Version = "v1"
 // Config is a function
 func Config() {
 
-	log.Warn().Msg("Starting HTTP server ...")
+	env.Config()
+
+	logrus.Debugf("Starting HTTP server ...")
 	server.Config(Version)
 }

@@ -3,7 +3,7 @@ package github
 import (
 	"context"
 
-	"github.com/labbsr0x/githunter-repos/infra/env"
+	"github.com/labbsr0x/githunter-api/infra/env"
 	"github.com/machinebox/graphql"
 	"github.com/rs/zerolog/log"
 )
