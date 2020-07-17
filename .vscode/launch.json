@@ -12,7 +12,8 @@
             "program": "${workspaceRoot}",
             "env": {
                 "GH_LOG_LEVEL": "warn",
-                "GH_GIT_GRAPHQL_URL": "https://api.github.com/graphql"
+                "GH_GIT_GRAPHQL_URL": "https://api.github.com/graphql",
+                "GH_GITLAB_GRAPHQL_URL": "https://gitlab.com/api/graphql"
             },
             "args": []
         }

@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+
+  repos:
+    image: githunter-repos:1.0
+    restart: always
+    environment:
+      GH_LOG_LEVEL: warn
+      GH_GIT_GRAPHQL_URL: https://api.github.com/graphql
+    ports:
+      - 3000:3000

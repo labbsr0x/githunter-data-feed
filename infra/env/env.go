@@ -12,6 +12,7 @@ import (
 type Environment struct {
 	LogLevel         string `env:"GH_LOG_LEVEL"`
 	GithubGraphQLURL string `env:"GH_GIT_GRAPHQL_URL"`
+	GitlabGraphQLURL string `env:"GH_GITLAB_GRAPHQL_URL"`
 
 	Extras goEnv.EnvSet
 	init   bool

@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/gofiber/fiber"
-	"github.com/labbsr0x/githunter-repos/github"
+	"github.com/labbsr0x/githunter-repos/services"
 	"github.com/rs/zerolog/log"
 )
 
@@ -12,26 +12,17 @@ import (
 func GetRepos(c *fiber.Ctx) {
 
 	// param passed by param URL
-	accessToken := c.Params("access_token")
-	println(accessToken)
+	accessToken := c.Query("access_token")
+	provider := c.Query("provider")
 
-	repos := github.GetLastRepos(10, accessToken)
+	repos := services.GetLastRepos(10, accessToken, provider)
 	if repos == nil {
 		log.Error().Msg("Error requesting github")
 		c.Next(fiber.NewError(fiber.StatusInternalServerError, "Error requesting github"))
 		return
 	}
 
-	repositoreis := [10]string{}
-	for k, v := range repos.Viewer.Repositories.Nodes {
-		repositoreis[k] = v.Name
-	}
-	result := map[string]interface{}{
-		"name":         repos.Viewer.Name,
-		"repositories": repositoreis,
-	}
-
-	b, err := json.Marshal(result)
+	b, err := json.Marshal(repos)
 	if err != nil {
 		log.Error().Err(err).Msg("error at unmarshal")
 		return

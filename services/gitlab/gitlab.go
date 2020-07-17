@@ -1,4 +1,4 @@
-package github
+package gitlab
 
 import (
 	"context"
@@ -18,21 +18,13 @@ type ResponseFail struct {
 	documentationURL string `json:"documentation_url"`
 }
 
-// Repo Response
-// type ReposResponse struct {
-// 	Data data `json:"data"`
-// }
-
+// Repos Response
 type ReposResponse struct {
-	Viewer viewer `json:"viewer"`
+	CurrentUser node     `json:"currentUser"`
+	Projects    projects `json:"projects"`
 }
 
-type viewer struct {
-	Name         string       `json:"name"`
-	Repositories repositories `json:"repositories"`
-}
-
-type repositories struct {
+type projects struct {
 	Nodes []node `json:"nodes"`
 }
 
@@ -41,9 +33,7 @@ type node struct {
 }
 
 func connect() {
-	if client == nil {
-		client = graphql.NewClient(env.Get().GithubGraphQLURL)
-	}
+		client = graphql.NewClient(env.Get().GitlabGraphQLURL)
 }
 
 // Get Last Repos
@@ -53,14 +43,14 @@ func GetLastRepos(numberOfRepos int, accessToken string) *ReposResponse {
 	connect()
 
 	req := graphql.NewRequest(`query($number_of_repos:Int!) {
-		viewer {
-		  name
-		   repositories(last: $number_of_repos) {
-			 nodes {
-			   name
-			 }
-		   }
-		 }
+			currentUser {
+			  name
+			}
+			projects(last:$number_of_repos membership: true) {
+			  nodes {
+				name
+			  }
+			}
 	  }`)
 
 	req.Var("number_of_repos", numberOfRepos)
@@ -77,5 +67,5 @@ func GetLastRepos(numberOfRepos int, accessToken string) *ReposResponse {
 }
 
 func auth(req *graphql.Request, accessToken string) {
-	req.Header.Add("Authorization", "bearer "+accessToken)
+	req.Header.Add("Authorization", "Bearer "+accessToken)
 }
