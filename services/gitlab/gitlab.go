@@ -1,24 +1,17 @@
 package gitlab
 
 import (
-	"context"
-
-	"github.com/labbsr0x/githunter-api/infra/env"
-	"github.com/machinebox/graphql"
-	"github.com/rs/zerolog/log"
+	"github.com/labbsr0x/githunter-repos/infra/env"
+	"github.com/labbsr0x/githunter-repos/services/graphql"
 )
 
-var (
-	client *graphql.Client
-)
-
-// Response Fail
+// ResponseFail define the struct of a fail request
 type ResponseFail struct {
 	message          string `json:"message"`
 	documentationURL string `json:"documentation_url"`
 }
 
-// Repos Response
+// ReposResponse define the return's struct of GetLastRepos
 type ReposResponse struct {
 	CurrentUser node     `json:"currentUser"`
 	Projects    projects `json:"projects"`
@@ -32,17 +25,18 @@ type node struct {
 	Name string `json:"name"`
 }
 
-func connect() {
-	client = graphql.NewClient(env.Get().GitlabGraphQLURL)
-}
-
-// Get Last Repos
+// GetLastRepos is used for get last repos of the user
 func GetLastRepos(numberOfRepos int, accessToken string) *ReposResponse {
 
-	// Connect with Github if not.
-	connect()
+	client := graphql.New(env.Get().GitlabGraphQLURL, accessToken)
 
-	req := graphql.NewRequest(`query($number_of_repos:Int!) {
+	respData := &ReposResponse{}
+
+	variables := map[string]interface{}{
+		"number_of_repos": numberOfRepos,
+	}
+
+	client.Query(`query($number_of_repos:Int!) {
 			currentUser {
 			  name
 			}
@@ -51,21 +45,7 @@ func GetLastRepos(numberOfRepos int, accessToken string) *ReposResponse {
 				name
 			  }
 			}
-	  }`)
-
-	req.Var("number_of_repos", numberOfRepos)
-
-	auth(req, accessToken)
-
-	respData := &ReposResponse{}
-	if err := client.Run(context.Background(), req, &respData); err != nil {
-		log.Warn().Msg(err.Error())
-		return nil
-	}
+		}`, variables, respData)
 
 	return respData
-}
-
-func auth(req *graphql.Request, accessToken string) {
-	req.Header.Add("Authorization", "Bearer "+accessToken)
 }
