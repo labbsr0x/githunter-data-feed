@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/labbsr0x/githunter-repos/infra"
+	"github.com/labbsr0x/githunter-api/infra"
 )
 
 func main() {

@@ -1,8 +1,8 @@
 package services
 
 import (
-	"github.com/labbsr0x/githunter-repos/services/github"
-	"github.com/labbsr0x/githunter-repos/services/gitlab"
+	"github.com/labbsr0x/githunter-api/services/github"
+	"github.com/labbsr0x/githunter-api/services/gitlab"
 )
 
 // ReposResponseContract

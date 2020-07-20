@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/gofiber/fiber"
-	"github.com/labbsr0x/githunter-repos/services"
+	"github.com/labbsr0x/githunter-api/services"
 	"github.com/rs/zerolog/log"
 )
 

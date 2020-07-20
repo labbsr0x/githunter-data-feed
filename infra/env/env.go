@@ -1,54 +1,56 @@
 package env
 
 import (
-	"errors"
-	"reflect"
+	"flag"
 
-	goEnv "github.com/Netflix/go-env"
-	"github.com/rs/zerolog/log"
+	"github.com/sirupsen/logrus"
 )
 
 // Environment Environment
 type Environment struct {
-	LogLevel         string `env:"GH_LOG_LEVEL"`
-	GithubGraphQLURL string `env:"GH_GIT_GRAPHQL_URL"`
-	GitlabGraphQLURL string `env:"GH_GITLAB_GRAPHQL_URL"`
-
-	Extras goEnv.EnvSet
-	init   bool
+	GithubGraphQLURL string
+	GitlabGraphQLURL string
+	ServerPort       int
 }
 
-var env Environment
+var environment Environment
 
-// GetEnvironment variable
+// Configuration for environment variables
+func Config() {
+
+	logLevel := flag.String("log-level", "info", "debug, info, warning, error")
+	graphqlGithubURL := flag.String("graphql-github-url", "https://api.github.com/graphql", "The GraphQL Github API URL.")
+	graphqlGitlabURL := flag.String("graphql-gitlab-url", "https://gitlab.com/api/graphql", "The GraphQL GitLab API URL.")
+	serverPort := flag.Int("server-port", 3001, "The server port")
+	flag.Parse()
+
+	switch *logLevel {
+	case "debug":
+		logrus.SetLevel(logrus.DebugLevel)
+		break
+	case "warning":
+		logrus.SetLevel(logrus.WarnLevel)
+		break
+	case "error":
+		logrus.SetLevel(logrus.ErrorLevel)
+		break
+	default:
+		logrus.SetLevel(logrus.InfoLevel)
+	}
+	logrus.Debugf("log level set: %s", logLevel)
+
+	environment.GithubGraphQLURL = *graphqlGithubURL
+	logrus.Debugf("GraphQL Github API URL at %s", graphqlGithubURL)
+
+	environment.GitlabGraphQLURL = *graphqlGitlabURL
+	logrus.Debugf("GraphQL GitLab API URL at %s", graphqlGitlabURL)
+
+	environment.ServerPort = *serverPort
+	logrus.Debugf("The server port:%d", serverPort)
+
+}
+
+// Get env from external
 func Get() Environment {
-	if !env.init {
-		es, err := goEnv.UnmarshalFromEnviron(&env)
-		if err != nil {
-			log.Fatal().Err(err).Msg("Critical error during unmarshal env process")
-		}
-		log.Warn().Interface("env_vars", env).Msg("Environment variables loaded : OK")
-		env.Extras = es
-		env.init = true
-		checkUndefinedEnvVar(env)
-	}
-	return env
-}
-
-// Config verifica se as variáveis obrigatórias foram definidas
-func checkUndefinedEnvVar(environment Environment) {
-	e := reflect.ValueOf(&environment).Elem()
-	for i := 0; i < e.NumField(); i++ {
-		if !e.Field(i).CanInterface() {
-			continue
-		}
-		varName := e.Type().Field(i).Name
-		varValue := e.Field(i).Interface()
-
-		if varValue == "" || varValue == 0 {
-			err := errors.New("required environment variable not set")
-			log.Fatal().Err(err).Msgf("Error: environment variable %s was not set", varName)
-		}
-
-	}
+	return environment
 }

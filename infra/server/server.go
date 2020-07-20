@@ -4,7 +4,9 @@ import (
 	"github.com/gofiber/cors"
 	"github.com/gofiber/fiber"
 	"github.com/gofiber/logger"
-	"github.com/labbsr0x/githunter-repos/routes"
+	"github.com/labbsr0x/githunter-api/infra/env"
+	"github.com/labbsr0x/githunter-api/routes"
+	"github.com/sirupsen/logrus"
 )
 
 // Config is a function
@@ -32,5 +34,7 @@ func Config(version string) {
 		c.SendStatus(404) // => 404 "Not Found"
 		c.Send("This is a dummy route")
 	})
-	app.Listen(3000)
+
+	app.Listen(env.Get().ServerPort)
+	logrus.Debugf("The server is running at localhost:%d by default", env.Get().ServerPort)
 }
