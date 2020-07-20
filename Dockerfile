@@ -1,11 +1,13 @@
-FROM golang:1.12.4-stretch
+FROM golang:1.12.4-stretch as BUILDER
 # create a working directory
 WORKDIR /go/src/app
 # add source code
-ADD . .
+
+COPY . .
 
 ENV GO111MODULE "on" 
 RUN go mod vendor
+
 RUN CGO_ENABLED=0 GOOS=linux go build -o /go/bin/githunter
 
 ENV GH_GRAPHQL_GITHUB_URL "https://api.github.com/graphql"
@@ -15,8 +17,12 @@ ENV GH_SERVER_PORT 3001
 
 USER root
 
-ADD startup.sh /
+FROM alpine
+
+COPY startup.sh /
 RUN chmod -R 777 /startup.sh
+
+COPY --from=BUILDER /go/bin/githunter /bin/githunter
 
 # run compiled go app
 ENTRYPOINT [ "/bin/sh" ]
