@@ -1,8 +1,8 @@
 package github
 
 import (
-	"github.com/labbsr0x/githunter-repos/infra/env"
-	"github.com/labbsr0x/githunter-repos/services/graphql"
+	"github.com/labbsr0x/githunter-api/infra/env"
+	"github.com/labbsr0x/githunter-api/services/graphql"
 )
 
 // ResponseFail define the struct of a fail request
