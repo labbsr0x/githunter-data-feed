@@ -24,6 +24,40 @@ func Config() {
 	serverPort := flag.Int("server-port", 3001, "The server port")
 	flag.Parse()
 
+	configLogrus(logLevel)
+
+	logrus.WithFields(logrus.Fields{
+		"level-logging": *logLevel,
+	}).Debug("Log level defined")
+
+	environment.GithubGraphQLURL = *graphqlGithubURL
+	logrus.WithFields(logrus.Fields{
+		"url": *graphqlGithubURL,
+	}).Debug("GraphQL Github API defined")
+
+	environment.GitlabGraphQLURL = *graphqlGitlabURL
+	logrus.WithFields(logrus.Fields{
+		"url": *graphqlGitlabURL,
+	}).Debug("GraphQL Gitlab API defined")
+
+	environment.ServerPort = *serverPort
+	logrus.WithFields(logrus.Fields{
+		"port": *serverPort,
+	}).Debug("The server port defined")
+
+}
+
+// Get env from external
+func Get() Environment {
+	return environment
+}
+
+func configLogrus(logLevel *string) {
+	logrus.SetFormatter(&logrus.TextFormatter{
+		FullTimestamp:   true,
+		TimestampFormat: "2006-01-02 15:04:05",
+	})
+
 	switch *logLevel {
 	case "debug":
 		logrus.SetLevel(logrus.DebugLevel)
@@ -37,20 +71,4 @@ func Config() {
 	default:
 		logrus.SetLevel(logrus.InfoLevel)
 	}
-	logrus.Debugf("log level set: %s", logLevel)
-
-	environment.GithubGraphQLURL = *graphqlGithubURL
-	logrus.Debugf("GraphQL Github API URL at %s", graphqlGithubURL)
-
-	environment.GitlabGraphQLURL = *graphqlGitlabURL
-	logrus.Debugf("GraphQL GitLab API URL at %s", graphqlGitlabURL)
-
-	environment.ServerPort = *serverPort
-	logrus.Debugf("The server port:%d", serverPort)
-
-}
-
-// Get env from external
-func Get() Environment {
-	return environment
 }
