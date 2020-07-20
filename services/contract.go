@@ -29,8 +29,8 @@ func GetLastRepos(numberOfRepos int, accessToken string, provider string) *Repos
 		break
 	}
 
-	if(theContract == nil){
-		logrus..Debug("GetLastRepos returned a null answer")
+	if theContract == nil {
+		logrus.Debug("GetLastRepos returned a null answer")
 	}
 
 	return theContract
