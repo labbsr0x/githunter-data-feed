@@ -13,7 +13,7 @@
             "env": {
             },
             "args": [
-                "--log-level=warning",
+                "--log-level=info",
                 "--graphql-github-url=https://api.github.com/graphql",
                 "--graphql-gitlab-url=https://gitlab.com/api/graphql",
                 "--server-port=3001"
@@ -28,7 +28,7 @@
             "env": {
             },
             "args": [
-                "--log-level=warning",
+                "--log-level=debug",
                 "--graphql-github-url=https://api.github.com/graphql",
                 "--graphql-gitlab-url=https://gitlab.com/api/graphql",
                 "--server-port=3001"

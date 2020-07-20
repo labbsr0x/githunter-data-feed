@@ -4,7 +4,7 @@ import (
 	"context"
 
 	ql "github.com/machinebox/graphql"
-	"github.com/rs/zerolog/log"
+	"github.com/sirupsen/logrus"
 )
 
 // Graphql define the object wich will be created with funtion New
@@ -18,6 +18,12 @@ func New(clientURL string, accessToken string) *Graphql {
 
 	client := ql.NewClient(clientURL)
 
+	if client == nil {
+		logrus.WithFields(logrus.Fields{
+			"client-url": clientURL,
+		}).Warn("Couldn't possible to make new GraphQL Client")
+	}
+
 	graphql.Query = buildQuery(client, accessToken)
 
 	return graphql
@@ -30,6 +36,12 @@ func buildQuery(client *ql.Client, accessToken string) func(string, map[string]i
 	return func(query string, variables map[string]interface{}, resp interface{}) {
 		req := ql.NewRequest(query)
 
+		if req == nil {
+			logrus.WithFields(logrus.Fields{
+				"query": query,
+			}).Warn("Couldn't possible to make a new GraphQL request")
+		}
+
 		for key, value := range variables {
 			req.Var(key, value)
 		}
@@ -38,7 +50,9 @@ func buildQuery(client *ql.Client, accessToken string) func(string, map[string]i
 
 		//todo: implement logRUS
 		if err := client.Run(context.Background(), req, &resp); err != nil {
-			log.Warn().Msg(err.Error())
+			logrus.WithFields(logrus.Fields{
+				"error": err.Error(),
+			}).Warn("An error ocurred while run a GraphQL request")
 		}
 	}
 }

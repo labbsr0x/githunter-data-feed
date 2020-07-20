@@ -11,9 +11,9 @@ var Version = "v1"
 
 // Config is a function
 func Config() {
-
+	logrus.Info("Starting environment and logRUS configuration...")
 	env.Config()
 
-	logrus.Debugf("Starting HTTP server ...")
+	logrus.Info("Starting HTTP server ...")
 	server.Config(Version)
 }
