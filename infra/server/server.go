@@ -27,14 +27,15 @@ func Config(version string) {
 	app.Get("/error", func(c *fiber.Ctx) {
 		c.Status(500)
 		c.JSON(map[string]string{"message": "unknown error"})
+		logrus.Debug("An error route was called")
 	})
 	routes.Register(app, version)
 
 	app.Use(func(c *fiber.Ctx) {
 		c.SendStatus(404) // => 404 "Not Found"
 		c.Send("This is a dummy route")
+		logrus.Debug("A dummy route was called")
 	})
 
 	app.Listen(env.Get().ServerPort)
-	logrus.Debugf("The server is running at localhost:%d by default", env.Get().ServerPort)
 }

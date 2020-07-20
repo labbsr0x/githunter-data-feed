@@ -3,6 +3,7 @@ package services
 import (
 	"github.com/labbsr0x/githunter-api/services/github"
 	"github.com/labbsr0x/githunter-api/services/gitlab"
+	"github.com/sirupsen/logrus"
 )
 
 // ReposResponseContract
@@ -15,6 +16,10 @@ func GetLastRepos(numberOfRepos int, accessToken string, provider string) *Repos
 
 	theContract := &ReposResponseContract{}
 
+	logrus.WithFields(logrus.Fields{
+		"provider": provider,
+	}).Debug("Making a request in an external api for get the last repositories of the user")
+
 	switch provider {
 	case `github`:
 		theContract = githubGetLastRepos(numberOfRepos, accessToken)
@@ -22,6 +27,10 @@ func GetLastRepos(numberOfRepos int, accessToken string, provider string) *Repos
 	case `gitlab`:
 		theContract = gitlabGetLastRepos(numberOfRepos, accessToken)
 		break
+	}
+
+	if(theContract == nil){
+		logrus..Debug("GetLastRepos returned a null answer")
 	}
 
 	return theContract
