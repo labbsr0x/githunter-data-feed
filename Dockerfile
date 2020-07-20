@@ -20,4 +20,4 @@ RUN chmod -R 777 /startup.sh
 
 # run compiled go app
 ENTRYPOINT [ "/bin/sh" ]
-CMD [ "-C", "/startup.sh" ]
+CMD [ "/startup.sh" ]
