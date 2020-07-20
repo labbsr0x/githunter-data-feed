@@ -1,13 +1,10 @@
 # github.com/andybalholm/brotli v1.0.0
 github.com/andybalholm/brotli
 # github.com/gofiber/cors v0.2.1
-## explicit
 github.com/gofiber/cors
 # github.com/gofiber/fiber v1.12.6
-## explicit
 github.com/gofiber/fiber
 # github.com/gofiber/logger v0.2.3
-## explicit
 github.com/gofiber/logger
 # github.com/gofiber/utils v0.0.9
 github.com/gofiber/utils
@@ -15,30 +12,25 @@ github.com/gofiber/utils/memory
 # github.com/gorilla/schema v1.1.0
 github.com/gorilla/schema
 # github.com/klauspost/compress v1.10.4
-## explicit
 github.com/klauspost/compress/flate
 github.com/klauspost/compress/gzip
 github.com/klauspost/compress/zlib
 # github.com/konsorten/go-windows-terminal-sequences v1.0.3
 github.com/konsorten/go-windows-terminal-sequences
 # github.com/machinebox/graphql v0.2.2
-## explicit
 github.com/machinebox/graphql
 # github.com/mattn/go-colorable v0.1.7
 github.com/mattn/go-colorable
 # github.com/mattn/go-isatty v0.0.12
 github.com/mattn/go-isatty
 # github.com/pkg/errors v0.8.1
-## explicit
 github.com/pkg/errors
 # github.com/rs/zerolog v1.19.0
-## explicit
 github.com/rs/zerolog
 github.com/rs/zerolog/internal/cbor
 github.com/rs/zerolog/internal/json
 github.com/rs/zerolog/log
 # github.com/sirupsen/logrus v1.6.0
-## explicit
 github.com/sirupsen/logrus
 # github.com/valyala/bytebufferpool v1.0.0
 github.com/valyala/bytebufferpool
@@ -51,7 +43,6 @@ github.com/valyala/fasttemplate
 # github.com/valyala/tcplisten v0.0.0-20161114210144-ceec8f93295a
 github.com/valyala/tcplisten
 # golang.org/x/sys v0.0.0-20200625212154-ddb9806d33ae
-## explicit
 golang.org/x/sys/internal/unsafeheader
 golang.org/x/sys/unix
 golang.org/x/sys/windows
