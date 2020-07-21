@@ -15,6 +15,7 @@ type ReposResponseContract struct {
 func GetLastRepos(numberOfRepos int, accessToken string, provider string) *ReposResponseContract {
 
 	theContract := &ReposResponseContract{}
+	var err error
 
 	logrus.WithFields(logrus.Fields{
 		"provider": provider,
@@ -22,10 +23,10 @@ func GetLastRepos(numberOfRepos int, accessToken string, provider string) *Repos
 
 	switch provider {
 	case `github`:
-		theContract = githubGetLastRepos(numberOfRepos, accessToken)
+		theContract, err = githubGetLastRepos(numberOfRepos, accessToken)
 		break
 	case `gitlab`:
-		theContract = gitlabGetLastRepos(numberOfRepos, accessToken)
+		theContract, err = gitlabGetLastRepos(numberOfRepos, accessToken)
 		break
 	}
 
@@ -33,15 +34,21 @@ func GetLastRepos(numberOfRepos int, accessToken string, provider string) *Repos
 		logrus.Debug("GetLastRepos returned a null answer")
 	}
 
+	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"provider": provider,
+		}).Warn(err.Error())
+	}
+
 	return theContract
 }
 
-func githubGetLastRepos(numberOfRepos int, accessToken string) *ReposResponseContract {
+func githubGetLastRepos(numberOfRepos int, accessToken string) (*ReposResponseContract, error) {
 
-	repos := github.GetLastRepos(numberOfRepos, accessToken)
+	repos, err := github.GetLastRepos(numberOfRepos, accessToken)
 
-	if repos == nil {
-		return nil
+	if err != nil {
+		return nil, err
 	}
 
 	repositoreis := []string{}
@@ -53,15 +60,15 @@ func githubGetLastRepos(numberOfRepos int, accessToken string) *ReposResponseCon
 		Repositories: repositoreis,
 	}
 
-	return result
+	return result, nil
 }
 
-func gitlabGetLastRepos(numberOfRepos int, accessToken string) *ReposResponseContract {
+func gitlabGetLastRepos(numberOfRepos int, accessToken string) (*ReposResponseContract, error) {
 
-	repos := gitlab.GetLastRepos(numberOfRepos, accessToken)
+	repos, err := gitlab.GetLastRepos(numberOfRepos, accessToken)
 
-	if repos == nil {
-		return nil
+	if err != nil {
+		return nil, err
 	}
 
 	repositoreis := []string{}
@@ -73,5 +80,5 @@ func gitlabGetLastRepos(numberOfRepos int, accessToken string) *ReposResponseCon
 		Repositories: repositoreis,
 	}
 
-	return result
+	return result, nil
 }

@@ -5,7 +5,7 @@ import (
 
 	"github.com/gofiber/fiber"
 	"github.com/labbsr0x/githunter-api/services"
-	"github.com/rs/zerolog/log"
+	"github.com/sirupsen/logrus"
 )
 
 // GetRepos function
@@ -17,14 +17,16 @@ func GetRepos(c *fiber.Ctx) {
 
 	repos := services.GetLastRepos(10, accessToken, provider)
 	if repos == nil {
-		log.Error().Msg("Error requesting github")
+		logrus.Warn("Error requesting github")
 		c.Next(fiber.NewError(fiber.StatusInternalServerError, "Error requesting github"))
 		return
 	}
 
 	b, err := json.Marshal(repos)
 	if err != nil {
-		log.Error().Err(err).Msg("error at unmarshal")
+		logrus.WithFields(logrus.Fields{
+			"error": err.Error(),
+		}).Warn("error at unmarshal")
 		return
 	}
 
