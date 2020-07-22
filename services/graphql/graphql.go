@@ -2,44 +2,43 @@ package graphql
 
 import (
 	"context"
+	"fmt"
 
 	ql "github.com/machinebox/graphql"
-	"github.com/sirupsen/logrus"
 )
 
 // Graphql define the object wich will be created with funtion New
 type Graphql struct {
-	Query func(string, map[string]interface{}, interface{})
+	Query func(string, map[string]interface{}, interface{}) error
 }
 
 //New create a new GraphQL instance
-func New(clientURL string, accessToken string) *Graphql {
+func New(clientURL string, accessToken string) (*Graphql, error) {
+	var err error
+
 	graphql := &Graphql{}
 
 	client := ql.NewClient(clientURL)
 
 	if client == nil {
-		logrus.WithFields(logrus.Fields{
-			"client-url": clientURL,
-		}).Warn("Couldn't possible to make new GraphQL Client")
+		err = fmt.Errorf("Couldn't possible to make new GraphQL Client")
 	}
 
 	graphql.Query = buildQuery(client, accessToken)
 
-	return graphql
+	return graphql, err
 }
 
 // buildQuery is a closure function to use the client and accessToken parameters
 // passed in New function and create a new function wich will be used to
 // mount and send a GraphQL request
-func buildQuery(client *ql.Client, accessToken string) func(string, map[string]interface{}, interface{}) {
-	return func(query string, variables map[string]interface{}, resp interface{}) {
+func buildQuery(client *ql.Client, accessToken string) func(string, map[string]interface{}, interface{}) error {
+	return func(query string, variables map[string]interface{}, resp interface{}) error {
 		req := ql.NewRequest(query)
 
+		//todo: implements message
 		if req == nil {
-			logrus.WithFields(logrus.Fields{
-				"query": query,
-			}).Warn("Couldn't possible to make a new GraphQL request")
+			return fmt.Errorf("Couldn't possible to make new GraphQL Client")
 		}
 
 		for key, value := range variables {
@@ -50,10 +49,10 @@ func buildQuery(client *ql.Client, accessToken string) func(string, map[string]i
 
 		//todo: implement logRUS
 		if err := client.Run(context.Background(), req, &resp); err != nil {
-			logrus.WithFields(logrus.Fields{
-				"error": err.Error(),
-			}).Warn("An error ocurred while run a GraphQL request")
+			return err
 		}
+
+		return nil
 	}
 }
 

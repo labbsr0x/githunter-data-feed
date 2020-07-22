@@ -26,9 +26,12 @@ type node struct {
 }
 
 // GetLastRepos is used for get last repos of the user
-func GetLastRepos(numberOfRepos int, accessToken string) *ReposResponse {
+func GetLastRepos(numberOfRepos int, accessToken string) (*ReposResponse, error) {
+	client, err := graphql.New(env.Get().GitlabGraphQLURL, accessToken)
 
-	client := graphql.New(env.Get().GitlabGraphQLURL, accessToken)
+	if err != nil {
+		return nil, err
+	}
 
 	respData := &ReposResponse{}
 
@@ -36,7 +39,7 @@ func GetLastRepos(numberOfRepos int, accessToken string) *ReposResponse {
 		"number_of_repos": numberOfRepos,
 	}
 
-	client.Query(`query($number_of_repos:Int!) {
+	err = client.Query(`query($number_of_repos:Int!) {
 			currentUser {
 			  name
 			}
@@ -47,5 +50,9 @@ func GetLastRepos(numberOfRepos int, accessToken string) *ReposResponse {
 			}
 		}`, variables, respData)
 
-	return respData
+	if err != nil {
+		return nil, err
+	}
+
+	return respData, nil
 }
