@@ -1,4 +1,4 @@
-# GitHunter-Crawler
+# GitHunter-API
 The objective this tool is basically search good issues for resolve.
 
 ## Installation
