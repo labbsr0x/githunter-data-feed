@@ -1,5 +1,5 @@
 # GitHunter-API
-The objective this tool is basically search good issues for resolve.
+This project consumes the API of GitHub, GitLab and, in the future, another providers.
 
 ## Installation
 Download and install [Go](https://golang.org/dl) to run the project.
