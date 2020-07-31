@@ -8,15 +8,26 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+type ReposController struct {
+	Contract services.Contract
+}
+
+func NewReposController() *ReposController {
+	theController := &ReposController{
+		Contract: services.New(),
+	}
+	return theController
+}
+
 // GetRepos function
-func GetRepos(c *fiber.Ctx) {
+func (r *ReposController) GetReposHandler(c *fiber.Ctx) {
 
 	// param passed by param URL
 	accessToken := c.Query("access_token")
 	provider := c.Query("provider")
 
-	repos := services.GetLastRepos(10, accessToken, provider)
-	if repos == nil {
+	repos, err := r.Contract.GetLastRepos(10, accessToken, provider)
+	if err != nil {
 		logrus.Warn("Error requesting github")
 		c.Next(fiber.NewError(fiber.StatusInternalServerError, "Error requesting github"))
 		return
