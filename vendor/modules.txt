@@ -12,6 +12,9 @@ github.com/gofiber/logger
 # github.com/gofiber/utils v0.0.9
 github.com/gofiber/utils
 github.com/gofiber/utils/memory
+# github.com/golang/mock v1.4.3
+## explicit
+github.com/golang/mock/gomock
 # github.com/gorilla/schema v1.1.0
 github.com/gorilla/schema
 # github.com/klauspost/compress v1.10.4
@@ -23,6 +26,8 @@ github.com/konsorten/go-windows-terminal-sequences
 # github.com/machinebox/graphql v0.2.2
 ## explicit
 github.com/machinebox/graphql
+# github.com/matryer/is v1.4.0
+## explicit
 # github.com/mattn/go-colorable v0.1.7
 github.com/mattn/go-colorable
 # github.com/mattn/go-isatty v0.0.12
@@ -31,10 +36,6 @@ github.com/mattn/go-isatty
 github.com/pkg/errors
 # github.com/rs/zerolog v1.19.0
 ## explicit
-github.com/rs/zerolog
-github.com/rs/zerolog/internal/cbor
-github.com/rs/zerolog/internal/json
-github.com/rs/zerolog/log
 # github.com/sirupsen/logrus v1.6.0
 ## explicit
 github.com/sirupsen/logrus

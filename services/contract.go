@@ -1,10 +1,23 @@
 package services
 
 import (
+	"fmt"
 	"github.com/labbsr0x/githunter-api/services/github"
 	"github.com/labbsr0x/githunter-api/services/gitlab"
 	"github.com/sirupsen/logrus"
 )
+
+// ContractInterface
+type Contract interface {
+	GetLastRepos(int, string, string) (*ReposResponseContract, error)
+}
+
+type defaultContract struct{}
+
+
+func New() Contract {
+	return &defaultContract{}
+}
 
 // ReposResponseContract
 type ReposResponseContract struct {
@@ -12,7 +25,7 @@ type ReposResponseContract struct {
 	Repositories []string `json:"repositories"`
 }
 
-func GetLastRepos(numberOfRepos int, accessToken string, provider string) *ReposResponseContract {
+func (d *defaultContract) GetLastRepos(numberOfRepos int, accessToken string, provider string) (*ReposResponseContract, error ){
 
 	theContract := &ReposResponseContract{}
 	var err error
@@ -28,6 +41,11 @@ func GetLastRepos(numberOfRepos int, accessToken string, provider string) *Repos
 	case `gitlab`:
 		theContract, err = gitlabGetLastRepos(numberOfRepos, accessToken)
 		break
+	case ``:
+		//TODO: Call all providers
+		break
+	default:
+		return nil, fmt.Errorf("GetLastRepos unknown provider: %s", provider)
 	}
 
 	if theContract == nil {
@@ -40,7 +58,7 @@ func GetLastRepos(numberOfRepos int, accessToken string, provider string) *Repos
 		}).Warn(err.Error())
 	}
 
-	return theContract
+	return theContract, nil
 }
 
 func githubGetLastRepos(numberOfRepos int, accessToken string) (*ReposResponseContract, error) {
@@ -51,13 +69,13 @@ func githubGetLastRepos(numberOfRepos int, accessToken string) (*ReposResponseCo
 		return nil, err
 	}
 
-	repositoreis := []string{}
+	repositories := []string{}
 	for _, v := range repos.Viewer.Repositories.Nodes {
-		repositoreis = append(repositoreis, v.Name)
+		repositories = append(repositories, v.Name)
 	}
 	result := &ReposResponseContract{
 		Name:         repos.Viewer.Name,
-		Repositories: repositoreis,
+		Repositories: repositories,
 	}
 
 	return result, nil
