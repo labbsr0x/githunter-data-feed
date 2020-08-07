@@ -79,16 +79,15 @@ func (d *defaultContract) GetIssues(numberOfIssues int, owner string, repo strin
 }
 
 func githubGetIssues(numberOfIssues int, owner string, repo string, accessToken string) (*IssuesResponseContract, error) {
-	logrus.Info("Start")
 	issues, err := github.GetIssues(numberOfIssues, owner, repo, accessToken)
-	logrus.Info("End")
 
 	if err != nil {
 		return nil, err
 	}
-	logrus.Info("Start 2")
+
 	issueTemp := issue{}
 	issuesResp := []issue{}
+
 	for _, v := range issues.Repository.Issues.Nodes {
 		issueTemp.Number = v.Number
 		issueTemp.State = v.State
@@ -98,9 +97,10 @@ func githubGetIssues(numberOfIssues int, owner string, repo string, accessToken 
 		issueTemp.ClosedAt = v.ClosedAt
 		issuesResp = append(issuesResp, issueTemp)
 	}
-	logrus.Info("End 2")
+
 	result := &IssuesResponseContract{
 		Issues: issuesResp,
 	}
+
 	return result, nil
 }

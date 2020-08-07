@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	ql "github.com/machinebox/graphql"
-	"github.com/sirupsen/logrus"
 )
 
 // Graphql define the object wich will be created with funtion New
@@ -37,7 +36,7 @@ func buildQuery(client *ql.Client, accessToken string) func(string, map[string]i
 	return func(query string, variables map[string]interface{}, resp interface{}) error {
 		req := ql.NewRequest(query)
 
-		//todo: implements message
+		//TODO: implements message
 		if req == nil {
 			return fmt.Errorf("Couldn't possible to make new GraphQL Client")
 		}
@@ -48,12 +47,10 @@ func buildQuery(client *ql.Client, accessToken string) func(string, map[string]i
 
 		auth(req, accessToken)
 
-		logrus.Info("Start run graphql")
-		//todo: implement logRUS
+		//TODO: implement logRUS
 		if err := client.Run(context.Background(), req, &resp); err != nil {
 			return err
 		}
-		logrus.Info("Stop run graphql")
 
 		return nil
 	}

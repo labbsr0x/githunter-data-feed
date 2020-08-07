@@ -73,8 +73,6 @@ func GetIssues(numberOfIssues int, owner string, repo string, accessToken string
 		"repo":             repo,
 	}
 
-	logrus.Info("Start query")
-
 	err = client.Query(`query($number_of_issues:Int!, $owner:String!, $repo:String!) {
 			repository(name: $repo, owner: $owner) {
 				issues(last: $number_of_issues) {
@@ -114,7 +112,6 @@ func GetIssues(numberOfIssues int, owner string, repo string, accessToken string
 			}
 		}`, variables, respData)
 
-	logrus.Info("End query")
 	if err != nil {
 		return nil, err
 	}

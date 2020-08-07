@@ -20,7 +20,6 @@ func (c *Controller) GetIssuesHandler(ctx *fiber.Ctx) {
 		return
 	}
 
-	logrus.Infof("Start Marshal")
 	b, err := json.Marshal(issues)
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
@@ -28,7 +27,6 @@ func (c *Controller) GetIssuesHandler(ctx *fiber.Ctx) {
 		}).Warn("error at unmarshal")
 		return
 	}
-	logrus.Infof("End Marshal")
 
 	ctx.Fasthttp.Response.Header.Add("Content-type", "application/json")
 	ctx.Status(fiber.StatusOK).Send(b)
