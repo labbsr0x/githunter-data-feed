@@ -5,9 +5,10 @@
 package mock
 
 import (
+	reflect "reflect"
+
 	gomock "github.com/golang/mock/gomock"
 	services "github.com/labbsr0x/githunter-api/services"
-	reflect "reflect"
 )
 
 // MockContract is a mock of Contract interface
