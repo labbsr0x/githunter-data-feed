@@ -22,24 +22,24 @@ type CodeResponseContract struct {
 	Readme           string        `json:"readme"`
 	Contributing     string        `json:"contributing"`
 	LicenseInfo      string        `json:"licenseInfo"`
-	CodeOfConduct    CodeOfConduct `json:"codeOfConduct"`
+	CodeOfConduct    codeOfConduct `json:"codeOfConduct"`
 	Releases         int           `json:"releases"`
 	Contributors     int           `json:"contributors"`
-	Languages        *Languages    `json:"languages"`
+	Languages        *languages    `json:"languages"`
 	DiskUsage        int           `json:"diskUsage"`
 }
 
-type CodeOfConduct struct {
+type codeOfConduct struct {
 	Body         string `json:"body"`
 	ResourcePath string `json:"resourcePath"`
 }
 
-type Languages struct {
+type languages struct {
 	Quantity  int        `json:"quantity"`
-	Languages []Language `json:"languages"`
+	Languages []language `json:"languages"`
 }
 
-type Language struct {
+type language struct {
 	Size int    `json:"size"`
 	Name string `json:"name"`
 }
@@ -91,20 +91,20 @@ func githubGetCodePageInfo(nameRepo string, ownerRepo string, accessToken string
 		topics = append(topics, topic.Name.Name)
 	}
 
-	codeOfConduct := CodeOfConduct{
+	codeOfConduct := codeOfConduct{
 		code.Viewer.CodeOfConduct.Body,
 		code.Viewer.CodeOfConduct.ResourcePath,
 	}
 
-	langsInfo := []Language{}
+	langsInfo := []language{}
 	for _, lang := range code.Viewer.Languages.Languages {
-		langsInfo = append(langsInfo, Language{
+		langsInfo = append(langsInfo, language{
 			Size: lang.Size,
 			Name: lang.Language.Name,
 		})
 	}
 
-	languages := &Languages{
+	languages := &languages{
 		Quantity:  code.Viewer.Languages.Quantity,
 		Languages: langsInfo,
 	}
