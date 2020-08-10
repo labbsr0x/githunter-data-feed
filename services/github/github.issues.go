@@ -3,7 +3,6 @@ package github
 import (
 	"github.com/labbsr0x/githunter-api/infra/env"
 	"github.com/labbsr0x/githunter-api/services/graphql"
-	"github.com/sirupsen/logrus"
 )
 
 type IssuesResponse struct {
@@ -67,50 +66,52 @@ func GetIssues(numberOfIssues int, owner string, repo string, accessToken string
 
 	respData := &IssuesResponse{}
 
+	query := `query($number_of_issues:Int!, $owner:String!, $repo:String!) {
+							repository(name: $repo, owner: $owner) {
+								issues(last: $number_of_issues) {
+									nodes {
+										number
+										state
+										createdAt
+										updatedAt
+										closedAt
+										author {
+											login
+										}
+										labels(first: 10, orderBy: {field: CREATED_AT, direction: DESC}) {
+											nodes {
+												name
+											}
+										}
+										participants(last: 10) {
+											totalCount
+										}
+										timelineItems(last: 10, itemTypes: ISSUE_COMMENT) {
+											totalCount
+											updatedAt
+											nodes {
+												
+												__typename
+												... on IssueComment {
+													createdAt
+													author {
+														login
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}`
+
 	variables := map[string]interface{}{
 		"number_of_issues": numberOfIssues,
 		"owner":            owner,
 		"repo":             repo,
 	}
 
-	err = client.Query(`query($number_of_issues:Int!, $owner:String!, $repo:String!) {
-			repository(name: $repo, owner: $owner) {
-				issues(last: $number_of_issues) {
-					nodes {
-						number
-						state
-						createdAt
-						updatedAt
-						closedAt
-						author {
-							login
-						}
-						labels(first: 10, orderBy: {field: CREATED_AT, direction: DESC}) {
-							nodes {
-								name
-							}
-						}
-						participants(last: 10) {
-							totalCount
-						}
-						timelineItems(last: 10, itemTypes: ISSUE_COMMENT) {
-							totalCount
-							updatedAt
-							nodes {
-								
-								__typename
-								... on IssueComment {
-									createdAt
-									author {
-										login
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}`, variables, respData)
+	err = client.Query(query, variables, respData)
 
 	if err != nil {
 		return nil, err

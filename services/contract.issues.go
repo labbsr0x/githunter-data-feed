@@ -12,23 +12,15 @@ type IssuesResponseContract struct {
 }
 
 type issue struct {
-	Number        int           `json:"number"`
-	State         string        `json:"state"`
-	CreatedAt     string        `json:"createdAt"`
-	UpdatedAt     string        `json:"updatedAt"`
-	ClosedAt      string        `json:"closedAt"`
-	Author        author        `json:"author"`
-	Labels        []string      `json:"labels"`
-	Participants  participant   `json:"participants"`
-	TimelineItems timelineItems `json:"timelineItems"`
-}
-
-type author struct {
-	Login string `json:"login"`
-}
-
-type participant struct {
-	TotalCount int `json:"totalCount"`
+	Number            int           `json:"number"`
+	State             string        `json:"state"`
+	CreatedAt         string        `json:"createdAt"`
+	UpdatedAt         string        `json:"updatedAt"`
+	ClosedAt          string        `json:"closedAt"`
+	Author            string        `json:"author"`
+	Labels            []string      `json:"labels"`
+	TotalParticipants int           `json:"totalParticipants"`
+	TimelineItems     timelineItems `json:"timelineItems"`
 }
 
 type timelineItems struct {
@@ -40,7 +32,7 @@ type timelineItems struct {
 type timelineItem struct {
 	TypeName  string `json:"__typename"`
 	CreatedAt string `json:"createdAt"`
-	Author    author `json:"author"`
+	Author    string `json:"author"`
 }
 
 func (d *defaultContract) GetIssues(numberOfIssues int, owner string, repo string, provider string, accessToken string) (*IssuesResponseContract, error) {
@@ -85,21 +77,39 @@ func githubGetIssues(numberOfIssues int, owner string, repo string, accessToken 
 		return nil, err
 	}
 
+	issuesTemp := []issue{}
 	issueTemp := issue{}
-	issuesResp := []issue{}
+	timelineItemTemp := timelineItem{}
 
 	for _, v := range issues.Repository.Issues.Nodes {
 		issueTemp.Number = v.Number
 		issueTemp.State = v.State
-		issueTemp.Author.Login = v.Author.Login
+		issueTemp.Author = v.Author.Login
 		issueTemp.CreatedAt = v.CreatedAt
 		issueTemp.UpdatedAt = v.UpdatedAt
 		issueTemp.ClosedAt = v.ClosedAt
-		issuesResp = append(issuesResp, issueTemp)
+		issueTemp.TotalParticipants = v.Participants.TotalCount
+
+		for _, l := range v.Labels.Nodes {
+			issueTemp.Labels = append(issueTemp.Labels, l.Name)
+		}
+
+		issueTemp.TimelineItems.TotalCount = v.TimelineItems.TotalCount
+		issueTemp.TimelineItems.UpdatedAt = v.TimelineItems.UpdatedAt
+
+		for _, t := range v.TimelineItems.Nodes {
+			timelineItemTemp.Author = t.Author.Login
+			timelineItemTemp.CreatedAt = t.CreatedAt
+			timelineItemTemp.TypeName = t.TypeName
+
+			issueTemp.TimelineItems.Items = append(issueTemp.TimelineItems.Items, timelineItemTemp)
+		}
+
+		issuesTemp = append(issuesTemp, issueTemp)
 	}
 
 	result := &IssuesResponseContract{
-		Issues: issuesResp,
+		Issues: issuesTemp,
 	}
 
 	return result, nil
