@@ -16,7 +16,7 @@ func TestReposController_GetReposHandler_Error_GetRepos_Unknown_Provider(t *test
 
 	mockContractService := mock.NewMockContract(mockController)
 
-	reposController := &ReposController{
+	reposController := &Controller{
 		Contract: mockContractService,
 	}
 
@@ -33,7 +33,6 @@ func TestReposController_GetReposHandler_Error_GetRepos_Unknown_Provider(t *test
 	// http.Request
 	req := httptest.NewRequest(fiber.MethodGet, "/repos?"+q.Encode(), nil)
 	req.Header.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSON)
-
 
 	// http.Response
 	resp, err := app.Test(req)
