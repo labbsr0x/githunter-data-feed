@@ -2,18 +2,17 @@ package controllers
 
 import (
 	"encoding/json"
-
 	"github.com/gofiber/fiber"
 	"github.com/sirupsen/logrus"
 )
 
-func (c *Controller) GetIssuesHandler(ctx *fiber.Ctx) {
+func (c *Controller) GetPullsHandler(ctx *fiber.Ctx) {
 	accessToken := ctx.Query("access_token")
 	provider := ctx.Query("provider")
 	owner := ctx.Query("owner")
 	repo := ctx.Query("name")
 
-	issues, err := c.Contract.GetIssues(10, owner, repo, provider, accessToken)
+	issues, err := c.Contract.GetPulls(10, owner, repo, provider, accessToken)
 	if err != nil {
 		logrus.Warn("Error requesting github")
 		ctx.Next(fiber.NewError(fiber.StatusInternalServerError, "Error requesting github"))

@@ -5,15 +5,8 @@ import (
 	"github.com/labbsr0x/githunter-api/services/graphql"
 )
 
-type IssuesResponse struct {
-	Repository repository `json:"repository"`
-}
-
-type repository struct {
-	Issues issue `json:"issues"`
-}
-
 type issue struct {
+	TotalCount int `json:"totalCount"`
 	Nodes []issueNode `json:"nodes"`
 }
 
@@ -23,38 +16,10 @@ type issueNode struct {
 	CreatedAt     string       `json:"createdAt"`
 	UpdatedAt     string       `json:"updatedAt"`
 	ClosedAt      string       `json:"closedAt"`
-	Author        author       `json:"author"`
-	Labels        label        `json:"labels"`
-	Participants  participant  `json:"participants"`
-	TimelineItems timelineItem `json:"timelineItems"`
-}
-
-type author struct {
-	Login string `json:"login"`
-}
-
-type label struct {
-	Nodes []labelNode `json:"nodes"`
-}
-
-type labelNode struct {
-	Name string `json:"name"`
-}
-
-type participant struct {
-	TotalCount int `json:"totalCount"`
-}
-
-type timelineItem struct {
-	TotalCount int                `json:"totalCount"`
-	UpdatedAt  string             `json:"updatedAt"`
-	Nodes      []timelineItemNode `json:"nodes"`
-}
-
-type timelineItemNode struct {
-	TypeName  string `json:"__typename"`
-	CreatedAt string `json:"createdAt"`
-	Author    author `json:"author"`
+	Author        user       	`json:"author"`
+	Labels        labels        `json:"labels"`
+	Participants  participants  `json:"participants"`
+	TimelineItems comments `json:"timelineItems"`
 }
 
 func GetIssues(numberOfIssues int, owner string, repo string, accessToken string) (*IssuesResponse, error) {
@@ -85,6 +50,9 @@ func GetIssues(numberOfIssues int, owner string, repo string, accessToken string
 										}
 										participants(last: 10) {
 											totalCount
+											nodes {
+												 login
+											  }
 										}
 										timelineItems(last: 10, itemTypes: ISSUE_COMMENT) {
 											totalCount

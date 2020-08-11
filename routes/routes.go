@@ -15,4 +15,5 @@ func Register(app *fiber.App, version string) {
 	//TODO: JWT //:email?:provider
 	v1.Get("/repos", theController.GetReposHandler)
 	v1.Get("/issues", theController.GetIssuesHandler)
+	v1.Get("/pulls", theController.GetPullsHandler)
 }
