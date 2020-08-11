@@ -4,31 +4,15 @@ import (
 	"encoding/json"
 
 	"github.com/gofiber/fiber"
-	"github.com/labbsr0x/githunter-api/services"
 	"github.com/sirupsen/logrus"
 )
 
-type CodeController struct {
-	Contract services.Contract
-}
-
-func NewCodeController() *CodeController {
-	theController := &CodeController{
-		Contract: services.New(),
-	}
-	return theController
-}
-
 // GetCode function
-func (c *CodeController) GetCodeHandler(ctx *fiber.Ctx) {
-
-	// param passed by param URL
-	// name and owner
+func (c *Controller) GetCodeHandler(ctx *fiber.Ctx) {
 	name := ctx.Query("name")
 	owner := ctx.Query("owner")
 	accessToken := ctx.Query("access_token")
 	provider := ctx.Query("provider")
-	//check value query!!
 
 	data, err := c.Contract.GetInfoCodePage(name, owner, accessToken, provider)
 	if err != nil {
@@ -38,7 +22,8 @@ func (c *CodeController) GetCodeHandler(ctx *fiber.Ctx) {
 	}
 
 	if data == nil {
-		logrus.Warn("data response is null")
+		logrus.Warn("No data found")
+		ctx.Next(fiber.NewError(fiber.StatusNoContent, "No data found"))
 		return
 	}
 

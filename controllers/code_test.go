@@ -10,26 +10,116 @@ import (
 	"testing"
 
 	"github.com/gofiber/fiber"
-	"github.com/golang/mock/gomock"
 	"github.com/labbsr0x/githunter-api/services"
-	"github.com/labbsr0x/githunter-api/services/mock"
 )
 
-func GetMockContractServiceController(t *testing.T) (m *mock.MockContract, c *CodeController) {
-	mockController := gomock.NewController(t)
-	defer mockController.Finish()
+func TestCodeController_GetCodeHandler_Error_GetInfoCodePage_Invalid_NameAndOwner(t *testing.T) {
+	mockContractService, controller := GetMockContractServiceAndController(t)
 
-	mockContractService := mock.NewMockContract(mockController)
+	// Mocking the values Expected
+	mockContractService.EXPECT().GetInfoCodePage(
+		"",
+		"",
+		"token",
+		"provider",
+	).Return(nil, fmt.Errorf("GetInfoCodePage invalid path of repository."))
 
-	codeController := &CodeController{
-		Contract: mockContractService,
+	app := fiber.New()
+	app.Get("/code", controller.GetCodeHandler)
+
+	q := url.Values{}
+	q.Add("name", "")
+	q.Add("owner", "")
+	q.Add("access_token", "token")
+	q.Add("provider", "provider")
+
+	// http.Request
+	req := httptest.NewRequest(fiber.MethodGet, "/code?"+q.Encode(), nil)
+	req.Header.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSON)
+
+	// http.Response
+	resp, err := app.Test(req)
+	if err != nil {
+		t.Error(err)
 	}
 
-	return mockContractService, codeController
+	if resp.StatusCode != fiber.StatusInternalServerError {
+		t.Errorf("expect response status code %d got %d", fiber.StatusInternalServerError, resp.StatusCode)
+	}
+}
+
+func TestCodeController_GetCodeHandler_Error_GetInfoCodePage_Invalid_AccessToken(t *testing.T) {
+	mockContractService, controller := GetMockContractServiceAndController(t)
+
+	// Mocking the values Expected
+	mockContractService.EXPECT().GetInfoCodePage(
+		"name",
+		"owner",
+		"",
+		"provider",
+	).Return(nil, fmt.Errorf("GetInfoCodePage wihtout token auth code."))
+
+	app := fiber.New()
+	app.Get("/code", controller.GetCodeHandler)
+
+	q := url.Values{}
+	q.Add("name", "name")
+	q.Add("owner", "owner")
+	q.Add("access_token", "")
+	q.Add("provider", "provider")
+
+	// http.Request
+	req := httptest.NewRequest(fiber.MethodGet, "/code?"+q.Encode(), nil)
+	req.Header.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSON)
+
+	// http.Response
+	resp, err := app.Test(req)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if resp.StatusCode != fiber.StatusInternalServerError {
+		t.Errorf("expect response status code %d got %d", fiber.StatusInternalServerError, resp.StatusCode)
+	}
+}
+
+func TestCodeController_GetCodeHandler_Error_GetInfoCodePage_Unknown_Provider(t *testing.T) {
+	mockContractService, controller := GetMockContractServiceAndController(t)
+
+	// Mocking the values Expected
+	mockContractService.EXPECT().GetInfoCodePage(
+		"name",
+		"owner",
+		"token",
+		"",
+	).Return(nil, fmt.Errorf("GetInfoCodePage unknown provider: providerTest"))
+
+	app := fiber.New()
+	app.Get("/code", controller.GetCodeHandler)
+
+	q := url.Values{}
+	q.Add("name", "name")
+	q.Add("owner", "owner")
+	q.Add("access_token", "token")
+	q.Add("provider", "")
+
+	// http.Request
+	req := httptest.NewRequest(fiber.MethodGet, "/code?"+q.Encode(), nil)
+	req.Header.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSON)
+
+	// http.Response
+	resp, err := app.Test(req)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if resp.StatusCode != fiber.StatusInternalServerError {
+		t.Errorf("expect response status code %d got %d", fiber.StatusInternalServerError, resp.StatusCode)
+	}
 }
 
 func TestCodeController_GetCodeHandler_Success(t *testing.T) {
-	mockContractService, codeController := GetMockContractServiceController(t)
+	mockContractService, controller := GetMockContractServiceAndController(t)
 
 	responseJSONStr :=
 		`{
@@ -77,7 +167,7 @@ func TestCodeController_GetCodeHandler_Success(t *testing.T) {
 	).Return(mockResponse, nil)
 
 	app := fiber.New()
-	app.Get("/code", codeController.GetCodeHandler)
+	app.Get("/code", controller.GetCodeHandler)
 
 	q := url.Values{}
 	q.Add("name", "name")
@@ -109,117 +199,5 @@ func TestCodeController_GetCodeHandler_Success(t *testing.T) {
 
 	if !reflect.DeepEqual(theContract, mockResponse) {
 		t.Errorf("expect %#v response message. got %#v", mockResponse, theContract)
-	}
-}
-
-func TestCodeController_GetCodeHandler_Error_GetInfoCodePage_Invalid_NameAndOwner(t *testing.T) {
-	mockContractService, codeController := GetMockContractServiceController(t)
-
-	invalidNameRepository := "invalidNameRepo"
-	invalidOwnerRepository := "invalidOwnerRepo"
-
-	// Mocking the values Expected
-	mockContractService.EXPECT().GetInfoCodePage(
-		invalidNameRepository,
-		invalidOwnerRepository,
-		"token",
-		"provider",
-	).Return(nil, fmt.Errorf("GetInfoCodePage invalid path of repository."))
-
-	app := fiber.New()
-	app.Get("/code", codeController.GetCodeHandler)
-
-	q := url.Values{}
-	q.Add("name", invalidNameRepository)
-	q.Add("owner", invalidOwnerRepository)
-	q.Add("access_token", "token")
-	q.Add("provider", "provider")
-
-	// http.Request
-	req := httptest.NewRequest(fiber.MethodGet, "/code?"+q.Encode(), nil)
-	req.Header.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSON)
-
-	// http.Response
-	resp, err := app.Test(req)
-	if err != nil {
-		t.Error(err)
-	}
-
-	if resp.StatusCode != fiber.StatusInternalServerError {
-		t.Errorf("expect response status code %d got %d", fiber.StatusInternalServerError, resp.StatusCode)
-	}
-}
-
-func TestCodeController_GetCodeHandler_Error_GetInfoCodePage_Invalid_AccessToken(t *testing.T) {
-	mockContractService, codeController := GetMockContractServiceController(t)
-
-	invalidAccesToken := "invalidAccessToken"
-
-	// Mocking the values Expected
-	mockContractService.EXPECT().GetInfoCodePage(
-		"name",
-		"owner",
-		invalidAccesToken,
-		"provider",
-	).Return(nil, fmt.Errorf("GetInfoCodePage wihtout token auth code."))
-
-	app := fiber.New()
-	app.Get("/code", codeController.GetCodeHandler)
-
-	q := url.Values{}
-	q.Add("name", "name")
-	q.Add("owner", "owner")
-	q.Add("access_token", invalidAccesToken)
-	q.Add("provider", "provider")
-
-	// http.Request
-	req := httptest.NewRequest(fiber.MethodGet, "/code?"+q.Encode(), nil)
-	req.Header.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSON)
-
-	// http.Response
-	resp, err := app.Test(req)
-	if err != nil {
-		t.Error(err)
-	}
-
-	if resp.StatusCode != fiber.StatusInternalServerError {
-		t.Errorf("expect response status code %d got %d", fiber.StatusInternalServerError, resp.StatusCode)
-	}
-}
-
-func TestCodeController_GetCodeHandler_Error_GetInfoCodePage_Unknown_Provider(t *testing.T) {
-	mockContractService, codeController := GetMockContractServiceController(t)
-
-	invalidProvider := "invalidProvider"
-
-	// Mocking the values Expected
-	mockContractService.EXPECT().GetInfoCodePage(
-		"name",
-		"owner",
-		"token",
-		invalidProvider,
-	).Return(nil, fmt.Errorf("GetInfoCodePage unknown provider: providerTest"))
-
-	app := fiber.New()
-	app.Get("/code", codeController.GetCodeHandler)
-
-	q := url.Values{}
-	q.Add("name", "name")
-	q.Add("owner", "owner")
-	q.Add("access_token", "token")
-	q.Add("provider", "providerTest")
-
-	// http.Request
-	req := httptest.NewRequest(fiber.MethodGet, "/code?"+q.Encode(), nil)
-	req.Header.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSON)
-
-	// http.Response
-	resp, err := app.Test(req)
-	if err != nil {
-		t.Error(err)
-	}
-
-	if resp.StatusCode != fiber.StatusInternalServerError {
-		t.Errorf("expect response status code %d got %d", fiber.StatusInternalServerError, resp.StatusCode)
 	}
 }

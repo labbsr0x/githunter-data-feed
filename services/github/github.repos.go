@@ -25,10 +25,6 @@ type repositories struct {
 	Nodes []node `json:"nodes"`
 }
 
-type node struct {
-	Name string `json:"name"`
-}
-
 // GetLastRepos is used for get last repos of the user
 func GetLastRepos(numberOfRepos int, accessToken string) (*ReposResponse, error) {
 	client, err := graphql.New(env.Get().GithubGraphQLURL, accessToken)

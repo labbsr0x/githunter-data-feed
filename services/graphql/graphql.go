@@ -36,7 +36,7 @@ func buildQuery(client *ql.Client, accessToken string) func(string, map[string]i
 	return func(query string, variables map[string]interface{}, resp interface{}) error {
 		req := ql.NewRequest(query)
 
-		//todo: implements message
+		//TODO: implements message
 		if req == nil {
 			return fmt.Errorf("Couldn't possible to make new GraphQL Client")
 		}
@@ -48,7 +48,7 @@ func buildQuery(client *ql.Client, accessToken string) func(string, map[string]i
 
 		auth(req, accessToken)
 
-		//todo: implement logRUS
+		//TODO: implement logRUS
 		if err := client.Run(context.Background(), req, &resp); err != nil {
 			return err
 		}

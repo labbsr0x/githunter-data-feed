@@ -10,11 +10,11 @@ func Register(app *fiber.App, version string) {
 
 	v1 := app.Group("/" + version)
 
-	reposController := controllers.NewReposController()
-	codeController := controllers.NewCodeController()
+	theController := controllers.NewController()
 
 	//TODO: JWT //:email?:provider
-	v1.Get("/repos", reposController.GetReposHandler)
-	v1.Get("/code", codeController.GetCodeHandler)
-
+	v1.Get("/repos", theController.GetReposHandler)
+	v1.Get("/code", theController.GetCodeHandler)
+	v1.Get("/issues", theController.GetIssuesHandler)
+	v1.Get("/pulls", theController.GetPullsHandler)
 }

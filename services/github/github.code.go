@@ -10,35 +10,23 @@ type CodeResponse struct {
 }
 
 type codeViewer struct {
-	Name             string               `json:"name"`
-	Description      string               `json:"description"`
-	CreatedAt        string               `json:"createdAt"`
-	PrimaryLanguage  node                 `json:"primaryLanguage"`
-	RepositoryTopics nodeRepositoryTopics `json:"repositoryTopics"`
-	Watchers         nodeCount            `json:"watchers"`
-	Stars            nodeCount            `json:"stargazers"`
-	Forks            int                  `json:"forkCount"`
-	LastCommit       nodeDefaultBranch    `json:"defaultBranchRef"`
-	Readme           nodeText             `json:"readme"`
-	Contributing     nodeText             `json:"contributing"`
-	LicenseInfo      node                 `json:"licenseInfo"`
-	CodeOfConduct    nodeCodeOfConduct    `json:"codeOfConduct"`
-	Releases         nodeCount            `json:"releases"`
-	Contributors     nodeHistory          `json:"totalContributors"`
-	Languages        nodeLanguages        `json:"languages"`
-	DiskUsage        int                  `json:"diskUsage"`
-}
-
-type nodeCount struct {
-	TotalCount int `json:"totalCount"`
-}
-
-type nodeRepositoryTopics struct {
-	Nodes []nodeTopic `json:"nodes"`
-}
-
-type nodeTopic struct {
-	Name node `json:"topic"`
+	Name             string            `json:"name"`
+	Description      string            `json:"description"`
+	CreatedAt        string            `json:"createdAt"`
+	PrimaryLanguage  node              `json:"primaryLanguage"`
+	RepositoryTopics repositoryTopics  `json:"repositoryTopics"`
+	Watchers         count             `json:"watchers"`
+	Stars            count             `json:"stargazers"`
+	Forks            int               `json:"forkCount"`
+	LastCommit       nodeDefaultBranch `json:"defaultBranchRef"`
+	Readme           text              `json:"readme"`
+	Contributing     text              `json:"contributing"`
+	LicenseInfo      node              `json:"licenseInfo"`
+	CodeOfConduct    nodeCodeOfConduct `json:"codeOfConduct"`
+	Releases         count             `json:"releases"`
+	Contributors     history           `json:"totalContributors"`
+	Languages        nodeLanguages     `json:"languages"`
+	DiskUsage        int               `json:"diskUsage"`
 }
 
 type nodeDefaultBranch struct {
@@ -46,12 +34,8 @@ type nodeDefaultBranch struct {
 }
 
 type nodeTarget struct {
-	LastCommitDate string    `json:"lastCommitDate"`
-	CommitsQuanity nodeCount `json:"commits"`
-}
-
-type nodeText struct {
-	Text string `json:"text"`
+	LastCommitDate string `json:"lastCommitDate"`
+	CommitsQuanity count  `json:"commits"`
 }
 
 type nodeCodeOfConduct struct {
@@ -59,8 +43,8 @@ type nodeCodeOfConduct struct {
 	ResourcePath string `json:"resourcePath"`
 }
 
-type nodeHistory struct {
-	History nodeCount `json:"history"`
+type history struct {
+	History count `json:"history"`
 }
 
 type nodeLanguages struct {
@@ -69,12 +53,8 @@ type nodeLanguages struct {
 }
 
 type edgeLanguages struct {
-	Size     int          `json:"size"`
-	Language nodeLanguage `json:"node"`
-}
-
-type nodeLanguage struct {
-	Name string `json:"language"`
+	Size     int      `json:"size"`
+	Language language `json:"node"`
 }
 
 func GetInfoCodePage(nameRepo string, ownerRepo string, accessToken string) (*CodeResponse, error) {
