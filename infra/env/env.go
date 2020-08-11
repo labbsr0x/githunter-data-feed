@@ -21,7 +21,7 @@ func Config() {
 	logLevel := flag.String("log-level", "info", "debug, info, warning, error")
 	graphqlGithubURL := flag.String("graphql-github-url", "https://api.github.com/graphql", "The GraphQL Github API URL.")
 	graphqlGitlabURL := flag.String("graphql-gitlab-url", "https://gitlab.com/api/graphql", "The GraphQL GitLab API URL.")
-	serverPort := flag.Int("server-port", 3001, "The server port")
+	serverPort := flag.Int("server-port", 3002, "The server port")
 	flag.Parse()
 
 	configLogrus(logLevel)
@@ -55,7 +55,7 @@ func Get() Environment {
 func configLogrus(logLevel *string) {
 	logrus.SetFormatter(&logrus.TextFormatter{
 		FullTimestamp:   true,
-		TimestampFormat: "2006-01-02 15:04:05",
+		TimestampFormat: "2006-01-02 15:04:05.999999",
 	})
 
 	switch *logLevel {

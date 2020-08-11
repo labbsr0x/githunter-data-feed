@@ -194,4 +194,7 @@ tags
 !.local/docker-compose.yml
 !.local/prometheus.yml
 
+# GO
+__debug_bin
+
 # End of https://www.gitignore.io/api/git,vim,code,linux,ansible

@@ -5,39 +5,32 @@ import (
 	"strconv"
 
 	"github.com/gofiber/fiber"
-	"github.com/labbsr0x/githunter-api/services"
 	"github.com/sirupsen/logrus"
 )
 
-type CommitsController struct {
-	Contract services.Contract
-}
-
-func NewCommitsController() *CommitsController {
-	theController := &CommitsController{
-		Contract: services.New(),
-	}
-	return theController
-}
-
 // GetRepos function
-func (r *CommitsController) GetCommitsHandler(c *fiber.Ctx) {
-
+func (c *Controller) GetCommitsHandler(ctx *fiber.Ctx) {
 	// param passed by param URL
-	name := c.Query("name")
-	owner := c.Query("owner")
-	quantity, err := strconv.Atoi(c.Query("quantity"))
-	accessToken := c.Query("access_token")
-	provider := c.Query("provider")
+	name := ctx.Query("name")
+	owner := ctx.Query("owner")
+	quantity, err := strconv.Atoi(ctx.Query("quantity"))
+	accessToken := ctx.Query("access_token")
+	provider := ctx.Query("provider")
 
-	commits, err := r.Contract.GetCommitsRepo(name, owner, quantity, accessToken, provider)
+	data, err := c.Contract.GetCommitsRepo(name, owner, quantity, accessToken, provider)
 	if err != nil {
 		logrus.Warn("Error requesting github")
-		c.Next(fiber.NewError(fiber.StatusInternalServerError, "Error requesting github"))
+		ctx.Next(fiber.NewError(fiber.StatusInternalServerError, "Error requesting github"))
 		return
 	}
 
-	b, err := json.Marshal(commits)
+	if data == nil {
+		logrus.Warn("No data found")
+		ctx.Next(fiber.NewError(fiber.StatusNoContent, "No data found"))
+		return
+	}
+
+	b, err := json.Marshal(data)
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
 			"error": err.Error(),
@@ -45,6 +38,6 @@ func (r *CommitsController) GetCommitsHandler(c *fiber.Ctx) {
 		return
 	}
 
-	c.Fasthttp.Response.Header.Add("Content-type", "application/json")
-	c.Status(fiber.StatusOK).Send(b)
+	ctx.Fasthttp.Response.Header.Add("Content-type", "application/json")
+	ctx.Status(fiber.StatusOK).Send(b)
 }

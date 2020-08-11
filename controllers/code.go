@@ -7,14 +7,14 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// GetRepos function
-func (c *Controller) GetReposHandler(ctx *fiber.Ctx) {
-
-	// param passed by param URL
+// GetCode function
+func (c *Controller) GetCodeHandler(ctx *fiber.Ctx) {
+	name := ctx.Query("name")
+	owner := ctx.Query("owner")
 	accessToken := ctx.Query("access_token")
 	provider := ctx.Query("provider")
 
-	data, err := c.Contract.GetLastRepos(10, accessToken, provider)
+	data, err := c.Contract.GetInfoCodePage(name, owner, accessToken, provider)
 	if err != nil {
 		logrus.Warn("Error requesting github")
 		ctx.Next(fiber.NewError(fiber.StatusInternalServerError, "Error requesting github"))

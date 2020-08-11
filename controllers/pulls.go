@@ -2,22 +2,20 @@ package controllers
 
 import (
 	"encoding/json"
-
 	"github.com/gofiber/fiber"
 	"github.com/sirupsen/logrus"
 )
 
-// GetRepos function
-func (c *Controller) GetReposHandler(ctx *fiber.Ctx) {
-
-	// param passed by param URL
+func (c *Controller) GetPullsHandler(ctx *fiber.Ctx) {
 	accessToken := ctx.Query("access_token")
 	provider := ctx.Query("provider")
+	owner := ctx.Query("owner")
+	name := ctx.Query("name")
 
-	data, err := c.Contract.GetLastRepos(10, accessToken, provider)
+	data, err := c.Contract.GetPulls(10, owner, name, provider, accessToken)
 	if err != nil {
-		logrus.Warn("Error requesting github")
-		ctx.Next(fiber.NewError(fiber.StatusInternalServerError, "Error requesting github"))
+		logrus.Warn("Error requesting provider")
+		ctx.Next(fiber.NewError(fiber.StatusInternalServerError, "Error requesting provider"))
 		return
 	}
 
