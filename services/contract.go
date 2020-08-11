@@ -10,14 +10,14 @@ type Contract interface {
 type defaultContract struct{}
 
 type participants struct {
-	TotalCount int `json:"totalCount"`
-	User []string `json:"users"`
+	TotalCount int      `json:"totalCount"`
+	User       []string `json:"users"`
 }
 
 type comments struct {
-	TotalCount int            `json:"totalCount"`
-	UpdatedAt string         `json:"updatedAt"`
-	Data []comment 			`json:"data"`
+	TotalCount int       `json:"totalCount"`
+	UpdatedAt  string    `json:"updatedAt"`
+	Data       []comment `json:"data"`
 }
 
 type comment struct {

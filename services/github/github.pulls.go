@@ -6,36 +6,36 @@ import (
 )
 
 type pulls struct {
-	TotalCount int `json:"totalCount"`
-	Nodes []pullNode `json:"nodes"`
+	TotalCount int        `json:"totalCount"`
+	Nodes      []pullNode `json:"nodes"`
 }
 
 type pullNode struct {
-	Number        int          `json:"number"`
-	State         string       `json:"state"`
-	CreatedAt     string       `json:"createdAt"`
-	Merged            bool        	`json:"merged"`
-	MergedAt          string        `json:"mergedAt"`
-	ClosedAt      string       `json:"closedAt"`
-	Author        user       	`json:"author"`
-	Labels        labels        `json:"labels"`
-	Participants  participants  `json:"participants"`
-	Comments comments 			`json:"comments"`
+	Number       int          `json:"number"`
+	State        string       `json:"state"`
+	CreatedAt    string       `json:"createdAt"`
+	Merged       bool         `json:"merged"`
+	MergedAt     string       `json:"mergedAt"`
+	ClosedAt     string       `json:"closedAt"`
+	Author       user         `json:"author"`
+	Labels       labels       `json:"labels"`
+	Participants participants `json:"participants"`
+	Comments     comments     `json:"comments"`
 }
 
-func GetPulls(numberCount int, owner string, name string, accessToken string, closed bool) (*IssuesResponse, error) {
+func GetPulls(numberCount int, owner string, name string, accessToken string, closed bool) (*Response, error) {
 	client, err := graphql.New(env.Get().GithubGraphQLURL, accessToken)
 
 	if err != nil {
 		return nil, err
 	}
 
-	states := []string {"OPEN"}
+	states := []string{"OPEN"}
 	if closed == true {
-		states = []string {"CLOSED", "MERGED"}
+		states = []string{"CLOSED", "MERGED"}
 	}
 
-	respData := &IssuesResponse{}
+	respData := &Response{}
 
 	query := `query($numberCount:Int!, $owner:String!, $name:String!, $states:[PullRequestState!]) {
 				  repository(name: $name, owner: $owner) {
@@ -77,10 +77,10 @@ func GetPulls(numberCount int, owner string, name string, accessToken string, cl
 				}`
 
 	variables := map[string]interface{}{
-		"numberCount": 		numberCount,
-		"owner":            owner,
-		"name":             name,
-		"state":			states,
+		"numberCount": numberCount,
+		"owner":       owner,
+		"name":        name,
+		"state":       states,
 	}
 
 	err = client.Query(query, variables, respData)

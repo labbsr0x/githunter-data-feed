@@ -10,16 +10,22 @@ func (c *Controller) GetPullsHandler(ctx *fiber.Ctx) {
 	accessToken := ctx.Query("access_token")
 	provider := ctx.Query("provider")
 	owner := ctx.Query("owner")
-	repo := ctx.Query("name")
+	name := ctx.Query("name")
 
-	issues, err := c.Contract.GetPulls(10, owner, repo, provider, accessToken)
+	data, err := c.Contract.GetPulls(10, owner, name, provider, accessToken)
 	if err != nil {
-		logrus.Warn("Error requesting github")
-		ctx.Next(fiber.NewError(fiber.StatusInternalServerError, "Error requesting github"))
+		logrus.Warn("Error requesting provider")
+		ctx.Next(fiber.NewError(fiber.StatusInternalServerError, "Error requesting provider"))
 		return
 	}
 
-	b, err := json.Marshal(issues)
+	if data == nil {
+		logrus.Warn("No data found")
+		ctx.Next(fiber.NewError(fiber.StatusNoContent, "No data found"))
+		return
+	}
+
+	b, err := json.Marshal(data)
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
 			"error": err.Error(),

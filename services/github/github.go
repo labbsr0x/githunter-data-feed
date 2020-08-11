@@ -1,22 +1,22 @@
 package github
 
-type IssuesResponse struct {
+type Response struct {
 	Repository repository `json:"repository"`
 }
 
 type repository struct {
 	Issues issue `json:"issues"`
-	Pulls pulls `json:"pullRequests"`
+	Pulls  pulls `json:"pullRequests"`
 }
 
 type participants struct {
-	TotalCount int `json:"totalCount"`
-	User []user `json:"nodes"`
+	TotalCount int    `json:"totalCount"`
+	User       []user `json:"nodes"`
 }
 
 type user struct {
 	Login string `json:"login"`
-	Name string `json:"name"`
+	Name  string `json:"name"`
 }
 
 type labels struct {
@@ -29,10 +29,10 @@ type label struct {
 
 type comments struct {
 	TotalCount int       `json:"totalCount"`
-	Data      []comment `json:"nodes"`
+	Data       []comment `json:"nodes"`
 }
 
 type comment struct {
-	CreatedAt string 	`json:"createdAt"`
-	Author    user 		`json:"author"`
+	CreatedAt string `json:"createdAt"`
+	Author    user   `json:"author"`
 }

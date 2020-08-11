@@ -6,8 +6,8 @@ import (
 )
 
 type issue struct {
-	TotalCount int `json:"totalCount"`
-	Nodes []issueNode `json:"nodes"`
+	TotalCount int         `json:"totalCount"`
+	Nodes      []issueNode `json:"nodes"`
 }
 
 type issueNode struct {
@@ -16,20 +16,20 @@ type issueNode struct {
 	CreatedAt     string       `json:"createdAt"`
 	UpdatedAt     string       `json:"updatedAt"`
 	ClosedAt      string       `json:"closedAt"`
-	Author        user       	`json:"author"`
-	Labels        labels        `json:"labels"`
-	Participants  participants  `json:"participants"`
-	TimelineItems comments `json:"timelineItems"`
+	Author        user         `json:"author"`
+	Labels        labels       `json:"labels"`
+	Participants  participants `json:"participants"`
+	TimelineItems comments     `json:"timelineItems"`
 }
 
-func GetIssues(numberOfIssues int, owner string, repo string, accessToken string) (*IssuesResponse, error) {
+func GetIssues(numberOfIssues int, owner string, repo string, accessToken string) (*Response, error) {
 	client, err := graphql.New(env.Get().GithubGraphQLURL, accessToken)
 
 	if err != nil {
 		return nil, err
 	}
 
-	respData := &IssuesResponse{}
+	respData := &Response{}
 
 	query := `query($number_of_issues:Int!, $owner:String!, $repo:String!) {
 							repository(name: $repo, owner: $owner) {

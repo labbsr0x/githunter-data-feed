@@ -7,20 +7,20 @@ import (
 )
 
 type PullsResponseContract struct {
-	Total int `json:"total"`
+	Total int    `json:"total"`
 	Pulls []pull `json:"pulls"`
 }
 
 type pull struct {
-	Number            int           `json:"number"`
-	State             string        `json:"state"`
-	CreatedAt         string        `json:"createdAt"`
-	ClosedAt          string        `json:"closedAt"`
-	Merged            bool        	`json:"merged"`
-	MergedAt          string        `json:"mergedAt"`
-	Author            string        `json:"author"`
-	Labels            []string      `json:"labels"`
-	Comments     comments 		`json:"comments"`
+	Number       int          `json:"number"`
+	State        string       `json:"state"`
+	CreatedAt    string       `json:"createdAt"`
+	ClosedAt     string       `json:"closedAt"`
+	Merged       bool         `json:"merged"`
+	MergedAt     string       `json:"mergedAt"`
+	Author       string       `json:"author"`
+	Labels       []string     `json:"labels"`
+	Comments     comments     `json:"comments"`
 	Participants participants `json:"participants"`
 }
 
@@ -81,11 +81,10 @@ func githubGetPulls(numberCount int, owner string, repo string, accessToken stri
 		Pulls: data,
 	}
 
-
 	return result, nil
 }
 
-func formatContract(response *github.IssuesResponse) []pull {
+func formatContract(response *github.Response) []pull {
 
 	data := []pull{}
 	for _, v := range response.Repository.Pulls.Nodes {

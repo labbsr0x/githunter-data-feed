@@ -12,15 +12,15 @@ type IssuesResponseContract struct {
 }
 
 type issue struct {
-	Number			int           `json:"number"`
-	State			string        `json:"state"`
-	CreatedAt		string        `json:"createdAt"`
-	UpdatedAt		string        `json:"updatedAt"`
-	ClosedAt		string			`json:"closedAt"`
-	Author			string			`json:"author"`
-	Labels			[]string		`json:"labels"`
-	Comments     	comments 		`json:"comments"`
-	Participants 	participants	`json:"participants"`
+	Number       int          `json:"number"`
+	State        string       `json:"state"`
+	CreatedAt    string       `json:"createdAt"`
+	UpdatedAt    string       `json:"updatedAt"`
+	ClosedAt     string       `json:"closedAt"`
+	Author       string       `json:"author"`
+	Labels       []string     `json:"labels"`
+	Comments     comments     `json:"comments"`
+	Participants participants `json:"participants"`
 }
 
 func (d *defaultContract) GetIssues(numberOfIssues int, owner string, repo string, provider string, accessToken string) (*IssuesResponseContract, error) {
