@@ -5,10 +5,9 @@
 package mock
 
 import (
-	reflect "reflect"
-
 	gomock "github.com/golang/mock/gomock"
 	services "github.com/labbsr0x/githunter-api/services"
+	reflect "reflect"
 )
 
 // MockContract is a mock of Contract interface
@@ -47,4 +46,19 @@ func (m *MockContract) GetLastRepos(arg0 int, arg1, arg2 string) (*services.Repo
 func (mr *MockContractMockRecorder) GetLastRepos(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetLastRepos", reflect.TypeOf((*MockContract)(nil).GetLastRepos), arg0, arg1, arg2)
+}
+
+// GetInfoCodePage mocks base method
+func (m *MockContract) GetInfoCodePage(arg0, arg1, arg2, arg3 string) (*services.CodeResponseContract, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetInfoCodePage", arg0, arg1, arg2, arg3)
+	ret0, _ := ret[0].(*services.CodeResponseContract)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetInfoCodePage indicates an expected call of GetInfoCodePage
+func (mr *MockContractMockRecorder) GetInfoCodePage(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetInfoCodePage", reflect.TypeOf((*MockContract)(nil).GetInfoCodePage), arg0, arg1, arg2, arg3)
 }

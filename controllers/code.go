@@ -20,24 +20,29 @@ func NewCodeController() *CodeController {
 }
 
 // GetCode function
-func (r *CodeController) GetCodeHandler(c *fiber.Ctx) {
+func (c *CodeController) GetCodeHandler(ctx *fiber.Ctx) {
 
 	// param passed by param URL
 	// name and owner
-	name := c.Query("name")
-	owner := c.Query("owner")
-	accessToken := c.Query("access_token")
-	provider := c.Query("provider")
+	name := ctx.Query("name")
+	owner := ctx.Query("owner")
+	accessToken := ctx.Query("access_token")
+	provider := ctx.Query("provider")
 	//check value query!!
 
-	repos, err := r.Contract.GetInfoCodePage(name, owner, accessToken, provider)
+	data, err := c.Contract.GetInfoCodePage(name, owner, accessToken, provider)
 	if err != nil {
 		logrus.Warn("Error requesting github")
-		c.Next(fiber.NewError(fiber.StatusInternalServerError, "Error requesting github"))
+		ctx.Next(fiber.NewError(fiber.StatusInternalServerError, "Error requesting github"))
 		return
 	}
 
-	b, err := json.Marshal(repos)
+	if data == nil {
+		logrus.Warn("data response is null")
+		return
+	}
+
+	b, err := json.Marshal(data)
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
 			"error": err.Error(),
@@ -45,6 +50,6 @@ func (r *CodeController) GetCodeHandler(c *fiber.Ctx) {
 		return
 	}
 
-	c.Fasthttp.Response.Header.Add("Content-type", "application/json")
-	c.Status(fiber.StatusOK).Send(b)
+	ctx.Fasthttp.Response.Header.Add("Content-type", "application/json")
+	ctx.Status(fiber.StatusOK).Send(b)
 }

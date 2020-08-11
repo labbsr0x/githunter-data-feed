@@ -2,12 +2,13 @@ package controllers
 
 import (
 	"fmt"
-	"github.com/gofiber/fiber"
-	"github.com/golang/mock/gomock"
-	"github.com/labbsr0x/githunter-api/services/mock"
 	"net/http/httptest"
 	"net/url"
 	"testing"
+
+	"github.com/gofiber/fiber"
+	"github.com/golang/mock/gomock"
+	"github.com/labbsr0x/githunter-api/services/mock"
 )
 
 func TestReposController_GetReposHandler_Error_GetRepos_Unknown_Provider(t *testing.T) {
@@ -33,7 +34,6 @@ func TestReposController_GetReposHandler_Error_GetRepos_Unknown_Provider(t *test
 	// http.Request
 	req := httptest.NewRequest(fiber.MethodGet, "/repos?"+q.Encode(), nil)
 	req.Header.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSON)
-
 
 	// http.Response
 	resp, err := app.Test(req)
