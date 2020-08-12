@@ -14,14 +14,20 @@ func (c *Controller) GetReposHandler(ctx *fiber.Ctx) {
 	accessToken := ctx.Query("access_token")
 	provider := ctx.Query("provider")
 
-	repos, err := c.Contract.GetLastRepos(10, accessToken, provider)
+	data, err := c.Contract.GetLastRepos(10, accessToken, provider)
 	if err != nil {
 		logrus.Warn("Error requesting github")
 		ctx.Next(fiber.NewError(fiber.StatusInternalServerError, "Error requesting github"))
 		return
 	}
 
-	b, err := json.Marshal(repos)
+	if data == nil {
+		logrus.Warn("No data found")
+		ctx.Next(fiber.NewError(fiber.StatusNoContent, "No data found"))
+		return
+	}
+
+	b, err := json.Marshal(data)
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
 			"error": err.Error(),

@@ -43,6 +43,7 @@ func buildQuery(client *ql.Client, accessToken string) func(string, map[string]i
 
 		for key, value := range variables {
 			req.Var(key, value)
+
 		}
 
 		auth(req, accessToken)

@@ -3,26 +3,18 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/gofiber/fiber"
-	"github.com/golang/mock/gomock"
-	"github.com/labbsr0x/githunter-api/services"
-	"github.com/labbsr0x/githunter-api/services/mock"
 	"io/ioutil"
 	"net/http/httptest"
 	"net/url"
 	"reflect"
 	"testing"
+
+	"github.com/gofiber/fiber"
+	"github.com/labbsr0x/githunter-api/services"
 )
 
 func TestController_GetPullsHandler_Error_GetPulls_Unknown_Provider(t *testing.T) {
-	mockController := gomock.NewController(t)
-	defer mockController.Finish()
-
-	mockContractService := mock.NewMockContract(mockController)
-
-	controller := &Controller{
-		Contract: mockContractService,
-	}
+	mockContractService, controller := GetMockContractServiceAndController(t)
 
 	// Mocking the values Expected
 	mockContractService.EXPECT().GetPulls(10, "", "", "providerTest", "token").Return(nil, fmt.Errorf("'Get' using unknown provider: providerTest"))
@@ -53,14 +45,7 @@ func TestController_GetPullsHandler_Error_GetPulls_Unknown_Provider(t *testing.T
 }
 
 func TestController_GetPullsHandler_Error_GetPulls_Invalid_Token(t *testing.T) {
-	mockController := gomock.NewController(t)
-	defer mockController.Finish()
-
-	mockContractService := mock.NewMockContract(mockController)
-
-	controller := &Controller{
-		Contract: mockContractService,
-	}
+	mockContractService, controller := GetMockContractServiceAndController(t)
 
 	// Mocking the values Expected
 	mockContractService.EXPECT().GetPulls(10, "", "", "github", "token").Return(nil, fmt.Errorf("'Get' using unknown token: token"))
@@ -91,14 +76,7 @@ func TestController_GetPullsHandler_Error_GetPulls_Invalid_Token(t *testing.T) {
 }
 
 func TestController_GetPullsHandler_Error_GetPulls_Invalid_NameAndOwner(t *testing.T) {
-	mockController := gomock.NewController(t)
-	defer mockController.Finish()
-
-	mockContractService := mock.NewMockContract(mockController)
-
-	controller := &Controller{
-		Contract: mockContractService,
-	}
+	mockContractService, controller := GetMockContractServiceAndController(t)
 
 	theValidToken := "fakeValidToken"
 
@@ -131,14 +109,7 @@ func TestController_GetPullsHandler_Error_GetPulls_Invalid_NameAndOwner(t *testi
 }
 
 func TestController_GetPullsHandler_Success(t *testing.T) {
-	mockController := gomock.NewController(t)
-	defer mockController.Finish()
-
-	mockContractService := mock.NewMockContract(mockController)
-
-	controller := &Controller{
-		Contract: mockContractService,
-	}
+	mockContractService, controller := GetMockContractServiceAndController(t)
 
 	theValidToken := "fakeValidToken"
 	responseJSONStr := `

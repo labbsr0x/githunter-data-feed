@@ -36,3 +36,31 @@ type comment struct {
 	CreatedAt string `json:"createdAt"`
 	Author    user   `json:"author"`
 }
+
+type node struct {
+	Name string `json:"name"`
+}
+
+type count struct {
+	TotalCount int `json:"totalCount"`
+}
+
+type defaultBranch struct {
+	DefaultBranch nodeTarget `json:"target"`
+}
+
+type repositoryTopics struct {
+	Nodes []topic `json:"nodes"`
+}
+
+type topic struct {
+	Name node `json:"topic"`
+}
+
+type text struct {
+	Text string `json:"text"`
+}
+
+type language struct {
+	Name string `json:"language"`
+}
