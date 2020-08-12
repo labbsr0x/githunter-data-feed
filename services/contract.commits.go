@@ -17,7 +17,7 @@ type commit struct {
 	CommittedDate string `json:"committedDate"`
 }
 
-func (d *defaultContract) GetCommitsRepo(nameRepo string, ownerRepo string, quantity int, accessToken string, provider string) (*CommitsResponseContract, error) {
+func (d *defaultContract) GetCommitsRepo(nameRepo string, ownerRepo string, accessToken string, provider string) (*CommitsResponseContract, error) {
 	theContract := &CommitsResponseContract{}
 	var err error
 
@@ -27,7 +27,7 @@ func (d *defaultContract) GetCommitsRepo(nameRepo string, ownerRepo string, quan
 
 	switch provider {
 	case `github`:
-		theContract, err = githubGetCommitsRepo(nameRepo, ownerRepo, quantity, accessToken)
+		theContract, err = githubGetCommitsRepo(nameRepo, ownerRepo, accessToken)
 		break
 	case `gitlab`:
 		// theContract, err = githubGetCommitsRepo(nameRepo, ownerRepo, quantity, accessToken)
@@ -52,8 +52,8 @@ func (d *defaultContract) GetCommitsRepo(nameRepo string, ownerRepo string, quan
 	return theContract, nil
 }
 
-func githubGetCommitsRepo(nameRepo string, ownerRepo string, quantity int, accessToken string) (*CommitsResponseContract, error) {
-	commits, err := github.GetCommitsRepo(nameRepo, ownerRepo, quantity, accessToken)
+func githubGetCommitsRepo(nameRepo string, ownerRepo string, accessToken string) (*CommitsResponseContract, error) {
+	commits, err := github.GetCommitsRepo(nameRepo, ownerRepo, accessToken)
 	if err != nil {
 		return nil, err
 	}

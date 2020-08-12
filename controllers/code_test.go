@@ -57,7 +57,7 @@ func TestCodeController_GetCodeHandler_Error_GetInfoCodePage_Invalid_AccessToken
 		"owner",
 		"",
 		"provider",
-	).Return(nil, fmt.Errorf("GetInfoCodePage wihtout token auth code."))
+	).Return(nil, fmt.Errorf("GetInfoCodePage invalid token auth code."))
 
 	app := fiber.New()
 	app.Get("/code", controller.GetCodeHandler)
@@ -135,15 +135,12 @@ func TestCodeController_GetCodeHandler_Success(t *testing.T) {
 			"forks": 999,
 			"lastCommitDate": "1995-10-10T00:00:01Z",
 			"commits": 999,
-			"readme": "fakeTextReadme",
-			"contributing": "fakeTextContributing",
+			"hasHomepageUrl": true,
+			"hasReadmeFile": true,
+			"hasContributingFile": true,
 			"licenseInfo": "fakeLicenseInfo",
-			"codeOfConduct": {
-				"body": "fakeBodyCodeOfConduct",
-				"resourcePath": "fakeResourcePath"
-			},
+			"hasCodeOfConductFile": true,
 			"releases": 999,
-			"contributors": 999,
 			"languages": {
 				"quantity": 1,
 				"languages": [
