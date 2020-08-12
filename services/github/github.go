@@ -61,6 +61,10 @@ type text struct {
 	Text string `json:"text"`
 }
 
+type byteSize struct {
+	ByteSize int `json:"byteSize"`
+}
+
 type language struct {
 	Name string `json:"language"`
 }
