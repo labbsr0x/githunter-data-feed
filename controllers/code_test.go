@@ -92,7 +92,7 @@ func TestCodeController_GetCodeHandler_Error_GetInfoCodePage_Unknown_Provider(t 
 		"owner",
 		"token",
 		"",
-	).Return(nil, fmt.Errorf("GetInfoCodePage unknown provider: providerTest"))
+	).Return(nil, fmt.Errorf("GetInfoCodePage unknown provider."))
 
 	app := fiber.New()
 	app.Get("/code", controller.GetCodeHandler)
