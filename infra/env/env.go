@@ -20,7 +20,7 @@ func Config() {
 
 	logLevel := flag.String("log-level", "info", "debug, info, warning, error")
 	graphqlGithubURL := flag.String("graphql-github-url", "https://api.github.com/graphql", "The GraphQL Github API URL.")
-	graphqlGitlabURL := flag.String("graphql-gitlab-url", "https://gitlab.com/api/graphql", "The GraphQL GitLab API URL.")
+	graphqlGitlabURL := flag.String("graphql-gitlab-url", "https://gitlab.com/api/v4", "The GraphQL GitLab API URL.")
 	serverPort := flag.Int("server-port", 3002, "The server port")
 	flag.Parse()
 

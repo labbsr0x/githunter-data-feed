@@ -1,5 +1,7 @@
 package services
 
+import "github.com/labbsr0x/githunter-api/services/gitlab"
+
 // ContractInterface
 type Contract interface {
 	GetLastRepos(int, string, string) (*ReposResponseContract, error)
@@ -29,4 +31,8 @@ type comment struct {
 
 func New() Contract {
 	return &defaultContract{}
+}
+
+func (d *defaultContract) Gitlab(accessToken string) *gitlab.Gitlab {
+	return gitlab.New(accessToken)
 }
