@@ -9,28 +9,28 @@ import (
 
 //struct response of Code page
 type CodeResponseContract struct {
-	Name             string        `json:"name"`
-	Description      string        `json:"description"`
-	CreatedAt        string        `json:"createdAt"`
-	PrimaryLanguage  string        `json:"primaryLanguage"`
-	RepositoryTopics []string      `json:"repositoryTopics"`
-	Watchers         int           `json:"watchers"`
-	Stars            int           `json:"stars"`
-	Forks            int           `json:"forks"`
-	LastCommitDate   string        `json:"lastCommitDate"`
-	Commits          int           `json:"commits"`
-	Readme           string        `json:"readme"`
-	Contributing     string        `json:"contributing"`
-	LicenseInfo      string        `json:"licenseInfo"`
-	CodeOfConduct    codeOfConduct `json:"codeOfConduct"`
-	Releases         int           `json:"releases"`
-	Contributors     int           `json:"contributors"`
-	Languages        *languages    `json:"languages"`
-	DiskUsage        int           `json:"diskUsage"`
+	Name                 string   `json:"name"`
+	Description          string   `json:"description"`
+	CreatedAt            string   `json:"createdAt"`
+	PrimaryLanguage      string   `json:"primaryLanguage"`
+	RepositoryTopics     []string `json:"repositoryTopics"`
+	Watchers             int      `json:"watchers"`
+	Stars                int      `json:"stars"`
+	Forks                int      `json:"forks"`
+	LastCommitDate       string   `json:"lastCommitDate"`
+	Commits              int      `json:"commits"`
+	HasHomepageUrl       bool     `json:"hasHomepageUrl"`
+	HasReadmeFile        bool     `json:"hasReadmeFile"`
+	HasContributingFile  bool     `json:"hasContributingFile"`
+	LicenseInfo          string   `json:"licenseInfo"`
+	HasCodeOfConductFile bool     `json:"hasCodeOfConductFile"`
+	Releases             int      `json:"releases"`
+	// Contributors         int        `json:"contributors"` *Info no longer available*
+	Languages *languages `json:"languages"`
+	DiskUsage int        `json:"diskUsage"`
 }
 
 type codeOfConduct struct {
-	Body         string `json:"body"`
 	ResourcePath string `json:"resourcePath"`
 }
 
@@ -92,7 +92,6 @@ func githubGetCodePageInfo(nameRepo string, ownerRepo string, accessToken string
 	}
 
 	codeOfConduct := codeOfConduct{
-		code.Viewer.CodeOfConduct.Body,
 		code.Viewer.CodeOfConduct.ResourcePath,
 	}
 
@@ -109,25 +108,46 @@ func githubGetCodePageInfo(nameRepo string, ownerRepo string, accessToken string
 		Languages: langsInfo,
 	}
 
+	hasHomepageUrl := false
+	if len(code.Viewer.HomepageUrl) > 0 {
+		hasHomepageUrl = true
+	}
+
+	hasReadmeFile := false
+	if code.Viewer.Readme.ByteSize > 0 {
+		hasReadmeFile = true
+	}
+
+	hasContributingFile := false
+	if code.Viewer.Contributing.ByteSize > 0 {
+		hasContributingFile = true
+	}
+
+	hasCodeOfConductFile := false
+	if len(codeOfConduct.ResourcePath) > 0 {
+		hasCodeOfConductFile = true
+	}
+
 	result := &CodeResponseContract{
-		Name:             code.Viewer.Name,
-		Description:      code.Viewer.Description,
-		CreatedAt:        code.Viewer.CreatedAt,
-		PrimaryLanguage:  code.Viewer.PrimaryLanguage.Name,
-		RepositoryTopics: topics,
-		Watchers:         code.Viewer.Watchers.TotalCount,
-		Stars:            code.Viewer.Stars.TotalCount,
-		Forks:            code.Viewer.Forks,
-		LastCommitDate:   code.Viewer.LastCommit.DefaultBranch.LastCommitDate,
-		Commits:          code.Viewer.LastCommit.DefaultBranch.CommitsQuanity.TotalCount,
-		Readme:           code.Viewer.Readme.Text,
-		Contributing:     code.Viewer.Contributing.Text,
-		LicenseInfo:      code.Viewer.LicenseInfo.Name,
-		CodeOfConduct:    codeOfConduct,
-		Releases:         code.Viewer.Releases.TotalCount,
-		Contributors:     code.Viewer.Contributors.History.TotalCount,
-		Languages:        languages,
-		DiskUsage:        code.Viewer.DiskUsage,
+		Name:                 code.Viewer.Name,
+		Description:          code.Viewer.Description,
+		CreatedAt:            code.Viewer.CreatedAt,
+		PrimaryLanguage:      code.Viewer.PrimaryLanguage.Name,
+		RepositoryTopics:     topics,
+		Watchers:             code.Viewer.Watchers.TotalCount,
+		Stars:                code.Viewer.Stars.TotalCount,
+		Forks:                code.Viewer.Forks,
+		LastCommitDate:       code.Viewer.LastCommit.DefaultBranch.LastCommitDate,
+		Commits:              code.Viewer.LastCommit.DefaultBranch.CommitsQuanity.TotalCount,
+		HasHomepageUrl:       hasHomepageUrl,
+		HasReadmeFile:        hasReadmeFile,
+		HasContributingFile:  hasContributingFile,
+		LicenseInfo:          code.Viewer.LicenseInfo.Name,
+		HasCodeOfConductFile: hasCodeOfConductFile,
+		Releases:             code.Viewer.Releases.TotalCount,
+		// Contributors:         code.Viewer.Contributors.History.TotalCount, *Info no longer available*
+		Languages: languages,
+		DiskUsage: code.Viewer.DiskUsage,
 	}
 
 	return result, nil
