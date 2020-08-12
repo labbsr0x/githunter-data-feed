@@ -3,7 +3,9 @@ package services
 import (
 	"fmt"
 	"github.com/labbsr0x/githunter-api/services/github"
+	"github.com/labbsr0x/githunter-api/services/gitlab"
 	"github.com/sirupsen/logrus"
+	gitlabLib "github.com/xanzy/go-gitlab"
 )
 
 type PullsResponseContract struct {
@@ -37,7 +39,8 @@ func (d *defaultContract) GetPulls(numberCount int, owner string, name string, p
 		theContract, err = githubGetPulls(numberCount, owner, name, accessToken)
 		break
 	case `gitlab`:
-		//theContract, err = gitlabGetIssues(numberOfIssues, owner, repo, accessToken)
+		client = d.Gitlab(accessToken)
+		theContract, err = gitlabGetPulls(numberCount, owner, name)
 		break
 	case ``:
 		//TODO: Call all providers
@@ -66,7 +69,7 @@ func githubGetPulls(numberCount int, owner string, repo string, accessToken stri
 		return nil, err
 	}
 
-	data := formatContract(pullsOpened)
+	data := formatContract4Github(pullsOpened)
 
 	pullsClosed, err := github.GetPulls(numberCount, owner, repo, accessToken, true)
 
@@ -74,7 +77,7 @@ func githubGetPulls(numberCount int, owner string, repo string, accessToken stri
 		return nil, err
 	}
 
-	data = append(data, formatContract(pullsClosed)...)
+	data = append(data, formatContract4Github(pullsClosed)...)
 
 	result := &PullsResponseContract{
 		Total: pullsOpened.Repository.Pulls.TotalCount + pullsClosed.Repository.Pulls.TotalCount,
@@ -84,7 +87,7 @@ func githubGetPulls(numberCount int, owner string, repo string, accessToken stri
 	return result, nil
 }
 
-func formatContract(response *github.Response) []pull {
+func formatContract4Github(response *github.Response) []pull {
 
 	data := []pull{}
 	for _, v := range response.Repository.Pulls.Nodes {
@@ -118,4 +121,153 @@ func formatContract(response *github.Response) []pull {
 	}
 
 	return data
+}
+
+
+// Gitlab Session
+var client *gitlab.Gitlab
+func gitlabGetPulls(numberCount int, owner string, name string) (*PullsResponseContract, error) {
+
+	projectName := owner + "/" + name
+	project, err := client.GetProjectDescription(projectName)
+	if err != nil {
+		return nil, err
+	}
+
+	mergeRequests, _ := client.ListProjectMergeRequests("merged", project.ID)
+
+	total := len(mergeRequests)
+
+	data := formatContract4Gitlab(mergeRequests)
+
+	mergeRequests, err = client.ListProjectMergeRequests("closed", project.ID)
+	if err != nil {
+		return nil, err
+	}
+	total = total + len(mergeRequests)
+
+	data = append(data, formatContract4Gitlab(mergeRequests)...)
+
+	mergeRequests, err = client.ListProjectMergeRequests("opened", project.ID)
+	if err != nil {
+		return nil, err
+	}
+	total = total + len(mergeRequests)
+
+	data = append(data, formatContract4Gitlab(mergeRequests)...)
+
+	data = fillDiscussion(data, project.ID)
+	data = fillParticipants(data, project.ID)
+
+	result := &PullsResponseContract{
+		Total: total,
+		Pulls: data,
+	}
+
+	return result, nil
+}
+
+func formatContract4Gitlab(mergeRequests []*gitlabLib.MergeRequest) []pull {
+	data := []pull{}
+	for _, v := range mergeRequests {
+		theData := pull{}
+		theData.Number = v.IID
+		theData.State = v.State
+		theData.Author = v.Author.Username
+
+		theData.CreatedAt = v.CreatedAt.String()
+		if v.ClosedAt != nil {
+			theData.ClosedAt = v.ClosedAt.String()
+		}
+		if v.MergedAt != nil {
+			theData.MergedAt = v.MergedAt.String()
+		}
+
+		theData.Merged = false
+		if v.State == "merged" {
+			theData.Merged = true
+		}
+
+		for _, l := range v.Labels {
+			theData.Labels = append(theData.Labels, l)
+		}
+
+		data = append(data, theData)
+	}
+	return data
+}
+
+func fillDiscussion (mergeRequests []pull, projectID int) []pull{
+
+	mergeRequestsWithDiscussion := []pull{}
+
+	for _, v := range mergeRequests {
+
+		discussions := []comment{}
+
+		lastUpdated := ""
+
+		mrDiscussions, err := client.GetDiscussions(projectID, v.Number)
+		if err != nil {
+			continue
+		}
+		for _, d := range mrDiscussions {
+
+			if len(d.Notes) > 0 && d.Notes[0].UpdatedAt != nil {
+				lastUpdated = d.Notes[0].UpdatedAt.String()
+			}
+
+			closedAt := ""
+			if len(d.Notes) > 0 && d.Notes[0].CreatedAt != nil {
+				closedAt = d.Notes[0].CreatedAt.String()
+			}
+
+			author := ""
+			if len(d.Notes) > 0 && d.Notes[0].Author.Username != "" {
+				author = d.Notes[0].Author.Username
+			}
+			theComment := comment{
+				CreatedAt: closedAt,
+				Author:     author,
+			}
+
+			discussions = append(discussions, theComment)
+		}
+
+		v.Comments = comments{
+			TotalCount: len(discussions),
+			UpdatedAt:  lastUpdated,
+			Data:       discussions,
+		}
+		mergeRequestsWithDiscussion = append(mergeRequestsWithDiscussion, v)
+
+	}
+
+	return mergeRequestsWithDiscussion
+}
+
+func fillParticipants (mergeRequests []pull, projectID int) []pull {
+
+	mergeRequestsWithParticipants := []pull{}
+
+	for _, v := range mergeRequests {
+
+		listOfUsers := []string{}
+		mrParticipants, err := client.GetMergeRequestParticipants(projectID, v.Number)
+		if err != nil {
+			continue
+		}
+		for _, p := range mrParticipants {
+			listOfUsers = append(listOfUsers, p.Username)
+		}
+
+		v.Participants = participants{
+			TotalCount: len(listOfUsers),
+			User:       listOfUsers,
+		}
+		mergeRequestsWithParticipants = append(mergeRequestsWithParticipants, v)
+
+	}
+
+	return mergeRequestsWithParticipants
 }
