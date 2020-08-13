@@ -64,18 +64,18 @@ func (mr *MockContractMockRecorder) GetInfoCodePage(arg0, arg1, arg2, arg3 inter
 }
 
 // GetCommitsRepo mocks base method
-func (m *MockContract) GetCommitsRepo(arg0, arg1, arg2, arg3 string) (*services.CommitsResponseContract, error) {
+func (m *MockContract) GetCommitsRepo(arg0 int, arg1, arg2, arg3, arg4 string) (*services.CommitsResponseContract, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetCommitsRepo", arg0, arg1, arg2, arg3)
+	ret := m.ctrl.Call(m, "GetCommitsRepo", arg0, arg1, arg2, arg3, arg4)
 	ret0, _ := ret[0].(*services.CommitsResponseContract)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetCommitsRepo indicates an expected call of GetCommitsRepo
-func (mr *MockContractMockRecorder) GetCommitsRepo(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+func (mr *MockContractMockRecorder) GetCommitsRepo(arg0, arg1, arg2, arg3, arg4 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCommitsRepo", reflect.TypeOf((*MockContract)(nil).GetCommitsRepo), arg0, arg1, arg2, arg3)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCommitsRepo", reflect.TypeOf((*MockContract)(nil).GetCommitsRepo), arg0, arg1, arg2, arg3, arg4)
 }
 
 // GetIssues mocks base method

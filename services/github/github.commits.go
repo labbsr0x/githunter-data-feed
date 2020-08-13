@@ -30,7 +30,7 @@ type commit struct {
 	CommittedDate string `json:"committedDate"`
 }
 
-func GetCommitsRepo(nameRepo string, ownerRepo string, accessToken string) (*CommitsResponse, error) {
+func GetCommitsRepo(quantity int, nameRepo string, ownerRepo string, accessToken string) (*CommitsResponse, error) {
 	client, err := graphql.New(env.Get().GithubGraphQLURL, accessToken)
 	if err != nil {
 		return nil, err
@@ -40,7 +40,7 @@ func GetCommitsRepo(nameRepo string, ownerRepo string, accessToken string) (*Com
 	variables := map[string]interface{}{
 		"name":     nameRepo,
 		"owner":    ownerRepo,
-		"quantity": 10,
+		"quantity": quantity,
 	}
 
 	err = client.Query(
