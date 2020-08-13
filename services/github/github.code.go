@@ -19,14 +19,15 @@ type codeViewer struct {
 	Stars            count             `json:"stargazers"`
 	Forks            int               `json:"forkCount"`
 	LastCommit       nodeDefaultBranch `json:"defaultBranchRef"`
-	Readme           text              `json:"readme"`
-	Contributing     text              `json:"contributing"`
+	HomepageUrl      string            `json:" homepageUrl"`
+	Readme           byteSize          `json:"readme"`
+	Contributing     byteSize          `json:"contributing"`
 	LicenseInfo      node              `json:"licenseInfo"`
 	CodeOfConduct    nodeCodeOfConduct `json:"codeOfConduct"`
 	Releases         count             `json:"releases"`
-	Contributors     history           `json:"totalContributors"`
-	Languages        nodeLanguages     `json:"languages"`
-	DiskUsage        int               `json:"diskUsage"`
+	// Contributors     history           `json:"totalContributors"` *Info no longer available*
+	Languages nodeLanguages `json:"languages"`
+	DiskUsage int           `json:"diskUsage"`
 }
 
 type nodeDefaultBranch struct {
@@ -39,7 +40,6 @@ type nodeTarget struct {
 }
 
 type nodeCodeOfConduct struct {
-	Body         string `json:"body"`
 	ResourcePath string `json:"resourcePath"`
 }
 
@@ -88,25 +88,19 @@ func GetInfoCodePage(nameRepo string, ownerRepo string, accessToken string) (*Co
 				stargazers { totalCount },
 				forkCount,
 				...RepoFragmentCommits,
+				homepageUrl,
 				readme: object(expression: "master:README.md") {
-					... on Blob { text }
+					... on Blob { byteSize }
 				},
 				contributing: object(expression: "master:CONTRIBUTING.md") {
-					... on Blob { text }
+					... on Blob { byteSize }
 				},
 				licenseInfo { name },
 				codeOfConduct {
-					body,
 					resourcePath,
 				},
 				releases(first: $zero) {
 					totalCount
-				},
-				#fundingLinks { url },
-				totalContributors: object(expression:"master") {
-					... on Commit {
-						history { totalCount }
-					}
 				},
 				languages(first: $count, orderBy: { field: SIZE, direction: DESC }) {
 					totalCount,
