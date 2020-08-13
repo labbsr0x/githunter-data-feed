@@ -65,6 +65,17 @@ func githubGetIssues(numberOfIssues int, owner string, repo string, accessToken 
 		return nil, err
 	}
 
+	issues := formatContractIssuesGithub(issuesResp)
+
+	result := &IssuesResponseContract{
+		Issues: issues,
+	}
+
+	return result, nil
+}
+
+func formatContractIssuesGithub(issuesResp *github.Response) []issue {
+
 	issues := []issue{}
 	for _, v := range issuesResp.Repository.Issues.Nodes {
 		theIssue := issue{}
@@ -96,9 +107,5 @@ func githubGetIssues(numberOfIssues int, owner string, repo string, accessToken 
 		issues = append(issues, theIssue)
 	}
 
-	result := &IssuesResponseContract{
-		Issues: issues,
-	}
-
-	return result, nil
+	return issues
 }
