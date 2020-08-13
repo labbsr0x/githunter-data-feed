@@ -13,38 +13,6 @@ import (
 	"github.com/labbsr0x/githunter-api/services"
 )
 
-func TestReposController_GetReposHandler_Error_GetRepos_Unknown_Provider(t *testing.T) {
-	mockContractService, controller := GetMockContractServiceAndController(t)
-
-	// Mocking the values Expected
-	mockContractService.EXPECT().GetLastRepos(
-		10,
-		"token",
-		"",
-	).Return(nil, fmt.Errorf("GetLastRepos unknown provider."))
-
-	app := fiber.New()
-	app.Get("/repos", controller.GetReposHandler)
-
-	q := url.Values{}
-	q.Add("access_token", "token")
-	q.Add("provider", "")
-
-	// http.Request
-	req := httptest.NewRequest(fiber.MethodGet, "/repos?"+q.Encode(), nil)
-	req.Header.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSON)
-
-	// http.Response
-	resp, err := app.Test(req)
-	if err != nil {
-		t.Error(err)
-	}
-
-	if resp.StatusCode != fiber.StatusInternalServerError {
-		t.Errorf("expect response status code %d got %d", fiber.StatusInternalServerError, resp.StatusCode)
-	}
-}
-
 func TestReposController_GetReposHandler_Error_GetRepos_Invalid_AccessToken(t *testing.T) {
 	mockContractService, controller := GetMockContractServiceAndController(t)
 
@@ -61,6 +29,38 @@ func TestReposController_GetReposHandler_Error_GetRepos_Invalid_AccessToken(t *t
 	q := url.Values{}
 	q.Add("access_token", "")
 	q.Add("provider", "provider")
+
+	// http.Request
+	req := httptest.NewRequest(fiber.MethodGet, "/repos?"+q.Encode(), nil)
+	req.Header.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSON)
+
+	// http.Response
+	resp, err := app.Test(req)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if resp.StatusCode != fiber.StatusInternalServerError {
+		t.Errorf("expect response status code %d got %d", fiber.StatusInternalServerError, resp.StatusCode)
+	}
+}
+
+func TestReposController_GetReposHandler_Error_GetRepos_Unknown_Provider(t *testing.T) {
+	mockContractService, controller := GetMockContractServiceAndController(t)
+
+	// Mocking the values Expected
+	mockContractService.EXPECT().GetLastRepos(
+		10,
+		"token",
+		"",
+	).Return(nil, fmt.Errorf("GetLastRepos unknown provider."))
+
+	app := fiber.New()
+	app.Get("/repos", controller.GetReposHandler)
+
+	q := url.Values{}
+	q.Add("access_token", "token")
+	q.Add("provider", "")
 
 	// http.Request
 	req := httptest.NewRequest(fiber.MethodGet, "/repos?"+q.Encode(), nil)

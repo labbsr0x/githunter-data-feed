@@ -6,7 +6,7 @@ import "github.com/labbsr0x/githunter-api/services/gitlab"
 type Contract interface {
 	GetLastRepos(int, string, string) (*ReposResponseContract, error)
 	GetInfoCodePage(string, string, string, string) (*CodeResponseContract, error)
-	GetCommitsRepo(string, string, int, string, string) (*CommitsResponseContract, error)
+	GetCommitsRepo(int, string, string, string, string) (*CommitsResponseContract, error)
 	GetIssues(int, string, string, string, string) (*IssuesResponseContract, error)
 	GetPulls(int, string, string, string, string) (*PullsResponseContract, error)
 }

@@ -64,7 +64,7 @@ func (mr *MockContractMockRecorder) GetInfoCodePage(arg0, arg1, arg2, arg3 inter
 }
 
 // GetCommitsRepo mocks base method
-func (m *MockContract) GetCommitsRepo(arg0, arg1 string, arg2 int, arg3, arg4 string) (*services.CommitsResponseContract, error) {
+func (m *MockContract) GetCommitsRepo(arg0 int, arg1, arg2, arg3, arg4 string) (*services.CommitsResponseContract, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetCommitsRepo", arg0, arg1, arg2, arg3, arg4)
 	ret0, _ := ret[0].(*services.CommitsResponseContract)

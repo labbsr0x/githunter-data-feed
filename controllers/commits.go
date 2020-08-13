@@ -2,8 +2,6 @@ package controllers
 
 import (
 	"encoding/json"
-	"strconv"
-
 	"github.com/gofiber/fiber"
 	"github.com/sirupsen/logrus"
 )
@@ -13,11 +11,10 @@ func (c *Controller) GetCommitsHandler(ctx *fiber.Ctx) {
 	// param passed by param URL
 	name := ctx.Query("name")
 	owner := ctx.Query("owner")
-	quantity, err := strconv.Atoi(ctx.Query("quantity"))
 	accessToken := ctx.Query("access_token")
 	provider := ctx.Query("provider")
 
-	data, err := c.Contract.GetCommitsRepo(name, owner, quantity, accessToken, provider)
+	data, err := c.Contract.GetCommitsRepo(10, name, owner, accessToken, provider)
 	if err != nil {
 		logrus.Warn("Error requesting github")
 		ctx.Next(fiber.NewError(fiber.StatusInternalServerError, "Error requesting github"))

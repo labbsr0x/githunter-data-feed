@@ -7,7 +7,6 @@ import (
 	"net/http/httptest"
 	"net/url"
 	"reflect"
-	"strconv"
 	"testing"
 
 	"github.com/gofiber/fiber"
@@ -19,9 +18,9 @@ func TestCodeController_GetCommitsHandler_Error_GetCommitsRepo_Invalid_NameAndOw
 
 	// Mocking the values Expected
 	mockContractService.EXPECT().GetCommitsRepo(
-		"",
-		"",
 		10,
+		"",
+		"",
 		"token",
 		"provider",
 	).Return(nil, fmt.Errorf("GetCommitsRepo invalid path of repository."))
@@ -32,7 +31,6 @@ func TestCodeController_GetCommitsHandler_Error_GetCommitsRepo_Invalid_NameAndOw
 	q := url.Values{}
 	q.Add("name", "")
 	q.Add("owner", "")
-	q.Add("quantity", strconv.Itoa(10))
 	q.Add("access_token", "token")
 	q.Add("provider", "provider")
 
@@ -56,12 +54,12 @@ func TestCodeController_GetCommitsHandler_Error_GetCommitsRepo_Invalid_AccessTok
 
 	// Mocking the values Expected
 	mockContractService.EXPECT().GetCommitsRepo(
+		10,
 		"name",
 		"owner",
-		10,
 		"",
 		"provider",
-	).Return(nil, fmt.Errorf("GetCommitsRepo wihtout token auth code."))
+	).Return(nil, fmt.Errorf("GetCommitsRepo invalid token auth code."))
 
 	app := fiber.New()
 	app.Get("/commits", controller.GetCommitsHandler)
@@ -69,7 +67,6 @@ func TestCodeController_GetCommitsHandler_Error_GetCommitsRepo_Invalid_AccessTok
 	q := url.Values{}
 	q.Add("name", "name")
 	q.Add("owner", "owner")
-	q.Add("quantity", strconv.Itoa(10))
 	q.Add("access_token", "")
 	q.Add("provider", "provider")
 
@@ -93,9 +90,9 @@ func TestCodeController_GetCommitsHandler_Error_GetCommitsRepo_Unknown_Provider(
 
 	// Mocking the values Expected
 	mockContractService.EXPECT().GetCommitsRepo(
+		10,
 		"name",
 		"owner",
-		10,
 		"token",
 		"",
 	).Return(nil, fmt.Errorf("GetCommitsRepo unknown provider."))
@@ -106,7 +103,6 @@ func TestCodeController_GetCommitsHandler_Error_GetCommitsRepo_Unknown_Provider(
 	q := url.Values{}
 	q.Add("name", "name")
 	q.Add("owner", "owner")
-	q.Add("quantity", strconv.Itoa(10))
 	q.Add("access_token", "token")
 	q.Add("provider", "")
 
@@ -142,9 +138,9 @@ func TestCodeController_GetCommitsHandler_Success(t *testing.T) {
 
 	// Mocking the values Expected
 	mockContractService.EXPECT().GetCommitsRepo(
+		10,
 		"name",
 		"owner",
-		10,
 		"token",
 		"provider",
 	).Return(mockResponse, nil)
@@ -155,7 +151,6 @@ func TestCodeController_GetCommitsHandler_Success(t *testing.T) {
 	q := url.Values{}
 	q.Add("name", "name")
 	q.Add("owner", "owner")
-	q.Add("quantity", strconv.Itoa(10))
 	q.Add("access_token", "token")
 	q.Add("provider", "provider")
 
