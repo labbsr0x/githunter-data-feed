@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"encoding/json"
-
 	"github.com/gofiber/fiber"
 	"github.com/sirupsen/logrus"
 )
