@@ -44,7 +44,7 @@ type language struct {
 	Name string `json:"name"`
 }
 
-func (d *defaultContract) GetInfoCodePage(nameRepo string, ownerRepo string, accessToken string, provider string) (*CodeResponseContract, error) {
+func (d *defaultContract) GetInfoCodePage(maxQuantityTopics int, maxQuantityLangs int, nameRepo string, ownerRepo string, accessToken string, provider string) (*CodeResponseContract, error) {
 
 	theContract := &CodeResponseContract{}
 	var err error
@@ -55,7 +55,7 @@ func (d *defaultContract) GetInfoCodePage(nameRepo string, ownerRepo string, acc
 
 	switch provider {
 	case `github`:
-		theContract, err = githubGetCodePageInfo(nameRepo, ownerRepo, accessToken)
+		theContract, err = githubGetCodePageInfo(maxQuantityTopics, maxQuantityLangs, nameRepo, ownerRepo, accessToken)
 		break
 	case `gitlab`:
 		// theContract, err = gitlabGetLastRepos(numberOfRepos, accessToken)
@@ -80,8 +80,8 @@ func (d *defaultContract) GetInfoCodePage(nameRepo string, ownerRepo string, acc
 	return theContract, nil
 }
 
-func githubGetCodePageInfo(nameRepo string, ownerRepo string, accessToken string) (*CodeResponseContract, error) {
-	code, err := github.GetInfoCodePage(nameRepo, ownerRepo, accessToken)
+func githubGetCodePageInfo(maxQuantityTopics int, maxQuantityLangs int, nameRepo string, ownerRepo string, accessToken string) (*CodeResponseContract, error) {
+	code, err := github.GetInfoCodePage(maxQuantityTopics, maxQuantityLangs, nameRepo, ownerRepo, accessToken)
 	if err != nil {
 		return nil, err
 	}
@@ -153,8 +153,8 @@ func githubGetCodePageInfo(nameRepo string, ownerRepo string, accessToken string
 	return result, nil
 }
 
-func gitlabGetPageCodePageInfo(nameRepo string, ownerRepo string, accessToken string) (*CodeResponseContract, error) {
-	// code, err := gitlab.GetInfoCodePage(nameRepo, ownerRepo, accessToken)
+func gitlabGetPageCodePageInfo(maxQuantityTopics int, maxQuantityLangs int, nameRepo string, ownerRepo string, accessToken string) (*CodeResponseContract, error) {
+	// code, err := gitlab.GetInfoCodePage(maxQuantityTopics, maxQuantityLangs, nameRepo, ownerRepo, accessToken)
 	// if err != nil {
 	// 	return nil, err
 	// }

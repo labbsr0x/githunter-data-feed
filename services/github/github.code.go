@@ -57,7 +57,7 @@ type edgeLanguages struct {
 	Language language `json:"node"`
 }
 
-func GetInfoCodePage(nameRepo string, ownerRepo string, accessToken string) (*CodeResponse, error) {
+func GetInfoCodePage(maxQuantityTopics int, maxQuantityLangs int, nameRepo string, ownerRepo string, accessToken string) (*CodeResponse, error) {
 	client, err := graphql.New(env.Get().GithubGraphQLURL, accessToken)
 	if err != nil {
 		return nil, err
@@ -65,19 +65,20 @@ func GetInfoCodePage(nameRepo string, ownerRepo string, accessToken string) (*Co
 
 	respData := &CodeResponse{}
 	variables := map[string]interface{}{
-		"name":  nameRepo,
-		"owner": ownerRepo,
-		"count": 100,
-		"zero":  0,
+		"name":              nameRepo,
+		"owner":             ownerRepo,
+		"maxQuantityTopics": maxQuantityTopics,
+		"maxQuantityLangs":  maxQuantityLangs,
+		"zero":              0,
 	}
 	err = client.Query(
-		`query getInfoCodePage($name:String!, $owner:String!, $count:Int!, $zero:Int!) {
+		`query getInfoCodePage($name:String!, $owner:String!, $maxQuantityTopics:Int!, $maxQuantityLangs:Int!, $zero:Int!) {
 			repository(name: $name, owner: $owner) {
 				name,
 				description,
 				createdAt,
 				primaryLanguage { name },
-				repositoryTopics(first: $count) { 
+				repositoryTopics(first: $maxQuantityTopics) { 
 					nodes {
 						topic {
 							name
@@ -102,7 +103,7 @@ func GetInfoCodePage(nameRepo string, ownerRepo string, accessToken string) (*Co
 				releases(first: $zero) {
 					totalCount
 				},
-				languages(first: $count, orderBy: { field: SIZE, direction: DESC }) {
+				languages(first: $maxQuantityLangs, orderBy: { field: SIZE, direction: DESC }) {
 					totalCount,
 					edges { 
 						size, 
