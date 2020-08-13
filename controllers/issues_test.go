@@ -10,20 +10,11 @@ import (
 	"testing"
 
 	"github.com/gofiber/fiber"
-	"github.com/golang/mock/gomock"
 	"github.com/labbsr0x/githunter-api/services"
-	"github.com/labbsr0x/githunter-api/services/mock"
 )
 
 func TestIssuesController_GetIssuesHandler_Error_GetIssues_Unknown_Provider(t *testing.T) {
-	mockController := gomock.NewController(t)
-	defer mockController.Finish()
-
-	mockContractService := mock.NewMockContract(mockController)
-
-	controller := &Controller{
-		Contract: mockContractService,
-	}
+	mockContractService, controller := GetMockContractServiceAndController(t)
 
 	// Mocking the values Expected
 	mockContractService.EXPECT().GetIssues(10, "owner", "repo", "provider", "accessToken").Return(nil, fmt.Errorf("GetIssues unknown provider: provider"))
@@ -53,14 +44,7 @@ func TestIssuesController_GetIssuesHandler_Error_GetIssues_Unknown_Provider(t *t
 }
 
 func TestIssuesController_GetIssuesHandler_Error_GetIssues_Invalid_Token(t *testing.T) {
-	mockController := gomock.NewController(t)
-	defer mockController.Finish()
-
-	mockContractService := mock.NewMockContract(mockController)
-
-	controller := &Controller{
-		Contract: mockContractService,
-	}
+	mockContractService, controller := GetMockContractServiceAndController(t)
 
 	// Mocking the values Expected
 	mockContractService.EXPECT().GetIssues(10, "owner", "repo", "provider", "invalidToken").Return(nil, fmt.Errorf("'Get' using unknown token: invalidToken"))
@@ -90,14 +74,7 @@ func TestIssuesController_GetIssuesHandler_Error_GetIssues_Invalid_Token(t *test
 }
 
 func TestIssuesController_GetIssuesHandler_Error_GetIssues_Invalid_NameAndOwner(t *testing.T) {
-	mockController := gomock.NewController(t)
-	defer mockController.Finish()
-
-	mockContractService := mock.NewMockContract(mockController)
-
-	controller := &Controller{
-		Contract: mockContractService,
-	}
+	mockContractService, controller := GetMockContractServiceAndController(t)
 
 	// Mocking the values Expected
 	mockContractService.EXPECT().GetPulls(10, "invalidOwner", "invalidRepo", "provider", "validToken").Return(nil, nil)
