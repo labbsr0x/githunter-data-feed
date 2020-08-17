@@ -10,6 +10,7 @@ services:
       GH_LOG_LEVEL: debug
       GH_GRAPHQL_GITHUB_URL: https://api.github.com/graphql
       GH_GRAPHQL_GITLAB_URL: https://gitlab.com/api/graphql
+      GH_API_GITLAB_URL: https://gitlab.com/api/v4
       GH_SERVER_PORT: 3001
     ports:
       - 3001:3001
