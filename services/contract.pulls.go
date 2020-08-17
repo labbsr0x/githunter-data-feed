@@ -26,7 +26,7 @@ type pull struct {
 	Participants participants `json:"participants"`
 }
 
-func (d *defaultContract) GetPulls(numberCount int, owner string, name string, provider string, accessToken string) (*PullsResponseContract, error) {
+func (d *defaultContract) GetPulls(owner string, name string, provider string, accessToken string) (*PullsResponseContract, error) {
 	theContract := &PullsResponseContract{}
 	var err error
 
@@ -36,11 +36,11 @@ func (d *defaultContract) GetPulls(numberCount int, owner string, name string, p
 
 	switch provider {
 	case `github`:
-		theContract, err = githubGetPulls(numberCount, owner, name, accessToken)
+		theContract, err = githubGetPulls(owner, name, accessToken)
 		break
 	case `gitlab`:
 		client = d.Gitlab(accessToken)
-		theContract, err = gitlabGetPulls(numberCount, owner, name)
+		theContract, err = gitlabGetPulls(owner, name)
 		break
 	case ``:
 		//TODO: Call all providers
@@ -62,8 +62,8 @@ func (d *defaultContract) GetPulls(numberCount int, owner string, name string, p
 	return theContract, nil
 }
 
-func githubGetPulls(numberCount int, owner string, repo string, accessToken string) (*PullsResponseContract, error) {
-	pullsOpened, err := github.GetPulls(numberCount, owner, repo, accessToken, false)
+func githubGetPulls(owner string, repo string, accessToken string) (*PullsResponseContract, error) {
+	pullsOpened, err := github.GetPulls(owner, repo, accessToken, false)
 
 	if err != nil {
 		return nil, err
@@ -71,7 +71,7 @@ func githubGetPulls(numberCount int, owner string, repo string, accessToken stri
 
 	data := formatContract4Github(pullsOpened)
 
-	pullsClosed, err := github.GetPulls(numberCount, owner, repo, accessToken, true)
+	pullsClosed, err := github.GetPulls(owner, repo, accessToken, true)
 
 	if err != nil {
 		return nil, err
@@ -123,10 +123,10 @@ func formatContract4Github(response *github.Response) []pull {
 	return data
 }
 
-
 // Gitlab Session
 var client *gitlab.Gitlab
-func gitlabGetPulls(numberCount int, owner string, name string) (*PullsResponseContract, error) {
+
+func gitlabGetPulls(owner string, name string) (*PullsResponseContract, error) {
 
 	projectName := owner + "/" + name
 	project, err := client.GetProjectDescription(projectName)
@@ -197,7 +197,7 @@ func formatContract4Gitlab(mergeRequests []*gitlabLib.MergeRequest) []pull {
 	return data
 }
 
-func fillDiscussion (mergeRequests []pull, projectID int) []pull{
+func fillDiscussion(mergeRequests []pull, projectID int) []pull {
 
 	mergeRequestsWithDiscussion := []pull{}
 
@@ -228,7 +228,7 @@ func fillDiscussion (mergeRequests []pull, projectID int) []pull{
 			}
 			theComment := comment{
 				CreatedAt: closedAt,
-				Author:     author,
+				Author:    author,
 			}
 
 			discussions = append(discussions, theComment)
@@ -246,7 +246,7 @@ func fillDiscussion (mergeRequests []pull, projectID int) []pull{
 	return mergeRequestsWithDiscussion
 }
 
-func fillParticipants (mergeRequests []pull, projectID int) []pull {
+func fillParticipants(mergeRequests []pull, projectID int) []pull {
 
 	mergeRequestsWithParticipants := []pull{}
 

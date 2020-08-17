@@ -26,15 +26,16 @@ type repositories struct {
 }
 
 // GetLastRepos is used for get last repos of the user
-func GetLastRepos(numberOfRepos int, accessToken string) (*ReposResponse, error) {
+func GetLastRepos(accessToken string) (*ReposResponse, error) {
 	client, err := graphql.New(env.Get().GithubGraphQLURL, accessToken)
 
 	if err != nil {
 		return nil, err
 	}
 
-	respData := &ReposResponse{}
+	numberOfRepos := env.Get().Counters.NumberOfLastItens
 
+	respData := &ReposResponse{}
 	variables := map[string]interface{}{
 		"number_of_repos": numberOfRepos,
 	}

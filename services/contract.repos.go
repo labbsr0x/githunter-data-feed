@@ -14,7 +14,7 @@ type ReposResponseContract struct {
 	Repositories []string `json:"repositories"`
 }
 
-func (d *defaultContract) GetLastRepos(numberOfRepos int, accessToken string, provider string) (*ReposResponseContract, error) {
+func (d *defaultContract) GetLastRepos(accessToken string, provider string) (*ReposResponseContract, error) {
 
 	theContract := &ReposResponseContract{}
 	var err error
@@ -25,10 +25,10 @@ func (d *defaultContract) GetLastRepos(numberOfRepos int, accessToken string, pr
 
 	switch provider {
 	case `github`:
-		theContract, err = githubGetLastRepos(numberOfRepos, accessToken)
+		theContract, err = githubGetLastRepos(accessToken)
 		break
 	case `gitlab`:
-		theContract, err = gitlabGetLastRepos(numberOfRepos, accessToken)
+		theContract, err = gitlabGetLastRepos(accessToken)
 		break
 	case ``:
 		//TODO: Call all providers
@@ -50,9 +50,9 @@ func (d *defaultContract) GetLastRepos(numberOfRepos int, accessToken string, pr
 	return theContract, nil
 }
 
-func githubGetLastRepos(numberOfRepos int, accessToken string) (*ReposResponseContract, error) {
+func githubGetLastRepos(accessToken string) (*ReposResponseContract, error) {
 
-	repos, err := github.GetLastRepos(numberOfRepos, accessToken)
+	repos, err := github.GetLastRepos(accessToken)
 
 	if err != nil {
 		return nil, err
@@ -70,9 +70,9 @@ func githubGetLastRepos(numberOfRepos int, accessToken string) (*ReposResponseCo
 	return result, nil
 }
 
-func gitlabGetLastRepos(numberOfRepos int, accessToken string) (*ReposResponseContract, error) {
+func gitlabGetLastRepos(accessToken string) (*ReposResponseContract, error) {
 
-	repos, err := gitlab.GetLastRepos(numberOfRepos, accessToken)
+	repos, err := gitlab.GetLastRepos(accessToken)
 
 	if err != nil {
 		return nil, err

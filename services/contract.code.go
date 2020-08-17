@@ -2,7 +2,6 @@ package services
 
 import (
 	"fmt"
-
 	"github.com/labbsr0x/githunter-api/services/github"
 	"github.com/sirupsen/logrus"
 )
@@ -153,8 +152,8 @@ func githubGetCodePageInfo(nameRepo string, ownerRepo string, accessToken string
 	return result, nil
 }
 
-func gitlabGetPageCodePageInfo(nameRepo string, ownerRepo string, accessToken string) (*CodeResponseContract, error) {
-	// code, err := gitlab.GetInfoCodePage(nameRepo, ownerRepo, accessToken)
+func gitlabGetPageCodePageInfo(maxQuantityTopics int, maxQuantityLangs int, nameRepo string, ownerRepo string, accessToken string) (*CodeResponseContract, error) {
+	// code, err := gitlab.GetInfoCodePage(maxQuantityTopics, maxQuantityLangs, nameRepo, ownerRepo, accessToken)
 	// if err != nil {
 	// 	return nil, err
 	// }

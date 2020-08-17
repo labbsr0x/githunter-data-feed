@@ -18,7 +18,6 @@ func TestReposController_GetReposHandler_Error_GetRepos_Invalid_AccessToken(t *t
 
 	// Mocking the values Expected
 	mockContractService.EXPECT().GetLastRepos(
-		10,
 		"",
 		"provider",
 	).Return(nil, fmt.Errorf("GetLastRepos invalid auth token."))
@@ -50,7 +49,6 @@ func TestReposController_GetReposHandler_Error_GetRepos_Unknown_Provider(t *test
 
 	// Mocking the values Expected
 	mockContractService.EXPECT().GetLastRepos(
-		10,
 		"token",
 		"",
 	).Return(nil, fmt.Errorf("GetLastRepos unknown provider."))
@@ -101,7 +99,6 @@ func TestCodeController_GetReposHandler_Success(t *testing.T) {
 
 	// Mocking the values Expected
 	mockContractService.EXPECT().GetLastRepos(
-		10,
 		"token",
 		"provider",
 	).Return(mockResponse, nil)

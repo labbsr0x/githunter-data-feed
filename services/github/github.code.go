@@ -63,21 +63,25 @@ func GetInfoCodePage(nameRepo string, ownerRepo string, accessToken string) (*Co
 		return nil, err
 	}
 
+	maxQuantityTopics := env.Get().Counters.NumberOfLastItens
+	maxQuantityLangs := env.Get().Counters.NumberOfQuantityItens
+
 	respData := &CodeResponse{}
 	variables := map[string]interface{}{
-		"name":  nameRepo,
-		"owner": ownerRepo,
-		"count": 100,
-		"zero":  0,
+		"name":              nameRepo,
+		"owner":             ownerRepo,
+		"maxQuantityTopics": maxQuantityTopics,
+		"maxQuantityLangs":  maxQuantityLangs,
+		"zero":              0,
 	}
 	err = client.Query(
-		`query getInfoCodePage($name:String!, $owner:String!, $count:Int!, $zero:Int!) {
+		`query getInfoCodePage($name:String!, $owner:String!, $maxQuantityTopics:Int!, $maxQuantityLangs:Int!, $zero:Int!) {
 			repository(name: $name, owner: $owner) {
 				name,
 				description,
 				createdAt,
 				primaryLanguage { name },
-				repositoryTopics(first: $count) { 
+				repositoryTopics(first: $maxQuantityTopics) { 
 					nodes {
 						topic {
 							name
@@ -102,7 +106,7 @@ func GetInfoCodePage(nameRepo string, ownerRepo string, accessToken string) (*Co
 				releases(first: $zero) {
 					totalCount
 				},
-				languages(first: $count, orderBy: { field: SIZE, direction: DESC }) {
+				languages(first: $maxQuantityLangs, orderBy: { field: SIZE, direction: DESC }) {
 					totalCount,
 					edges { 
 						size, 

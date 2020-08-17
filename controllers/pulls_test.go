@@ -17,7 +17,7 @@ func TestController_GetPullsHandler_Error_GetPulls_Unknown_Provider(t *testing.T
 	mockContractService, controller := GetMockContractServiceAndController(t)
 
 	// Mocking the values Expected
-	mockContractService.EXPECT().GetPulls(10, "", "", "providerTest", "token").Return(nil, fmt.Errorf("'Get' using unknown provider: providerTest"))
+	mockContractService.EXPECT().GetPulls("", "", "providerTest", "token").Return(nil, fmt.Errorf("'Get' using unknown provider: providerTest"))
 
 	app := fiber.New()
 	app.Get("/pulls", controller.GetPullsHandler)
@@ -48,7 +48,7 @@ func TestController_GetPullsHandler_Error_GetPulls_Invalid_Token(t *testing.T) {
 	mockContractService, controller := GetMockContractServiceAndController(t)
 
 	// Mocking the values Expected
-	mockContractService.EXPECT().GetPulls(10, "", "", "github", "token").Return(nil, fmt.Errorf("'Get' using unknown token: token"))
+	mockContractService.EXPECT().GetPulls("", "", "github", "token").Return(nil, fmt.Errorf("'Get' using unknown token: token"))
 
 	app := fiber.New()
 	app.Get("/pulls", controller.GetPullsHandler)
@@ -81,7 +81,7 @@ func TestController_GetPullsHandler_Error_GetPulls_Invalid_NameAndOwner(t *testi
 	theValidToken := "fakeValidToken"
 
 	// Mocking the values Expected
-	mockContractService.EXPECT().GetPulls(10, "fakeOwner", "fakeName", "github", theValidToken).Return(nil, nil)
+	mockContractService.EXPECT().GetPulls("fakeOwner", "fakeName", "github", theValidToken).Return(nil, nil)
 
 	app := fiber.New()
 	app.Get("/pulls", controller.GetPullsHandler)
@@ -125,7 +125,7 @@ func TestController_GetPullsHandler_Success(t *testing.T) {
 	json.Unmarshal([]byte(responseJSONStr), mockResponse)
 
 	// Mocking the values Expected
-	mockContractService.EXPECT().GetPulls(10, "fakeOwner", "fakeName", "github", theValidToken).Return(mockResponse, nil)
+	mockContractService.EXPECT().GetPulls("fakeOwner", "fakeName", "github", theValidToken).Return(mockResponse, nil)
 
 	app := fiber.New()
 	app.Get("/pulls", controller.GetPullsHandler)

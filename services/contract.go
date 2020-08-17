@@ -4,11 +4,11 @@ import "github.com/labbsr0x/githunter-api/services/gitlab"
 
 // ContractInterface
 type Contract interface {
-	GetLastRepos(int, string, string) (*ReposResponseContract, error)
+	GetLastRepos(string, string) (*ReposResponseContract, error)
 	GetInfoCodePage(string, string, string, string) (*CodeResponseContract, error)
-	GetCommitsRepo(int, string, string, string, string) (*CommitsResponseContract, error)
-	GetIssues(int, string, string, string, string) (*IssuesResponseContract, error)
-	GetPulls(int, string, string, string, string) (*PullsResponseContract, error)
+	GetCommitsRepo(string, string, string, string) (*CommitsResponseContract, error)
+	GetIssues(string, string, string, string) (*IssuesResponseContract, error)
+	GetPulls(string, string, string, string) (*PullsResponseContract, error)
 }
 
 type defaultContract struct{}

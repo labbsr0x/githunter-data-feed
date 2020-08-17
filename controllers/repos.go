@@ -14,7 +14,7 @@ func (c *Controller) GetReposHandler(ctx *fiber.Ctx) {
 	accessToken := ctx.Query("access_token")
 	provider := ctx.Query("provider")
 
-	data, err := c.Contract.GetLastRepos(10, accessToken, provider)
+	data, err := c.Contract.GetLastRepos(accessToken, provider)
 	if err != nil {
 		logrus.Warn("Error requesting github")
 		ctx.Next(fiber.NewError(fiber.StatusInternalServerError, "Error requesting github"))
