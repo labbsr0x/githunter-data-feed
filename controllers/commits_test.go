@@ -18,7 +18,6 @@ func TestCodeController_GetCommitsHandler_Error_GetCommitsRepo_Invalid_NameAndOw
 
 	// Mocking the values Expected
 	mockContractService.EXPECT().GetCommitsRepo(
-		10,
 		"",
 		"",
 		"token",
@@ -54,7 +53,6 @@ func TestCodeController_GetCommitsHandler_Error_GetCommitsRepo_Invalid_AccessTok
 
 	// Mocking the values Expected
 	mockContractService.EXPECT().GetCommitsRepo(
-		10,
 		"name",
 		"owner",
 		"",
@@ -90,7 +88,6 @@ func TestCodeController_GetCommitsHandler_Error_GetCommitsRepo_Unknown_Provider(
 
 	// Mocking the values Expected
 	mockContractService.EXPECT().GetCommitsRepo(
-		10,
 		"name",
 		"owner",
 		"token",
@@ -138,7 +135,6 @@ func TestCodeController_GetCommitsHandler_Success(t *testing.T) {
 
 	// Mocking the values Expected
 	mockContractService.EXPECT().GetCommitsRepo(
-		10,
 		"name",
 		"owner",
 		"token",

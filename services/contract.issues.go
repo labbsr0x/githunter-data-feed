@@ -23,7 +23,7 @@ type issue struct {
 	Participants participants `json:"participants"`
 }
 
-func (d *defaultContract) GetIssues(numberOfIssues int, owner string, repo string, provider string, accessToken string) (*IssuesResponseContract, error) {
+func (d *defaultContract) GetIssues(owner string, repo string, provider string, accessToken string) (*IssuesResponseContract, error) {
 	theContract := &IssuesResponseContract{}
 	var err error
 
@@ -33,7 +33,7 @@ func (d *defaultContract) GetIssues(numberOfIssues int, owner string, repo strin
 
 	switch provider {
 	case `github`:
-		theContract, err = githubGetIssues(numberOfIssues, owner, repo, accessToken)
+		theContract, err = githubGetIssues(owner, repo, accessToken)
 		break
 	case `gitlab`:
 		//theContract, err = gitlabGetIssues(numberOfIssues, owner, repo, accessToken)
@@ -58,8 +58,8 @@ func (d *defaultContract) GetIssues(numberOfIssues int, owner string, repo strin
 	return theContract, nil
 }
 
-func githubGetIssues(numberOfIssues int, owner string, repo string, accessToken string) (*IssuesResponseContract, error) {
-	issuesResp, err := github.GetIssues(numberOfIssues, owner, repo, accessToken)
+func githubGetIssues(owner string, repo string, accessToken string) (*IssuesResponseContract, error) {
+	issuesResp, err := github.GetIssues(owner, repo, accessToken)
 
 	if err != nil {
 		return nil, err

@@ -18,8 +18,6 @@ func TestCodeController_GetCodeHandler_Error_GetInfoCodePage_Invalid_NameAndOwne
 
 	// Mocking the values Expected
 	mockContractService.EXPECT().GetInfoCodePage(
-		10,
-		50,
 		"",
 		"",
 		"token",
@@ -55,8 +53,6 @@ func TestCodeController_GetCodeHandler_Error_GetInfoCodePage_Invalid_AccessToken
 
 	// Mocking the values Expected
 	mockContractService.EXPECT().GetInfoCodePage(
-		10,
-		50,
 		"name",
 		"owner",
 		"",
@@ -92,8 +88,6 @@ func TestCodeController_GetCodeHandler_Error_GetInfoCodePage_Unknown_Provider(t 
 
 	// Mocking the values Expected
 	mockContractService.EXPECT().GetInfoCodePage(
-		10,
-		50,
 		"name",
 		"owner",
 		"token",
@@ -163,8 +157,6 @@ func TestCodeController_GetCodeHandler_Success(t *testing.T) {
 
 	// Mocking the values Expected
 	mockContractService.EXPECT().GetInfoCodePage(
-		10,
-		50,
 		"name",
 		"owner",
 		"token",
