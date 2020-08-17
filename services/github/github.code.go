@@ -57,11 +57,14 @@ type edgeLanguages struct {
 	Language language `json:"node"`
 }
 
-func GetInfoCodePage(maxQuantityTopics int, maxQuantityLangs int, nameRepo string, ownerRepo string, accessToken string) (*CodeResponse, error) {
+func GetInfoCodePage(nameRepo string, ownerRepo string, accessToken string) (*CodeResponse, error) {
 	client, err := graphql.New(env.Get().GithubGraphQLURL, accessToken)
 	if err != nil {
 		return nil, err
 	}
+
+	maxQuantityTopics := env.Get().Counters.NumberOfLastItens
+	maxQuantityLangs := env.Get().Counters.NumberOfQuantityItens
 
 	respData := &CodeResponse{}
 	variables := map[string]interface{}{

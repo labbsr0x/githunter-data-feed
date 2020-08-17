@@ -14,7 +14,7 @@ func (c *Controller) GetCodeHandler(ctx *fiber.Ctx) {
 	accessToken := ctx.Query("access_token")
 	provider := ctx.Query("provider")
 
-	data, err := c.Contract.GetInfoCodePage(10, 50, name, owner, accessToken, provider)
+	data, err := c.Contract.GetInfoCodePage(name, owner, accessToken, provider)
 	if err != nil {
 		logrus.Warn("Error requesting github")
 		ctx.Next(fiber.NewError(fiber.StatusInternalServerError, "Error requesting github"))

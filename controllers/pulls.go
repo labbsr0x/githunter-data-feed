@@ -12,7 +12,7 @@ func (c *Controller) GetPullsHandler(ctx *fiber.Ctx) {
 	owner := ctx.Query("owner")
 	name := ctx.Query("name")
 
-	data, err := c.Contract.GetPulls(10, owner, name, provider, accessToken)
+	data, err := c.Contract.GetPulls(owner, name, provider, accessToken)
 	if err != nil {
 		logrus.Warn("Error requesting provider")
 		ctx.Next(fiber.NewError(fiber.StatusInternalServerError, "Error requesting provider"))

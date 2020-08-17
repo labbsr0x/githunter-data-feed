@@ -2,7 +2,6 @@ package services
 
 import (
 	"fmt"
-
 	"github.com/labbsr0x/githunter-api/services/github"
 	"github.com/sirupsen/logrus"
 )
@@ -44,7 +43,7 @@ type language struct {
 	Name string `json:"name"`
 }
 
-func (d *defaultContract) GetInfoCodePage(maxQuantityTopics int, maxQuantityLangs int, nameRepo string, ownerRepo string, accessToken string, provider string) (*CodeResponseContract, error) {
+func (d *defaultContract) GetInfoCodePage(nameRepo string, ownerRepo string, accessToken string, provider string) (*CodeResponseContract, error) {
 
 	theContract := &CodeResponseContract{}
 	var err error
@@ -55,7 +54,7 @@ func (d *defaultContract) GetInfoCodePage(maxQuantityTopics int, maxQuantityLang
 
 	switch provider {
 	case `github`:
-		theContract, err = githubGetCodePageInfo(maxQuantityTopics, maxQuantityLangs, nameRepo, ownerRepo, accessToken)
+		theContract, err = githubGetCodePageInfo(nameRepo, ownerRepo, accessToken)
 		break
 	case `gitlab`:
 		// theContract, err = gitlabGetLastRepos(numberOfRepos, accessToken)
@@ -80,8 +79,8 @@ func (d *defaultContract) GetInfoCodePage(maxQuantityTopics int, maxQuantityLang
 	return theContract, nil
 }
 
-func githubGetCodePageInfo(maxQuantityTopics int, maxQuantityLangs int, nameRepo string, ownerRepo string, accessToken string) (*CodeResponseContract, error) {
-	code, err := github.GetInfoCodePage(maxQuantityTopics, maxQuantityLangs, nameRepo, ownerRepo, accessToken)
+func githubGetCodePageInfo(nameRepo string, ownerRepo string, accessToken string) (*CodeResponseContract, error) {
+	code, err := github.GetInfoCodePage(nameRepo, ownerRepo, accessToken)
 	if err != nil {
 		return nil, err
 	}

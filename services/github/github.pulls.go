@@ -23,7 +23,7 @@ type pullNode struct {
 	Comments     comments     `json:"comments"`
 }
 
-func GetPulls(numberCount int, owner string, name string, accessToken string, closed bool) (*Response, error) {
+func GetPulls(owner string, name string, accessToken string, closed bool) (*Response, error) {
 	client, err := graphql.New(env.Get().GithubGraphQLURL, accessToken)
 
 	if err != nil {
@@ -37,7 +37,7 @@ func GetPulls(numberCount int, owner string, name string, accessToken string, cl
 
 	respData := &Response{}
 
-	query := `query($numberCount:Int!, $owner:String!, $name:String!, $states:[PullRequestState!]) {
+	query := `query($numberCount:Int!, $numberQuantity:Int!, $owner:String!, $name:String!, $states:[PullRequestState!]) {
 				  repository(name: $name, owner: $owner) {
 					pullRequests(last: $numberCount, states: $states) {
 					  totalCount
@@ -51,12 +51,12 @@ func GetPulls(numberCount int, owner string, name string, accessToken string, cl
 						author {
 							login
 						}
-						labels (first: $numberCount) {
+						labels (first: $numberQuantity) {
 						  nodes {
 							name
 						  }
 						}
-						comments (first: $numberCount) {
+						comments (first: $numberQuantity) {
 						  totalCount
 						  nodes {
 							createdAt
@@ -65,7 +65,7 @@ func GetPulls(numberCount int, owner string, name string, accessToken string, cl
 							}
 						  }
 						}
-						participants (last: $numberCount){
+						participants (last: $numberQuantity){
 						  totalCount
 						  nodes {
 							 login
@@ -76,11 +76,15 @@ func GetPulls(numberCount int, owner string, name string, accessToken string, cl
 				  }
 				}`
 
+	numberCount := env.Get().Counters.NumberOfLastItens
+	numberQuantity := env.Get().Counters.NumberOfQuantityItens
+
 	variables := map[string]interface{}{
-		"numberCount": numberCount,
-		"owner":       owner,
-		"name":        name,
-		"state":       states,
+		"numberCount":    numberCount,
+		"numberQuantity": numberQuantity,
+		"owner":          owner,
+		"name":           name,
+		"state":          states,
 	}
 
 	err = client.Query(query, variables, respData)
