@@ -15,7 +15,7 @@ type CommitsResponseContract struct {
 type commit struct {
 	Message       string `json:"message"`
 	CommittedDate string `json:"committedDate"`
-	Author		  string `json:"author"`
+	Author        string `json:"author"`
 }
 
 func (d *defaultContract) GetCommitsRepo(nameRepo string, ownerRepo string, accessToken string, provider string) (*CommitsResponseContract, error) {
@@ -65,7 +65,7 @@ func githubGetCommitsRepo(nameRepo string, ownerRepo string, accessToken string)
 		commitsInfo = append(commitsInfo, commit{
 			Message:       commitInf.Message,
 			CommittedDate: commitInf.CommittedDate,
-			Author: commitInf.Author.User.Login,
+			Author:        commitInf.Author.User.Login,
 		})
 	}
 
@@ -84,10 +84,9 @@ func gitlabGetCommits(name string, owner string, accessToken string) (*CommitsRe
 		return nil, err
 	}
 
-
 	all := true
 	opts := gitlab.ListCommitsOptions{
-		All:         &all,
+		All: &all,
 	}
 
 	commitsData, _, err := gitlabClient.Commits.ListCommits(project.ID, &opts)
@@ -106,7 +105,7 @@ func gitlabGetCommits(name string, owner string, accessToken string) (*CommitsRe
 			theData.CommittedDate = c.CommittedDate.String()
 		}
 
-		commits = append(commits,theData)
+		commits = append(commits, theData)
 	}
 
 	result := &CommitsResponseContract{
