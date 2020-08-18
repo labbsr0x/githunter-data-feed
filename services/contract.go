@@ -1,6 +1,10 @@
 package services
 
-import "github.com/labbsr0x/githunter-api/services/gitlab"
+import (
+	"github.com/labbsr0x/githunter-api/infra/env"
+	gitlabService "github.com/labbsr0x/githunter-api/services/gitlab"
+	"github.com/xanzy/go-gitlab"
+)
 
 // ContractInterface
 type Contract interface {
@@ -33,6 +37,16 @@ func New() Contract {
 	return &defaultContract{}
 }
 
-func (d *defaultContract) Gitlab(accessToken string) *gitlab.Gitlab {
-	return gitlab.New(accessToken)
+func (d *defaultContract) Gitlab(accessToken string) *gitlabService.Gitlab {
+	return gitlabService.New(accessToken)
+}
+
+var gitlabClient *gitlab.Client
+
+func gitlabNewClient(accessToken string) *gitlab.Client {
+	client, err := gitlab.NewClient(accessToken, gitlab.WithBaseURL(env.Get().ApiGitlabURL))
+	if err != nil {
+		return nil
+	}
+	return client
 }
