@@ -2,31 +2,34 @@ package services
 
 import (
 	"fmt"
+	"math"
+
 	"github.com/labbsr0x/githunter-api/services/github"
 	"github.com/sirupsen/logrus"
+	"github.com/xanzy/go-gitlab"
 )
 
 //struct response of Code page
 type CodeResponseContract struct {
-	Name                 string   `json:"name"`
-	Description          string   `json:"description"`
-	CreatedAt            string   `json:"createdAt"`
-	PrimaryLanguage      string   `json:"primaryLanguage"`
-	RepositoryTopics     []string `json:"repositoryTopics"`
-	Watchers             int      `json:"watchers"`
-	Stars                int      `json:"stars"`
-	Forks                int      `json:"forks"`
-	LastCommitDate       string   `json:"lastCommitDate"`
-	Commits              int      `json:"commits"`
-	HasHomepageUrl       bool     `json:"hasHomepageUrl"`
-	HasReadmeFile        bool     `json:"hasReadmeFile"`
-	HasContributingFile  bool     `json:"hasContributingFile"`
-	LicenseInfo          string   `json:"licenseInfo"`
-	HasCodeOfConductFile bool     `json:"hasCodeOfConductFile"`
-	Releases             int      `json:"releases"`
-	// Contributors         int        `json:"contributors"` *Info no longer available*
-	Languages *languages `json:"languages"`
-	DiskUsage int        `json:"diskUsage"`
+	Name                 string     `json:"name"`
+	Description          string     `json:"description"`
+	CreatedAt            string     `json:"createdAt"`
+	PrimaryLanguage      string     `json:"primaryLanguage"`
+	RepositoryTopics     []string   `json:"repositoryTopics"`
+	Watchers             int        `json:"watchers"`
+	Stars                int        `json:"stars"`
+	Forks                int        `json:"forks"`
+	LastCommitDate       string     `json:"lastCommitDate"`
+	Commits              int        `json:"commits"`
+	HasHomepageUrl       bool       `json:"hasHomepageUrl"`
+	HasReadmeFile        bool       `json:"hasReadmeFile"`
+	HasContributingFile  bool       `json:"hasContributingFile"`
+	LicenseInfo          string     `json:"licenseInfo"`
+	HasCodeOfConductFile bool       `json:"hasCodeOfConductFile"`
+	Releases             int        `json:"releases"`
+	Contributors         int        `json:"contributors"` //*Info no longer available on Github*
+	Languages            *languages `json:"languages"`
+	DiskUsage            int        `json:"diskUsage"`
 }
 
 type codeOfConduct struct {
@@ -39,8 +42,8 @@ type languages struct {
 }
 
 type language struct {
-	Size int    `json:"size"`
-	Name string `json:"name"`
+	Size float64 `json:"size"`
+	Name string  `json:"name"`
 }
 
 func (d *defaultContract) GetInfoCodePage(nameRepo string, ownerRepo string, accessToken string, provider string) (*CodeResponseContract, error) {
@@ -57,7 +60,8 @@ func (d *defaultContract) GetInfoCodePage(nameRepo string, ownerRepo string, acc
 		theContract, err = githubGetCodePageInfo(nameRepo, ownerRepo, accessToken)
 		break
 	case `gitlab`:
-		// theContract, err = gitlabGetLastRepos(numberOfRepos, accessToken)
+		gitlabClient = gitlabNewClient(accessToken)
+		theContract, err = gitlabGetCodePageInfo(nameRepo, ownerRepo)
 		break
 	case ``:
 		//TODO: Call all providers
@@ -97,7 +101,7 @@ func githubGetCodePageInfo(nameRepo string, ownerRepo string, accessToken string
 	langsInfo := []language{}
 	for _, lang := range code.Viewer.Languages.Languages {
 		langsInfo = append(langsInfo, language{
-			Size: lang.Size,
+			Size: float64(lang.Size),
 			Name: lang.Language.Name,
 		})
 	}
@@ -152,11 +156,121 @@ func githubGetCodePageInfo(nameRepo string, ownerRepo string, accessToken string
 	return result, nil
 }
 
-func gitlabGetPageCodePageInfo(maxQuantityTopics int, maxQuantityLangs int, nameRepo string, ownerRepo string, accessToken string) (*CodeResponseContract, error) {
-	// code, err := gitlab.GetInfoCodePage(maxQuantityTopics, maxQuantityLangs, nameRepo, ownerRepo, accessToken)
-	// if err != nil {
-	// 	return nil, err
-	// }
+// Gitlab REST
+func gitlabGetCodePageInfo(nameRepo string, ownerRepo string) (*CodeResponseContract, error) {
+	projectPath := ownerRepo + "/" + nameRepo
+	project, _, err := gitlabClient.Projects.GetProject(projectPath, nil)
+	if err != nil {
+		return nil, err
+	}
 
-	return nil, nil
+	name := project.Name
+	description := project.Description
+	createAt := project.CreatedAt
+	repositoryTopics := []string{""}
+	watchers := 0
+	stars := project.StarCount
+	forks := project.ForksCount
+	lastCommitDate := project.LastActivityAt
+
+	commitsQuantity := 0
+	_, resp, err := gitlabClient.Commits.ListCommits(projectPath, nil)
+	if resp.Response.StatusCode == 200 {
+		commitsQuantity = resp.TotalItems
+	}
+
+	// commitsQuantity := project.Statistics.CommitCount
+
+	hasHomepageUrl := false
+
+	hasReadmeFile := false
+	if project.ReadmeURL != "" {
+		hasReadmeFile = true
+	}
+
+	defaultBranch := project.DefaultBranch
+	opts := gitlab.GetFileOptions{
+		Ref: &defaultBranch,
+	}
+
+	hasContributingFile := false
+	contributingFile, resp, err := gitlabClient.RepositoryFiles.GetFile(projectPath, "CONTRIBUTING.md", &opts)
+	if contributingFile != nil {
+		hasContributingFile = true
+	}
+
+	getPopularLicense := true
+	licensesOpts := gitlab.ListLicenseTemplatesOptions{
+		Popular: &getPopularLicense,
+	}
+	licenses, resp, err := gitlabClient.LicenseTemplates.ListLicenseTemplates(&licensesOpts, nil)
+	licenseIndex := licenses[0]
+	license := licenseIndex.Name
+
+	hasCodeOfConductFile := false
+	codeOfConductFile, resp, err := gitlabClient.RepositoryFiles.GetFile(projectPath, "CODE_OF_CONDUCT.md", &opts)
+	if codeOfConductFile != nil {
+		hasCodeOfConductFile = true
+	}
+
+	releasesQuantity := 0
+	_, resp, err = gitlabClient.Releases.ListReleases(projectPath, nil)
+	if resp.Response.StatusCode == 200 {
+		releasesQuantity = resp.TotalItems
+	}
+
+	contributors := 0
+	_, resp, err = gitlabClient.ProjectMembers.ListAllProjectMembers(projectPath, nil)
+	if resp.Response.StatusCode == 200 {
+		contributors = resp.TotalItems
+	}
+
+	languagesResp, resp, err := gitlabClient.Projects.GetProjectLanguages(projectPath, nil)
+
+	langsInfo := []language{}
+	primaryLanguage := ""
+	if resp.Response.StatusCode == 200 {
+		index := 0
+		for key, value := range *languagesResp {
+			if index == 0 {
+				primaryLanguage = key
+			}
+			vf64 := float64(value)
+			langsInfo = append(langsInfo, language{
+				Size: (math.Floor(vf64*100) / 100),
+				Name: key,
+			})
+			index++
+		}
+	}
+
+	langs := &languages{
+		Quantity:  len(*languagesResp),
+		Languages: langsInfo,
+	}
+
+	strFormatDate := "2006-01-02T15:04:05Z"
+	result := &CodeResponseContract{
+		Name:                 name,
+		Description:          description,
+		CreatedAt:            createAt.Format(strFormatDate),
+		PrimaryLanguage:      primaryLanguage,
+		RepositoryTopics:     repositoryTopics,
+		Watchers:             watchers,
+		Stars:                stars,
+		Forks:                forks,
+		LastCommitDate:       lastCommitDate.Format(strFormatDate),
+		Commits:              commitsQuantity,
+		HasHomepageUrl:       hasHomepageUrl,
+		HasReadmeFile:        hasReadmeFile,
+		HasContributingFile:  hasContributingFile,
+		LicenseInfo:          license,
+		HasCodeOfConductFile: hasCodeOfConductFile,
+		Releases:             releasesQuantity,
+		Contributors:         contributors,
+		Languages:            langs,
+		DiskUsage:            0,
+	}
+
+	return result, nil
 }

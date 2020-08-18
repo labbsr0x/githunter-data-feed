@@ -2,6 +2,7 @@ package services
 
 import (
 	"fmt"
+
 	"github.com/labbsr0x/githunter-api/services/github"
 	"github.com/labbsr0x/githunter-api/services/gitlab"
 	"github.com/sirupsen/logrus"
@@ -46,11 +47,11 @@ func (d *defaultContract) GetPulls(owner string, name string, provider string, a
 		//TODO: Call all providers
 		break
 	default:
-		return nil, fmt.Errorf("GetIssues unknown provider: %s", provider)
+		return nil, fmt.Errorf("GetPulls unknown provider: %s", provider)
 	}
 
 	if theContract == nil {
-		logrus.Debug("GetIssues returned a null answer")
+		logrus.Debug("GetPulls returned a null answer")
 	}
 
 	if err != nil {
@@ -123,7 +124,7 @@ func formatContract4Github(response *github.Response) []pull {
 	return data
 }
 
-// Gitlab Session
+//Gitlab Session
 var client *gitlab.Gitlab
 
 func gitlabGetPulls(owner string, name string) (*PullsResponseContract, error) {
