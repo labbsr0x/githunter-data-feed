@@ -1,6 +1,8 @@
 package services
 
-import "github.com/labbsr0x/githunter-api/services/gitlab"
+import (
+	"github.com/labbsr0x/githunter-api/services/gitlab"
+)
 
 // ContractInterface
 type Contract interface {
@@ -12,6 +14,8 @@ type Contract interface {
 }
 
 type defaultContract struct{}
+
+var client *gitlab.Gitlab
 
 type participants struct {
 	TotalCount int      `json:"totalCount"`

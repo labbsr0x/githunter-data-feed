@@ -1,29 +1,10 @@
 package gitlab
 
 import (
-	"github.com/labbsr0x/githunter-api/infra/env"
 	"github.com/xanzy/go-gitlab"
 )
 
-type Gitlab struct {
-	Client *gitlab.Client
-}
-
-func New(accessToken string) *Gitlab {
-	return &Gitlab{
-		Client: client(accessToken),
-	}
-}
-
-func client (accessToken string) *gitlab.Client{
-	client, err := gitlab.NewClient(accessToken, gitlab.WithBaseURL(env.Get().GitlabGraphQLURL))
-	if err != nil {
-		return nil
-	}
-	return client
-}
-
-func (g *Gitlab) ListProjectMergeRequests (state string, projectID int ) ([]*gitlab.MergeRequest, error) {
+func (g *Gitlab) ListProjectMergeRequests(state string, projectID int) ([]*gitlab.MergeRequest, error) {
 	opts := gitlab.ListProjectMergeRequestsOptions{
 		State: &state,
 	}
@@ -36,7 +17,7 @@ func (g *Gitlab) ListProjectMergeRequests (state string, projectID int ) ([]*git
 	return mergeRequests, nil
 }
 
-func (g *Gitlab) GetMergeRequestParticipants (projectID int, mergeRequestID int) ([]*gitlab.BasicUser, error) {
+func (g *Gitlab) GetMergeRequestParticipants(projectID int, mergeRequestID int) ([]*gitlab.BasicUser, error) {
 
 	participants, _, err := g.Client.MergeRequests.GetMergeRequestParticipants(projectID, mergeRequestID)
 	if err != nil {

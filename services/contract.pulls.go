@@ -2,8 +2,8 @@ package services
 
 import (
 	"fmt"
+
 	"github.com/labbsr0x/githunter-api/services/github"
-	"github.com/labbsr0x/githunter-api/services/gitlab"
 	"github.com/sirupsen/logrus"
 	gitlabLib "github.com/xanzy/go-gitlab"
 )
@@ -123,13 +123,11 @@ func formatContract4Github(response *github.Response) []pull {
 	return data
 }
 
-
 // Gitlab Session
-var client *gitlab.Gitlab
 func gitlabGetPulls(numberCount int, owner string, name string) (*PullsResponseContract, error) {
 
 	projectName := owner + "/" + name
-	project, err := client.GetProjectDescription(projectName)
+	project, err := client.GetProjectInfo(projectName)
 	if err != nil {
 		return nil, err
 	}
@@ -197,7 +195,7 @@ func formatContract4Gitlab(mergeRequests []*gitlabLib.MergeRequest) []pull {
 	return data
 }
 
-func fillDiscussion (mergeRequests []pull, projectID int) []pull{
+func fillDiscussion(mergeRequests []pull, projectID int) []pull {
 
 	mergeRequestsWithDiscussion := []pull{}
 
@@ -228,7 +226,7 @@ func fillDiscussion (mergeRequests []pull, projectID int) []pull{
 			}
 			theComment := comment{
 				CreatedAt: closedAt,
-				Author:     author,
+				Author:    author,
 			}
 
 			discussions = append(discussions, theComment)
@@ -246,7 +244,7 @@ func fillDiscussion (mergeRequests []pull, projectID int) []pull{
 	return mergeRequestsWithDiscussion
 }
 
-func fillParticipants (mergeRequests []pull, projectID int) []pull {
+func fillParticipants(mergeRequests []pull, projectID int) []pull {
 
 	mergeRequestsWithParticipants := []pull{}
 
