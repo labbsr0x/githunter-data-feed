@@ -3,7 +3,7 @@ package services
 import (
 	"github.com/labbsr0x/githunter-api/infra/env"
 	gitlabService "github.com/labbsr0x/githunter-api/services/gitlab"
-	gitlab "github.com/xanzy/go-gitlab"
+	"github.com/xanzy/go-gitlab"
 )
 
 // ContractInterface

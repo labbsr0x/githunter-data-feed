@@ -1,8 +1,27 @@
 package gitlab
 
 import (
+	"github.com/labbsr0x/githunter-api/infra/env"
 	"github.com/xanzy/go-gitlab"
 )
+
+type Gitlab struct {
+	Client *gitlab.Client
+}
+
+func New(accessToken string) *Gitlab {
+	return &Gitlab{
+		Client: client(accessToken),
+	}
+}
+
+func client(accessToken string) *gitlab.Client {
+	client, err := gitlab.NewClient(accessToken, gitlab.WithBaseURL(env.Get().ApiGitlabURL))
+	if err != nil {
+		return nil
+	}
+	return client
+}
 
 func (g *Gitlab) ListProjectMergeRequests(state string, projectID int) ([]*gitlab.MergeRequest, error) {
 	opts := gitlab.ListProjectMergeRequestsOptions{

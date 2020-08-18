@@ -40,18 +40,18 @@ func (d *defaultContract) GetPulls(owner string, name string, provider string, a
 		theContract, err = githubGetPulls(owner, name, accessToken)
 		break
 	case `gitlab`:
-		gitlabClient = gitlabNewClient(accessToken)
+		client = d.Gitlab(accessToken)
 		theContract, err = gitlabGetPulls(owner, name)
 		break
 	case ``:
 		//TODO: Call all providers
 		break
 	default:
-		return nil, fmt.Errorf("GetIssues unknown provider: %s", provider)
+		return nil, fmt.Errorf("GetPulls unknown provider: %s", provider)
 	}
 
 	if theContract == nil {
-		logrus.Debug("GetIssues returned a null answer")
+		logrus.Debug("GetPulls returned a null answer")
 	}
 
 	if err != nil {
@@ -124,12 +124,13 @@ func formatContract4Github(response *github.Response) []pull {
 	return data
 }
 
+//Gitlab Session
 var client *gitlab.Gitlab
 
 func gitlabGetPulls(owner string, name string) (*PullsResponseContract, error) {
 
 	projectName := owner + "/" + name
-	project, err := client.GetProjectInfo(projectName)
+	project, err := client.GetProjectDescription(projectName)
 	if err != nil {
 		return nil, err
 	}
