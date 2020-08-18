@@ -19,6 +19,10 @@ type user struct {
 	Name  string `json:"name"`
 }
 
+type author struct {
+	User user `json:"user"`
+}
+
 type labels struct {
 	Label []label `json:"nodes"`
 }

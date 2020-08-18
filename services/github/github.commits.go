@@ -28,6 +28,7 @@ type commitsNode struct {
 type commit struct {
 	Message       string `json:"message"`
 	CommittedDate string `json:"committedDate"`
+	Author 		author `json:"author"`
 }
 
 func GetCommitsRepo(nameRepo string, ownerRepo string, accessToken string) (*CommitsResponse, error) {
@@ -60,6 +61,11 @@ func GetCommitsRepo(nameRepo string, ownerRepo string, accessToken string) (*Com
 							nodes {
 								message,
 								committedDate,
+								author{
+								  user {
+									login
+								  }
+								}
 							}
 						}
 					}
