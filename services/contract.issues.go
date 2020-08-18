@@ -36,7 +36,8 @@ func (d *defaultContract) GetIssues(owner string, repo string, provider string, 
 		theContract, err = githubGetIssues(owner, repo, accessToken)
 		break
 	case `gitlab`:
-		//theContract, err = gitlabGetIssues(numberOfIssues, owner, repo, accessToken)
+		gitlabClient = gitlabNewClient(accessToken)
+		theContract, err = gitlabGetIssues(owner, repo, accessToken)
 		break
 	case ``:
 		//TODO: Call all providers
@@ -108,4 +109,72 @@ func formatContractIssuesGithub(issuesResp *github.Response) []issue {
 	}
 
 	return issues
+}
+
+func gitlabGetIssues(owner string, repo string, accessToken string) (*IssuesResponseContract, error) {
+
+	projectName := owner + "/" + repo
+	project, _, err := gitlabClient.Projects.GetProject(projectName, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	issuesData, _, err := gitlabClient.Issues.ListProjectIssues(project.ID, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	issues := []issue{}
+
+	for _, i := range issuesData {
+		theIssue := issue{}
+
+		theIssue.Number = i.IID
+		theIssue.State = i.State
+		theIssue.Author = i.Author.Username
+
+		if i.CreatedAt != nil {
+			theIssue.CreatedAt = i.CreatedAt.String()
+		}
+
+		if i.UpdatedAt != nil {
+			theIssue.UpdatedAt = i.UpdatedAt.String()
+		}
+
+		if i.ClosedAt != nil {
+			theIssue.ClosedAt = i.ClosedAt.String()
+		}
+
+		//TODO implements get participants https://github.com/xanzy/go-gitlab/pull/920
+
+		for _, l := range i.Labels {
+			theIssue.Labels = append(theIssue.Labels, l)
+		}
+
+		notes, resp, err := gitlabClient.Notes.ListIssueNotes(project.ID, i.IID, nil)
+		if err != nil {
+			return nil, err
+		}
+
+		theIssue.Comments.TotalCount = resp.TotalItems
+
+		for _, n := range notes {
+			theComment := comment{}
+			theComment.Author = n.Author.Username
+
+			if n.CreatedAt != nil {
+				theComment.CreatedAt = n.CreatedAt.String()
+			}
+
+			theIssue.Comments.Data = append(theIssue.Comments.Data, theComment)
+		}
+
+		issues = append(issues, theIssue)
+	}
+
+	result := &IssuesResponseContract{
+		Issues: issues,
+	}
+
+	return result, nil
 }
