@@ -60,7 +60,7 @@ func (d *defaultContract) GetInfoCodePage(nameRepo string, ownerRepo string, acc
 		theContract, err = githubGetCodePageInfo(nameRepo, ownerRepo, accessToken)
 		break
 	case `gitlab`:
-		client = d.Gitlab(accessToken)
+		gitlabClient = gitlabNewClient(accessToken)
 		theContract, err = gitlabGetCodePageInfo(nameRepo, ownerRepo)
 		break
 	case ``:
@@ -159,7 +159,7 @@ func githubGetCodePageInfo(nameRepo string, ownerRepo string, accessToken string
 // Gitlab REST
 func gitlabGetCodePageInfo(nameRepo string, ownerRepo string) (*CodeResponseContract, error) {
 	projectPath := ownerRepo + "/" + nameRepo
-	project, err := client.GetProjectInfo(projectPath)
+	project, _, err := gitlabClient.Projects.GetProject(projectPath, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -174,7 +174,7 @@ func gitlabGetCodePageInfo(nameRepo string, ownerRepo string) (*CodeResponseCont
 	lastCommitDate := project.LastActivityAt
 
 	commitsQuantity := 0
-	_, resp, err := client.Client.Commits.ListCommits(projectPath, nil)
+	_, resp, err := gitlabClient.Commits.ListCommits(projectPath, nil)
 	if resp.Response.StatusCode == 200 {
 		commitsQuantity = resp.TotalItems
 	}
@@ -194,7 +194,7 @@ func gitlabGetCodePageInfo(nameRepo string, ownerRepo string) (*CodeResponseCont
 	}
 
 	hasContributingFile := false
-	contributingFile, resp, err := client.Client.RepositoryFiles.GetFile(projectPath, "CONTRIBUTING.md", &opts)
+	contributingFile, resp, err := gitlabClient.RepositoryFiles.GetFile(projectPath, "CONTRIBUTING.md", &opts)
 	if contributingFile != nil {
 		hasContributingFile = true
 	}
@@ -203,29 +203,29 @@ func gitlabGetCodePageInfo(nameRepo string, ownerRepo string) (*CodeResponseCont
 	licensesOpts := gitlab.ListLicenseTemplatesOptions{
 		Popular: &getPopularLicense,
 	}
-	licenses, resp, err := client.Client.LicenseTemplates.ListLicenseTemplates(&licensesOpts, nil)
+	licenses, resp, err := gitlabClient.LicenseTemplates.ListLicenseTemplates(&licensesOpts, nil)
 	licenseIndex := licenses[0]
 	license := licenseIndex.Name
 
 	hasCodeOfConductFile := false
-	codeOfConductFile, resp, err := client.Client.RepositoryFiles.GetFile(projectPath, "CODE_OF_CONDUCT.md", &opts)
+	codeOfConductFile, resp, err := gitlabClient.RepositoryFiles.GetFile(projectPath, "CODE_OF_CONDUCT.md", &opts)
 	if codeOfConductFile != nil {
 		hasCodeOfConductFile = true
 	}
 
 	releasesQuantity := 0
-	_, resp, err = client.Client.Releases.ListReleases(projectPath, nil)
+	_, resp, err = gitlabClient.Releases.ListReleases(projectPath, nil)
 	if resp.Response.StatusCode == 200 {
 		releasesQuantity = resp.TotalItems
 	}
 
 	contributors := 0
-	_, resp, err = client.Client.ProjectMembers.ListAllProjectMembers(projectPath, nil)
+	_, resp, err = gitlabClient.ProjectMembers.ListAllProjectMembers(projectPath, nil)
 	if resp.Response.StatusCode == 200 {
 		contributors = resp.TotalItems
 	}
 
-	languagesResp, resp, err := client.Client.Projects.GetProjectLanguages(projectPath, nil)
+	languagesResp, resp, err := gitlabClient.Projects.GetProjectLanguages(projectPath, nil)
 
 	langsInfo := []language{}
 	primaryLanguage := ""

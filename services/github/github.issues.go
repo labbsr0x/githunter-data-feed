@@ -22,7 +22,7 @@ type issueNode struct {
 	TimelineItems comments     `json:"timelineItems"`
 }
 
-func GetIssues(numberOfIssues int, owner string, repo string, accessToken string) (*Response, error) {
+func GetIssues(owner string, repo string, accessToken string) (*Response, error) {
 	client, err := graphql.New(env.Get().GithubGraphQLURL, accessToken)
 
 	if err != nil {
@@ -72,6 +72,8 @@ func GetIssues(numberOfIssues int, owner string, repo string, accessToken string
 								}
 							}
 						}`
+
+	numberOfIssues := env.Get().Counters.NumberOfLastItens
 
 	variables := map[string]interface{}{
 		"number_of_issues": numberOfIssues,

@@ -28,13 +28,16 @@ type commitsNode struct {
 type commit struct {
 	Message       string `json:"message"`
 	CommittedDate string `json:"committedDate"`
+	Author        author `json:"author"`
 }
 
-func GetCommitsRepo(quantity int, nameRepo string, ownerRepo string, accessToken string) (*CommitsResponse, error) {
+func GetCommitsRepo(nameRepo string, ownerRepo string, accessToken string) (*CommitsResponse, error) {
 	client, err := graphql.New(env.Get().GithubGraphQLURL, accessToken)
 	if err != nil {
 		return nil, err
 	}
+
+	quantity := env.Get().Counters.NumberOfLastItens
 
 	respData := &CommitsResponse{}
 	variables := map[string]interface{}{
@@ -58,6 +61,11 @@ func GetCommitsRepo(quantity int, nameRepo string, ownerRepo string, accessToken
 							nodes {
 								message,
 								committedDate,
+								author{
+								  user {
+									login
+								  }
+								}
 							}
 						}
 					}

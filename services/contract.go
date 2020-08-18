@@ -1,21 +1,21 @@
 package services
 
 import (
-	"github.com/labbsr0x/githunter-api/services/gitlab"
+	"github.com/labbsr0x/githunter-api/infra/env"
+	gitlabService "github.com/labbsr0x/githunter-api/services/gitlab"
+	gitlab "github.com/xanzy/go-gitlab"
 )
 
 // ContractInterface
 type Contract interface {
-	GetLastRepos(int, string, string) (*ReposResponseContract, error)
+	GetLastRepos(string, string) (*ReposResponseContract, error)
 	GetInfoCodePage(string, string, string, string) (*CodeResponseContract, error)
-	GetCommitsRepo(int, string, string, string, string) (*CommitsResponseContract, error)
-	GetIssues(int, string, string, string, string) (*IssuesResponseContract, error)
-	GetPulls(int, string, string, string, string) (*PullsResponseContract, error)
+	GetCommitsRepo(string, string, string, string) (*CommitsResponseContract, error)
+	GetIssues(string, string, string, string) (*IssuesResponseContract, error)
+	GetPulls(string, string, string, string) (*PullsResponseContract, error)
 }
 
 type defaultContract struct{}
-
-var client *gitlab.Gitlab
 
 type participants struct {
 	TotalCount int      `json:"totalCount"`
@@ -37,6 +37,16 @@ func New() Contract {
 	return &defaultContract{}
 }
 
-func (d *defaultContract) Gitlab(accessToken string) *gitlab.Gitlab {
-	return gitlab.New(accessToken)
+func (d *defaultContract) Gitlab(accessToken string) *gitlabService.Gitlab {
+	return gitlabService.New(accessToken)
+}
+
+var gitlabClient *gitlab.Client
+
+func gitlabNewClient(accessToken string) *gitlab.Client {
+	client, err := gitlab.NewClient(accessToken, gitlab.WithBaseURL(env.Get().ApiGitlabURL))
+	if err != nil {
+		return nil
+	}
+	return client
 }

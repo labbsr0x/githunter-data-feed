@@ -13,7 +13,7 @@ func (c *Controller) GetIssuesHandler(ctx *fiber.Ctx) {
 	owner := ctx.Query("owner")
 	repo := ctx.Query("name")
 
-	data, err := c.Contract.GetIssues(10, owner, repo, provider, accessToken)
+	data, err := c.Contract.GetIssues(owner, repo, provider, accessToken)
 	if err != nil {
 		logrus.Warn("Error requesting github")
 		ctx.Next(fiber.NewError(fiber.StatusInternalServerError, "Error requesting github"))

@@ -2,9 +2,9 @@ package services
 
 import (
 	"fmt"
-
 	"github.com/labbsr0x/githunter-api/services/github"
 	"github.com/sirupsen/logrus"
+	"github.com/xanzy/go-gitlab"
 )
 
 //struct responde of Commits page
@@ -15,9 +15,10 @@ type CommitsResponseContract struct {
 type commit struct {
 	Message       string `json:"message"`
 	CommittedDate string `json:"committedDate"`
+	Author        string `json:"author"`
 }
 
-func (d *defaultContract) GetCommitsRepo(quantity int, nameRepo string, ownerRepo string, accessToken string, provider string) (*CommitsResponseContract, error) {
+func (d *defaultContract) GetCommitsRepo(nameRepo string, ownerRepo string, accessToken string, provider string) (*CommitsResponseContract, error) {
 	theContract := &CommitsResponseContract{}
 	var err error
 
@@ -27,10 +28,11 @@ func (d *defaultContract) GetCommitsRepo(quantity int, nameRepo string, ownerRep
 
 	switch provider {
 	case `github`:
-		theContract, err = githubGetCommitsRepo(quantity, nameRepo, ownerRepo, accessToken)
+		theContract, err = githubGetCommitsRepo(nameRepo, ownerRepo, accessToken)
 		break
 	case `gitlab`:
-		// theContract, err = githubGetCommitsRepo(nameRepo, ownerRepo, quantity, accessToken)
+		gitlabClient = gitlabNewClient(accessToken)
+		theContract, err = gitlabGetCommits(nameRepo, ownerRepo, accessToken)
 		break
 	case ``:
 		//TODO: Call all providers
@@ -52,8 +54,8 @@ func (d *defaultContract) GetCommitsRepo(quantity int, nameRepo string, ownerRep
 	return theContract, nil
 }
 
-func githubGetCommitsRepo(quantity int, nameRepo string, ownerRepo string, accessToken string) (*CommitsResponseContract, error) {
-	commits, err := github.GetCommitsRepo(quantity, nameRepo, ownerRepo, accessToken)
+func githubGetCommitsRepo(nameRepo string, ownerRepo string, accessToken string) (*CommitsResponseContract, error) {
+	commits, err := github.GetCommitsRepo(nameRepo, ownerRepo, accessToken)
 	if err != nil {
 		return nil, err
 	}
@@ -63,6 +65,7 @@ func githubGetCommitsRepo(quantity int, nameRepo string, ownerRepo string, acces
 		commitsInfo = append(commitsInfo, commit{
 			Message:       commitInf.Message,
 			CommittedDate: commitInf.CommittedDate,
+			Author:        commitInf.Author.User.Login,
 		})
 	}
 
@@ -73,7 +76,41 @@ func githubGetCommitsRepo(quantity int, nameRepo string, ownerRepo string, acces
 	return result, nil
 }
 
-func gitlabGetCommitsRepo(nameRepo string, ownerRepo string, quantity int, accessToken string) (*CommitsResponseContract, error) {
+func gitlabGetCommits(name string, owner string, accessToken string) (*CommitsResponseContract, error) {
 
-	return nil, nil
+	projectName := owner + "/" + name
+	project, _, err := gitlabClient.Projects.GetProject(projectName, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	all := true
+	opts := gitlab.ListCommitsOptions{
+		All: &all,
+	}
+
+	commitsData, _, err := gitlabClient.Commits.ListCommits(project.ID, &opts)
+	if err != nil {
+		return nil, err
+	}
+
+	commits := []commit{}
+	for _, c := range commitsData {
+		theData := commit{}
+
+		theData.Message = c.Message
+		theData.Author = c.AuthorEmail
+
+		if c.CommittedDate != nil {
+			theData.CommittedDate = c.CommittedDate.String()
+		}
+
+		commits = append(commits, theData)
+	}
+
+	result := &CommitsResponseContract{
+		Commits: commits,
+	}
+
+	return result, nil
 }
