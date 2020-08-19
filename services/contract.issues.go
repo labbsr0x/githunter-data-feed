@@ -8,7 +8,7 @@ import (
 )
 
 type IssuesResponseContract struct {
-	Issues []issue `json:"issues"`
+	Issues []issue `json:"data"`
 }
 
 type issue struct {
