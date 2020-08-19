@@ -13,11 +13,16 @@ type Environment struct {
 	ApiGitlabURL     string
 	ServerPort       int
 	Counters         counters
+	DefaultConfiguration config
 }
 
 type counters struct {
 	NumberOfLastItens     int
 	NumberOfQuantityItens int
+}
+
+type config struct {
+	DateFormat string
 }
 
 var environment Environment
@@ -61,6 +66,7 @@ func Config() {
 	//Default counters
 	environment.Counters.NumberOfLastItens = 10
 	environment.Counters.NumberOfQuantityItens = 50
+	environment.DefaultConfiguration.DateFormat = "2006-01-02T15:04:05Z"
 
 }
 

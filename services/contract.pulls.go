@@ -2,6 +2,7 @@ package services
 
 import (
 	"fmt"
+	"github.com/labbsr0x/githunter-api/infra/env"
 
 	"github.com/labbsr0x/githunter-api/services/github"
 	"github.com/labbsr0x/githunter-api/services/gitlab"
@@ -169,6 +170,9 @@ func gitlabGetPulls(owner string, name string) (*PullsResponseContract, error) {
 }
 
 func formatContract4Gitlab(mergeRequests []*gitlabLib.MergeRequest) []pull {
+
+	strFormatDate := env.Get().DefaultConfiguration.DateFormat
+
 	data := []pull{}
 	for _, v := range mergeRequests {
 		theData := pull{}
@@ -176,12 +180,15 @@ func formatContract4Gitlab(mergeRequests []*gitlabLib.MergeRequest) []pull {
 		theData.State = v.State
 		theData.Author = v.Author.Username
 
-		theData.CreatedAt = v.CreatedAt.String()
+		if v.CreatedAt != nil {
+			theData.CreatedAt = v.CreatedAt.Format(strFormatDate)
+		}
+
 		if v.ClosedAt != nil {
-			theData.ClosedAt = v.ClosedAt.String()
+			theData.ClosedAt = v.ClosedAt.Format(strFormatDate)
 		}
 		if v.MergedAt != nil {
-			theData.MergedAt = v.MergedAt.String()
+			theData.MergedAt = v.MergedAt.Format(strFormatDate)
 		}
 
 		theData.Merged = false
@@ -200,8 +207,9 @@ func formatContract4Gitlab(mergeRequests []*gitlabLib.MergeRequest) []pull {
 
 func fillDiscussion(mergeRequests []pull, projectID int) []pull {
 
-	mergeRequestsWithDiscussion := []pull{}
+	strFormatDate := env.Get().DefaultConfiguration.DateFormat
 
+	mergeRequestsWithDiscussion := []pull{}
 	for _, v := range mergeRequests {
 
 		discussions := []comment{}
@@ -215,12 +223,12 @@ func fillDiscussion(mergeRequests []pull, projectID int) []pull {
 		for _, d := range mrDiscussions {
 
 			if len(d.Notes) > 0 && d.Notes[0].UpdatedAt != nil {
-				lastUpdated = d.Notes[0].UpdatedAt.String()
+				lastUpdated = d.Notes[0].UpdatedAt.Format(strFormatDate)
 			}
 
 			closedAt := ""
 			if len(d.Notes) > 0 && d.Notes[0].CreatedAt != nil {
-				closedAt = d.Notes[0].CreatedAt.String()
+				closedAt = d.Notes[0].CreatedAt.Format(strFormatDate)
 			}
 
 			author := ""

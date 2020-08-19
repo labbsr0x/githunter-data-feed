@@ -2,6 +2,7 @@ package services
 
 import (
 	"fmt"
+	"github.com/labbsr0x/githunter-api/infra/env"
 	"github.com/labbsr0x/githunter-api/services/github"
 	"github.com/sirupsen/logrus"
 	"github.com/xanzy/go-gitlab"
@@ -94,6 +95,7 @@ func gitlabGetCommits(name string, owner string, accessToken string) (*CommitsRe
 		return nil, err
 	}
 
+	strFormatDate := env.Get().DefaultConfiguration.DateFormat
 	commits := []commit{}
 	for _, c := range commitsData {
 		theData := commit{}
@@ -102,7 +104,7 @@ func gitlabGetCommits(name string, owner string, accessToken string) (*CommitsRe
 		theData.Author = c.AuthorEmail
 
 		if c.CommittedDate != nil {
-			theData.CommittedDate = c.CommittedDate.String()
+			theData.CommittedDate = c.CommittedDate.Format(strFormatDate)
 		}
 
 		commits = append(commits, theData)
