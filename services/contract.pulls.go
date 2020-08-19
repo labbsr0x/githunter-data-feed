@@ -12,7 +12,7 @@ import (
 
 type PullsResponseContract struct {
 	Total int    `json:"total"`
-	Pulls []pull `json:"pulls"`
+	Pulls []pull `json:"data"`
 }
 
 type pull struct {

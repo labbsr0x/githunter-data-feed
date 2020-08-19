@@ -11,7 +11,7 @@ import (
 // ReposResponseContract
 type ReposResponseContract struct {
 	Name         string   `json:"name"`
-	Repositories []string `json:"repositories"`
+	Repositories []string `json:"data"`
 }
 
 func (d *defaultContract) GetLastRepos(accessToken string, provider string) (*ReposResponseContract, error) {

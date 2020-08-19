@@ -10,7 +10,7 @@ import (
 
 //struct responde of Commits page
 type CommitsResponseContract struct {
-	Commits []commit `json:"commits"`
+	Commits []commit `json:"data"`
 }
 
 type commit struct {
