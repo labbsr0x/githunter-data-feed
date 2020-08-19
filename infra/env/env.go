@@ -66,7 +66,7 @@ func Config() {
 	//Default counters
 	environment.Counters.NumberOfLastItens = 10
 	environment.Counters.NumberOfQuantityItens = 50
-	environment.DefaultConfiguration.dateFormat = "2006-01-02T15:04:05Z"
+	environment.DefaultConfiguration.DateFormat = "2006-01-02T15:04:05Z"
 
 }
 
