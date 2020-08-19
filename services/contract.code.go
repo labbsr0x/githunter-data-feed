@@ -2,6 +2,7 @@ package services
 
 import (
 	"fmt"
+	"github.com/labbsr0x/githunter-api/infra/env"
 	"math"
 
 	"github.com/labbsr0x/githunter-api/services/github"
@@ -249,7 +250,7 @@ func gitlabGetCodePageInfo(nameRepo string, ownerRepo string) (*CodeResponseCont
 		Languages: langsInfo,
 	}
 
-	strFormatDate := "2006-01-02T15:04:05Z"
+	strFormatDate := env.Get().DefaultConfiguration.DateFormat
 	result := &CodeResponseContract{
 		Name:                 name,
 		Description:          description,
