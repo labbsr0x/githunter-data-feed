@@ -11,5 +11,5 @@ require (
 	github.com/matryer/is v1.4.0 // indirect
 	github.com/rs/zerolog v1.19.0 // indirect
 	github.com/sirupsen/logrus v1.6.0
-	github.com/xanzy/go-gitlab v0.35.0
+	github.com/xanzy/go-gitlab v0.36.0
 )
