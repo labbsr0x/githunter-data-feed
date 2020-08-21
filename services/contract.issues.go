@@ -3,6 +3,7 @@ package services
 import (
 	"fmt"
 
+	"github.com/labbsr0x/githunter-api/infra/env"
 	"github.com/labbsr0x/githunter-api/services/github"
 	"github.com/sirupsen/logrus"
 )
@@ -113,6 +114,8 @@ func formatContractIssuesGithub(issuesResp *github.Response) []issue {
 
 func gitlabGetIssues(owner string, repo string, accessToken string) (*IssuesResponseContract, error) {
 
+	strFormatDate := env.Get().DefaultConfiguration.DateFormat
+
 	projectName := owner + "/" + repo
 	project, _, err := gitlabClient.Projects.GetProject(projectName, nil)
 	if err != nil {
@@ -134,18 +137,24 @@ func gitlabGetIssues(owner string, repo string, accessToken string) (*IssuesResp
 		theIssue.Author = i.Author.Username
 
 		if i.CreatedAt != nil {
-			theIssue.CreatedAt = i.CreatedAt.String()
+			theIssue.CreatedAt = i.CreatedAt.Format(strFormatDate)
 		}
 
 		if i.UpdatedAt != nil {
-			theIssue.UpdatedAt = i.UpdatedAt.String()
+			theIssue.UpdatedAt = i.UpdatedAt.Format(strFormatDate)
 		}
 
 		if i.ClosedAt != nil {
-			theIssue.ClosedAt = i.ClosedAt.String()
+			theIssue.ClosedAt = i.ClosedAt.Format(strFormatDate)
 		}
 
 		//TODO implements get participants https://github.com/xanzy/go-gitlab/pull/920
+		participants, resp, err := gitlabClient.Issues.GetParticipants(project.ID, i.IID, nil)
+		theIssue.Participants.TotalCount = resp.TotalItems
+
+		for _, p := range participants {
+			theIssue.Participants.User = append(theIssue.Participants.User, p.Username)
+		}
 
 		for _, l := range i.Labels {
 			theIssue.Labels = append(theIssue.Labels, l)
@@ -163,7 +172,7 @@ func gitlabGetIssues(owner string, repo string, accessToken string) (*IssuesResp
 			theComment.Author = n.Author.Username
 
 			if n.CreatedAt != nil {
-				theComment.CreatedAt = n.CreatedAt.String()
+				theComment.CreatedAt = n.CreatedAt.Format(strFormatDate)
 			}
 
 			theIssue.Comments.Data = append(theIssue.Comments.Data, theComment)
