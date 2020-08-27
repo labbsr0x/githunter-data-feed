@@ -2,8 +2,9 @@ package services
 
 import (
 	"fmt"
-	"github.com/labbsr0x/githunter-api/infra/env"
 	"math"
+
+	"github.com/labbsr0x/githunter-api/infra/env"
 
 	"github.com/labbsr0x/githunter-api/services/github"
 	"github.com/sirupsen/logrus"
@@ -38,8 +39,8 @@ type codeOfConduct struct {
 }
 
 type languages struct {
-	Quantity  int        `json:"quantity"`
-	Languages []language `json:"languages"`
+	Quantity  int        `json:"totalCount"`
+	Languages []language `json:"data"`
 }
 
 type language struct {
@@ -149,9 +150,9 @@ func githubGetCodePageInfo(nameRepo string, ownerRepo string, accessToken string
 		LicenseInfo:          code.Viewer.LicenseInfo.Name,
 		HasCodeOfConductFile: hasCodeOfConductFile,
 		Releases:             code.Viewer.Releases.TotalCount,
-		// Contributors:         code.Viewer.Contributors.History.TotalCount, *Info no longer available*
-		Languages: languages,
-		DiskUsage: code.Viewer.DiskUsage,
+		Contributors:         0, //*Info no longer available in GraphQL API on Github*
+		Languages:            languages,
+		DiskUsage:            code.Viewer.DiskUsage,
 	}
 
 	return result, nil
@@ -168,7 +169,7 @@ func gitlabGetCodePageInfo(nameRepo string, ownerRepo string) (*CodeResponseCont
 	name := project.Name
 	description := project.Description
 	createAt := project.CreatedAt
-	repositoryTopics := []string{""}
+	repositoryTopics := []string{}
 	watchers := 0
 	stars := project.StarCount
 	forks := project.ForksCount
@@ -185,7 +186,7 @@ func gitlabGetCodePageInfo(nameRepo string, ownerRepo string) (*CodeResponseCont
 	hasHomepageUrl := false
 
 	hasReadmeFile := false
-	if project.ReadmeURL != "" {
+	if len(project.ReadmeURL) > 0 {
 		hasReadmeFile = true
 	}
 
@@ -204,9 +205,12 @@ func gitlabGetCodePageInfo(nameRepo string, ownerRepo string) (*CodeResponseCont
 	licensesOpts := gitlab.ListLicenseTemplatesOptions{
 		Popular: &getPopularLicense,
 	}
-	licenses, resp, err := gitlabClient.LicenseTemplates.ListLicenseTemplates(&licensesOpts, nil)
-	licenseIndex := licenses[0]
-	license := licenseIndex.Name
+	licenses, _, err := gitlabClient.LicenseTemplates.ListLicenseTemplates(&licensesOpts, nil)
+	license := ""
+	if len(licenses) > 0 {
+		licenseIndex := licenses[0]
+		license = licenseIndex.Name
+	}
 
 	hasCodeOfConductFile := false
 	codeOfConductFile, resp, err := gitlabClient.RepositoryFiles.GetFile(projectPath, "CODE_OF_CONDUCT.md", &opts)

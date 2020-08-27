@@ -15,6 +15,7 @@
             "args": [
                 "--log-level=info",
                 "--graphql-github-url=https://api.github.com/graphql",
+                "--graphql-gitlab-url=https://gitlab.com/api/graphql",
                 "--api-gitlab-url=https://gitlab.com/api/v4",
                 "--server-port=3001"
             ]
@@ -30,6 +31,7 @@
             "args": [
                 "--log-level=debug",
                 "--graphql-github-url=https://api.github.com/graphql",
+                "--graphql-gitlab-url=https://gitlab.com/api/graphql",
                 "--api-gitlab-url=https://gitlab.com/api/v4",
                 "--server-port=3001"
             ]
