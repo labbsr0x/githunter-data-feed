@@ -84,7 +84,7 @@ func GetPulls(owner string, name string, accessToken string, closed bool) (*Resp
 		"numberQuantity": numberQuantity,
 		"owner":          owner,
 		"name":           name,
-		"state":          states,
+		"states":         states,
 	}
 
 	err = client.Query(query, variables, respData)
