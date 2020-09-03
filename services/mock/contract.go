@@ -122,3 +122,18 @@ func (mr *MockContractMockRecorder) GetMembers(arg0, arg1, arg2 interface{}) *go
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetMembers", reflect.TypeOf((*MockContract)(nil).GetMembers), arg0, arg1, arg2)
 }
+
+// GetUserStats mocks base method
+func (m *MockContract) GetUserStats(arg0, arg1, arg2 string) (*services.UserResponseContract, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetUserStats", arg0, arg1, arg2)
+	ret0, _ := ret[0].(*services.UserResponseContract)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetUserStats indicates an expected call of GetUserStats
+func (mr *MockContractMockRecorder) GetUserStats(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserStats", reflect.TypeOf((*MockContract)(nil).GetUserStats), arg0, arg1, arg2)
+}
