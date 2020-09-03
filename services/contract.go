@@ -13,6 +13,7 @@ type Contract interface {
 	GetCommitsRepo(string, string, string, string) (*CommitsResponseContract, error)
 	GetIssues(string, string, string, string) (*IssuesResponseContract, error)
 	GetPulls(string, string, string, string) (*PullsResponseContract, error)
+	GetMembers(string, string, string) (*OrganizationResponseContract, error)
 }
 
 type defaultContract struct{}
