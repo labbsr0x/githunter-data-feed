@@ -19,4 +19,5 @@ func Register(app *fiber.App, version string) {
 	v1.Get("/issues", theController.GetIssuesHandler)
 	v1.Get("/pulls", theController.GetPullsHandler)
 	v1.Get("/organization/members", theController.GetMembersHandler)
+	v1.Get("/user/stats", theController.GetUserHandler)
 }

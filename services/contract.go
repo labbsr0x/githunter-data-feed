@@ -14,6 +14,7 @@ type Contract interface {
 	GetIssues(string, string, string, string) (*IssuesResponseContract, error)
 	GetPulls(string, string, string, string) (*PullsResponseContract, error)
 	GetMembers(string, string, string) (*OrganizationResponseContract, error)
+	GetUserStats(string, string, string) (*UserResponseContract, error)
 }
 
 type defaultContract struct{}
