@@ -44,11 +44,11 @@ func (d *defaultContract) GetUserStats(login string, accessToken string, provide
 		//TODO: Call all providers
 		break
 	default:
-		return nil, fmt.Errorf("GetUserStats unknown provider: %s", provider)
+		return nil, fmt.Errorf("GetUserInfo unknown provider: %s", provider)
 	}
 
 	if theContract == nil {
-		logrus.Debug("GetUserStats returned a null answer")
+		logrus.Debug("GetUserInfo returned a null answer")
 	}
 
 	if err != nil {
