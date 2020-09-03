@@ -19,6 +19,7 @@ type Environment struct {
 type counters struct {
 	NumberOfLastItens     int
 	NumberOfQuantityItens int
+	NumberOfMaxQuantityItens int
 }
 
 type config struct {
@@ -66,6 +67,7 @@ func Config() {
 	//Default counters
 	environment.Counters.NumberOfLastItens = 10
 	environment.Counters.NumberOfQuantityItens = 50
+	environment.Counters.NumberOfMaxQuantityItens = 100
 	environment.DefaultConfiguration.DateFormat = "2006-01-02T15:04:05Z"
 
 }
