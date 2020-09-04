@@ -12,6 +12,7 @@ type UserResponse struct {
 type userInfo struct {
 	Name                      string                  `json:"name"`
 	Login                     string                  `json:"login"`
+	AvatarUrl                 string                  `json:"avatarUrl"`
 	ContributionsCollection   contributionsCollection `json:"contributionsCollection"`
 	RepositoriesContributedTo count                   `json:"repositoriesContributedTo"`
 	PullRequests              count                   `json:"pullRequests"`
@@ -52,6 +53,7 @@ func GetUserStats(login string, accessToken string) (*UserResponse, error) {
 			user(login:$login) {
 				name,
 				login,
+				avatarUrl,
 				contributionsCollection {
 					totalCommitContributions,
 					restrictedContributionsCount

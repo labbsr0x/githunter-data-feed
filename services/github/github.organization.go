@@ -14,8 +14,8 @@ type membersWithRole struct {
 }
 
 type memberEdge struct {
-	Cursor string `json:"cursor"`
-	Node memberNode `json:"node"`
+	Cursor string     `json:"cursor"`
+	Node   memberNode `json:"node"`
 }
 
 type memberNode struct {
@@ -48,14 +48,14 @@ func GetMembers(organization string, after string, accessToken string) (*Respons
 
 	var cursor *string
 	cursor = &after
-	if (after == ""){
+	if after == "" {
 		cursor = nil
 	}
 
 	variables := map[string]interface{}{
-		"organization":    organization,
+		"organization":   organization,
 		"numberQuantity": numberQuantity,
-		"after": cursor,
+		"after":          cursor,
 	}
 
 	err = client.Query(query, variables, respData)

@@ -1,7 +1,7 @@
 package github
 
 type Response struct {
-	Repository repository `json:"repository"`
+	Repository   repository   `json:"repository"`
 	Organization organization `json:"organization"`
 }
 

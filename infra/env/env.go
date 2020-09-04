@@ -8,17 +8,17 @@ import (
 
 // Environment Environment
 type Environment struct {
-	GithubGraphQLURL string
-	GitlabGraphQLURL string
-	ApiGitlabURL     string
-	ServerPort       int
-	Counters         counters
+	GithubGraphQLURL     string
+	GitlabGraphQLURL     string
+	ApiGitlabURL         string
+	ServerPort           int
+	Counters             counters
 	DefaultConfiguration config
 }
 
 type counters struct {
-	NumberOfLastItens     int
-	NumberOfQuantityItens int
+	NumberOfLastItens        int
+	NumberOfQuantityItens    int
 	NumberOfMaxQuantityItens int
 }
 

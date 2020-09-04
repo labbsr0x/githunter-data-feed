@@ -11,7 +11,7 @@ type OrganizationResponseContract struct {
 }
 
 type membersStruct struct {
-	Total int    `json:"total"`
+	Total   int      `json:"total"`
 	Members []string `json:"data"`
 }
 
