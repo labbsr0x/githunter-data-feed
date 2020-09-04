@@ -16,10 +16,10 @@ type UserResponseContract struct {
 }
 
 type amount struct {
-	RepositoryContribution int `json:"repositories"`
+	RepositoryContribution int `json:"contributedRepositories"`
 	Commits                int `json:"commits"`
 	PullRequests           int `json:"pullRequests"`
-	Issues                 int `json:"issues"`
+	Issues                 int `json:"issuesOpened"`
 	StarsReceived          int `json:"starsReceived"`
 	Followers              int `json:"followers"`
 }
