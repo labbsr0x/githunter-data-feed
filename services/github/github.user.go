@@ -64,7 +64,7 @@ func GetUserStats(login string, accessToken string) (*UserResponse, error) {
 				pullRequests(first: 1) {
 					totalCount
 				},
-				issues(first: 1) {
+				issues(first: 1, filterBy:{ createdBy: $login }) {
 					totalCount
 				},
 				followers {
