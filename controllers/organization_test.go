@@ -78,7 +78,7 @@ func TestController_GetMembersHandler_Error_GetMembers_Invalid_Organization(t *t
 	theValidToken := "fakeValidToken"
 
 	// Mocking the values Expected
-	mockContractService.EXPECT().GetMembers( "fakeOrg", "github", theValidToken).Return(nil, nil)
+	mockContractService.EXPECT().GetMembers("fakeOrg", "github", theValidToken).Return(nil, nil)
 
 	app := fiber.New()
 	app.Get("/organization/members", controller.GetMembersHandler)

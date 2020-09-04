@@ -9,9 +9,10 @@ import (
 
 // struct reponse of User stats
 type UserResponseContract struct {
-	Name   string `json:"name"`
-	Login  string `json:"login"`
-	Amount amount `json:"amount"`
+	Name      string `json:"name"`
+	Login     string `json:"login"`
+	AvatarUrl string `json:"avatarUrl"`
+	Amount    amount `json:"amount"`
 }
 
 type amount struct {
@@ -81,9 +82,10 @@ func githubGetUserStats(login string, accessToken string) (*UserResponseContract
 	}
 
 	result := &UserResponseContract{
-		Name:   data.User.Name,
-		Login:  data.User.Login,
-		Amount: *amount,
+		Name:      data.User.Name,
+		Login:     data.User.Login,
+		AvatarUrl: data.User.AvatarUrl,
+		Amount:    *amount,
 	}
 
 	return result, nil
