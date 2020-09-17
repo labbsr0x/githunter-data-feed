@@ -2,15 +2,12 @@ package services
 
 import (
 	"fmt"
+
 	"github.com/labbsr0x/githunter-api/services/github"
 	"github.com/sirupsen/logrus"
 )
 
 type OrganizationResponseContract struct {
-	Members membersStruct `json:"members"`
-}
-
-type membersStruct struct {
 	Total   int      `json:"total"`
 	Members []string `json:"data"`
 }
@@ -28,7 +25,8 @@ func (d *defaultContract) GetMembers(organization string, provider string, acces
 		theContract, err = githubGetMembers(organization, accessToken)
 		break
 	case `gitlab`:
-
+		gitlabClient = gitlabNewClient(accessToken)
+		theContract, err = gitlabGetMembers(organization)
 		break
 	case ``:
 		//TODO: Call all providers
@@ -72,10 +70,8 @@ func githubGetMembers(organization string, accessToken string) (*OrganizationRes
 	}
 
 	result := &OrganizationResponseContract{
-		Members: membersStruct{
-			Total:   len(members),
-			Members: members,
-		},
+		Total:   len(members),
+		Members: members,
 	}
 
 	return result, nil
@@ -91,4 +87,24 @@ func formatContractMembers4Github(response *github.Response) ([]string, string) 
 	}
 
 	return data, lastCursor
+}
+
+func gitlabGetMembers(organization string) (*OrganizationResponseContract, error) {
+
+	data, _, err := gitlabClient.Groups.ListAllGroupMembers(organization, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	members := []string{}
+	for _, user := range data {
+		members = append(members, user.Username)
+	}
+
+	result := &OrganizationResponseContract{
+		Total:   len(members),
+		Members: members,
+	}
+
+	return result, nil
 }
