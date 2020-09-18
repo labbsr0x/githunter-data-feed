@@ -9,10 +9,12 @@ import (
 
 // struct reponse of User stats
 type UserResponseContract struct {
-	Name      string `json:"name"`
-	Login     string `json:"login"`
-	AvatarUrl string `json:"avatarUrl"`
-	Amount    amount `json:"amount"`
+	Name          string   `json:"name"`
+	Login         string   `json:"login"`
+	AvatarUrl     string   `json:"avatarUrl"`
+	Company       string   `json:"company"`
+	Organizations []string `json:"organizations"`
+	Amount        amount   `json:"amount"`
 }
 
 type amount struct {
@@ -72,6 +74,11 @@ func githubGetUserStats(login string, accessToken string) (*UserResponseContract
 		totalStarsReceived = +repo.Stargazers.TotalCount
 	}
 
+	organizations := []string{}
+	for _, u := range data.User.Organizations.Organization {
+		organizations = append(organizations, u.Login)
+	}
+
 	amount := &amount{
 		RepositoryContribution: data.User.RepositoriesContributedTo.TotalCount,
 		Commits:                (data.User.ContributionsCollection.TotalCommits + data.User.ContributionsCollection.RestrictedContributionsCount),
@@ -82,10 +89,12 @@ func githubGetUserStats(login string, accessToken string) (*UserResponseContract
 	}
 
 	result := &UserResponseContract{
-		Name:      data.User.Name,
-		Login:     data.User.Login,
-		AvatarUrl: data.User.AvatarUrl,
-		Amount:    *amount,
+		Name:          data.User.Name,
+		Login:         data.User.Login,
+		Company:       data.User.Company,
+		Organizations: organizations,
+		AvatarUrl:     data.User.AvatarUrl,
+		Amount:        *amount,
 	}
 
 	return result, nil
