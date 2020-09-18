@@ -13,6 +13,8 @@ type userInfo struct {
 	Name                      string                  `json:"name"`
 	Login                     string                  `json:"login"`
 	AvatarUrl                 string                  `json:"avatarUrl"`
+	Company                   string                  `json:"company"`
+	Organizations             organizations           `json:"organizations"`
 	ContributionsCollection   contributionsCollection `json:"contributionsCollection"`
 	RepositoriesContributedTo count                   `json:"repositoriesContributedTo"`
 	PullRequests              count                   `json:"pullRequests"`
@@ -24,6 +26,10 @@ type userInfo struct {
 type contributionsCollection struct {
 	TotalCommits                 int `json:"totalCommitContributions"`
 	RestrictedContributionsCount int `json:"restrictedContributionsCount"`
+}
+
+type organizations struct {
+	Organization []user `json:"nodes"`
 }
 
 type repos struct {
@@ -53,6 +59,12 @@ func GetUserStats(login string, accessToken string) (*UserResponse, error) {
 			user(login:$login) {
 				name,
 				login,
+				organizations(first:100){
+					nodes{
+						login
+					}
+				}
+				company,
 				avatarUrl,
 				contributionsCollection {
 					totalCommitContributions,
