@@ -27,6 +27,7 @@ type commitsNode struct {
 
 type commit struct {
 	Message       string `json:"message"`
+	Oid 		  string `json:"oid"`
 	CommittedDate string `json:"committedDate"`
 	Author        author `json:"author"`
 }
@@ -59,6 +60,7 @@ func GetCommitsRepo(nameRepo string, ownerRepo string, accessToken string) (*Com
 					... on Commit {
 						commits: history(first: $quantity) { 
 							nodes {
+								oid,
 								message,
 								committedDate,
 								author{
