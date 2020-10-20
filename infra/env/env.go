@@ -11,6 +11,7 @@ type Environment struct {
 	GithubGraphQLURL     string
 	GitlabGraphQLURL     string
 	ApiGitlabURL         string
+	GitlabURL            string
 	ServerPort           int
 	Counters             counters
 	DefaultConfiguration config
@@ -70,6 +71,8 @@ func Config() {
 	environment.Counters.NumberOfMaxQuantityItens = 100
 	environment.DefaultConfiguration.DateFormat = "2006-01-02T15:04:05Z"
 
+	//Gitlab URL
+	environment.GitlabURL = "hhtps://gitlab.com"
 }
 
 // Get env from external
