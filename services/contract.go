@@ -15,6 +15,7 @@ type Contract interface {
 	GetPulls(string, string, string, string) (*PullsResponseContract, error)
 	GetMembers(string, string, string) (*OrganizationResponseContract, error)
 	GetUserStats(string, string, string) (*UserResponseContract, error)
+	GetComments([]string, string, string) (*CommentsResponseContract, error)
 }
 
 type defaultContract struct{}
@@ -25,12 +26,12 @@ type participants struct {
 }
 
 type comments struct {
-	TotalCount int       `json:"totalCount"`
-	UpdatedAt  string    `json:"updatedAt"`
-	Data       []comment `json:"data"`
+	TotalCount int            `json:"totalCount"`
+	UpdatedAt  string         `json:"updatedAt"`
+	Data       []shortComment `json:"data"`
 }
 
-type comment struct {
+type shortComment struct {
 	CreatedAt string `json:"createdAt"`
 	Author    string `json:"author"`
 }

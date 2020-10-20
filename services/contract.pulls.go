@@ -113,7 +113,7 @@ func formatContract4Github(response *github.Response) []pull {
 
 		theData.Comments.TotalCount = v.Comments.TotalCount
 		for _, t := range v.Comments.Data {
-			theComment := comment{}
+			theComment := shortComment{}
 			theComment.Author = t.Author.Login
 			theComment.CreatedAt = t.CreatedAt
 			theData.Comments.Data = append(theData.Comments.Data, theComment)
@@ -212,7 +212,7 @@ func fillDiscussion(mergeRequests []pull, projectID int) []pull {
 	mergeRequestsWithDiscussion := []pull{}
 	for _, v := range mergeRequests {
 
-		discussions := []comment{}
+		discussions := []shortComment{}
 
 		lastUpdated := ""
 
@@ -235,7 +235,7 @@ func fillDiscussion(mergeRequests []pull, projectID int) []pull {
 			if len(d.Notes) > 0 && d.Notes[0].Author.Username != "" {
 				author = d.Notes[0].Author.Username
 			}
-			theComment := comment{
+			theComment := shortComment{
 				CreatedAt: closedAt,
 				Author:    author,
 			}
