@@ -25,7 +25,7 @@ type CodeResponseContract struct {
 	Commits              int        `json:"commits"`
 	HasHomepageUrl       bool       `json:"hasHomepageUrl"`
 	HasReadmeFile        bool       `json:"hasReadmeFile"`
-	ReadmeFileSize		 int		`json:"readmeFileSize"`
+	ReadmeFileSize       int        `json:"readmeFileSize"`
 	HasContributingFile  bool       `json:"hasContributingFile"`
 	LicenseInfo          string     `json:"licenseInfo"`
 	HasCodeOfConductFile bool       `json:"hasCodeOfConductFile"`
@@ -149,7 +149,7 @@ func githubGetCodePageInfo(nameRepo string, ownerRepo string, accessToken string
 		Commits:              code.Viewer.LastCommit.DefaultBranch.CommitsQuanity.TotalCount,
 		HasHomepageUrl:       hasHomepageUrl,
 		HasReadmeFile:        hasReadmeFile,
-		ReadmeFileSize: 	  readmeFileSize,
+		ReadmeFileSize:       readmeFileSize,
 		HasContributingFile:  hasContributingFile,
 		LicenseInfo:          code.Viewer.LicenseInfo.Name,
 		HasCodeOfConductFile: hasCodeOfConductFile,

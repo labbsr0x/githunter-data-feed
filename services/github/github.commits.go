@@ -27,7 +27,7 @@ type commitsNode struct {
 
 type commit struct {
 	Message       string `json:"message"`
-	Oid 		  string `json:"oid"`
+	Oid           string `json:"oid"`
 	CommittedDate string `json:"committedDate"`
 	Author        author `json:"author"`
 }

@@ -137,3 +137,18 @@ func (mr *MockContractMockRecorder) GetUserStats(arg0, arg1, arg2 interface{}) *
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserStats", reflect.TypeOf((*MockContract)(nil).GetUserStats), arg0, arg1, arg2)
 }
+
+// GetComments mocks base method
+func (m *MockContract) GetComments(arg0 []string, arg1, arg2 string) (*services.CommentsResponseContract, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetComments", arg0, arg1, arg2)
+	ret0, _ := ret[0].(*services.CommentsResponseContract)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetComments indicates an expected call of GetComments
+func (mr *MockContractMockRecorder) GetComments(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetComments", reflect.TypeOf((*MockContract)(nil).GetComments), arg0, arg1, arg2)
+}

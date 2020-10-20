@@ -15,7 +15,7 @@ type CommitsResponseContract struct {
 
 type commit struct {
 	Message       string `json:"message"`
-	Oid 		  string `json:"number"`
+	Oid           string `json:"number"`
 	CommittedDate string `json:"committedDate"`
 	Author        string `json:"author"`
 }
@@ -66,7 +66,7 @@ func githubGetCommitsRepo(nameRepo string, ownerRepo string, accessToken string)
 	for _, commitInf := range commits.Viewer.DefaultBranch.Target.Commits.Nodes {
 		commitsInfo = append(commitsInfo, commit{
 			Message:       commitInf.Message,
-			Oid: 		   commitInf.Oid,
+			Oid:           commitInf.Oid,
 			CommittedDate: commitInf.CommittedDate,
 			Author:        commitInf.Author.User.Login,
 		})

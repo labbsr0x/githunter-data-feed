@@ -100,7 +100,7 @@ func formatContractIssuesGithub(issuesResp *github.Response) []issue {
 		theIssue.Comments.TotalCount = v.TimelineItems.TotalCount
 
 		for _, t := range v.TimelineItems.Data {
-			theComment := comment{}
+			theComment := shortComment{}
 			theComment.Author = t.Author.Login
 			theComment.CreatedAt = t.CreatedAt
 			theIssue.Comments.Data = append(theIssue.Comments.Data, theComment)
@@ -168,7 +168,7 @@ func gitlabGetIssues(owner string, repo string, accessToken string) (*IssuesResp
 		theIssue.Comments.TotalCount = resp.TotalItems
 
 		for _, n := range notes {
-			theComment := comment{}
+			theComment := shortComment{}
 			theComment.Author = n.Author.Username
 
 			if n.CreatedAt != nil {

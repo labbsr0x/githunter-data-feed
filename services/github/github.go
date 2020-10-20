@@ -33,11 +33,11 @@ type label struct {
 }
 
 type comments struct {
-	TotalCount int       `json:"totalCount"`
-	Data       []comment `json:"nodes"`
+	TotalCount int            `json:"totalCount"`
+	Data       []shortComment `json:"nodes"`
 }
 
-type comment struct {
+type shortComment struct {
 	CreatedAt string `json:"createdAt"`
 	Author    user   `json:"author"`
 }
