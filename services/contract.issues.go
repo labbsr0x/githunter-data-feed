@@ -101,6 +101,8 @@ func formatContractIssuesGithub(issuesResp *github.Response) []issue {
 
 		for _, t := range v.TimelineItems.Data {
 			theComment := shortComment{}
+			theComment.ID = t.ID
+			theComment.URL = t.URL
 			theComment.Author = t.Author.Login
 			theComment.CreatedAt = t.CreatedAt
 			theIssue.Comments.Data = append(theIssue.Comments.Data, theComment)

@@ -61,6 +61,8 @@ func GetIssues(owner string, repo string, accessToken string) (*Response, error)
 												
 												__typename
 												... on IssueComment {
+													id
+													url
 													createdAt
 													author {
 														login

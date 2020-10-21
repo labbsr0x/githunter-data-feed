@@ -38,6 +38,8 @@ type comments struct {
 }
 
 type shortComment struct {
+	ID        string `json:"id"`
+	URL       string `json:"url"`
 	CreatedAt string `json:"createdAt"`
 	Author    user   `json:"author"`
 }
