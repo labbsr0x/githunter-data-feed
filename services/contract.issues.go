@@ -2,6 +2,7 @@ package services
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/labbsr0x/githunter-api/infra/env"
 	"github.com/labbsr0x/githunter-api/services/github"
@@ -171,6 +172,8 @@ func gitlabGetIssues(owner string, repo string, accessToken string) (*IssuesResp
 
 		for _, n := range notes {
 			theComment := shortComment{}
+			theComment.ID = strconv.Itoa(n.ID)
+			theComment.URL = fmt.Sprintf(`%s/%s/%s/-/issues/%d#note_%d`, env.Get().GitlabURL, owner, repo, n.NoteableIID, n.NoteableID)
 			theComment.Author = n.Author.Username
 
 			if n.CreatedAt != nil {
