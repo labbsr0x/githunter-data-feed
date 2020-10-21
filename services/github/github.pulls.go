@@ -59,6 +59,8 @@ func GetPulls(owner string, name string, accessToken string, closed bool) (*Resp
 						comments (first: $numberQuantity) {
 						  totalCount
 						  nodes {
+							id
+							url
 							createdAt
 							author {
 							  login

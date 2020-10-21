@@ -2,6 +2,7 @@ package services
 
 import (
 	"fmt"
+
 	"github.com/labbsr0x/githunter-api/infra/env"
 
 	"github.com/labbsr0x/githunter-api/services/github"
@@ -114,6 +115,8 @@ func formatContract4Github(response *github.Response) []pull {
 		theData.Comments.TotalCount = v.Comments.TotalCount
 		for _, t := range v.Comments.Data {
 			theComment := shortComment{}
+			theComment.ID = t.ID
+			theComment.URL = t.URL
 			theComment.Author = t.Author.Login
 			theComment.CreatedAt = t.CreatedAt
 			theData.Comments.Data = append(theData.Comments.Data, theComment)
