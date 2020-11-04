@@ -10,22 +10,36 @@ type UserResponse struct {
 }
 
 type userInfo struct {
-	Name                      string                  `json:"name"`
-	Login                     string                  `json:"login"`
-	AvatarUrl                 string                  `json:"avatarUrl"`
-	Company                   string                  `json:"company"`
-	Organizations             organizations           `json:"organizations"`
-	ContributionsCollection   contributionsCollection `json:"contributionsCollection"`
-	RepositoriesContributedTo count                   `json:"repositoriesContributedTo"`
-	PullRequests              count                   `json:"pullRequests"`
-	Issues                    count                   `json:"issues"`
-	Followers                 count                   `json:"followers"`
-	Repositories              repos                   `json:"repositories"`
+	Name                      string                    `json:"name"`
+	Login                     string                    `json:"login"`
+	AvatarUrl                 string                    `json:"avatarUrl"`
+	Company                   string                    `json:"company"`
+	Organizations             organizations             `json:"organizations"`
+	ContributionsCollection   contributionsCollection   `json:"contributionsCollection"`
+	RepositoriesContributedTo repositoriesContributedTo `json:"repositoriesContributedTo"`
+	PullRequests              count                     `json:"pullRequests"`
+	Issues                    count                     `json:"issues"`
+	Followers                 count                     `json:"followers"`
+	Repositories              repos                     `json:"repositories"`
 }
 
 type contributionsCollection struct {
 	TotalCommits                 int `json:"totalCommitContributions"`
 	RestrictedContributionsCount int `json:"restrictedContributionsCount"`
+}
+
+type repositoriesContributedTo struct {
+	PathOfRepositoriesContributed []pathRepoContributed `json:"nodes"`
+	TotalCount                    int                   `json:"totalCount"`
+}
+
+type pathRepoContributed struct {
+	Name  string `json:"name"`
+	Owner owner  `json:"owner"`
+}
+
+type owner struct {
+	Login string `json:"login"`
 }
 
 type organizations struct {
@@ -47,15 +61,17 @@ func GetUserStats(login string, accessToken string) (*UserResponse, error) {
 	}
 
 	maxQuantityReposStars := env.Get().Counters.NumberOfMaxQuantityItens
+	maxQuantityReposContributed := env.Get().Counters.NumberOfMaxQuantityItens
 
 	respData := &UserResponse{}
 	variables := map[string]interface{}{
-		"login":                 login,
-		"maxQuantityReposStars": maxQuantityReposStars,
+		"login":                       login,
+		"maxQuantityReposStars":       maxQuantityReposStars,
+		"maxQuantityReposContributed": maxQuantityReposContributed,
 	}
 
 	err = client.Query(
-		`query userStats($login:String!, $maxQuantityReposStars:Int!) {
+		`query userStats($login:String!, $maxQuantityReposStars:Int!, $maxQuantityReposContributed:Int!) {
 			user(login:$login) {
 				name,
 				login,
@@ -70,7 +86,13 @@ func GetUserStats(login string, accessToken string) (*UserResponse, error) {
 					totalCommitContributions,
 					restrictedContributionsCount
 				},
-				repositoriesContributedTo(first: 1, contributionTypes: [COMMIT, ISSUE, PULL_REQUEST, REPOSITORY]) {
+				repositoriesContributedTo(first: $maxQuantityReposContributed, contributionTypes: [COMMIT, ISSUE, PULL_REQUEST, REPOSITORY]) {
+					nodes {
+            name, 
+            owner {
+              login
+						}
+					},
 					totalCount
 				},
 				pullRequests(first: 1) {

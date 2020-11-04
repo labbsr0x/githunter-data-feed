@@ -9,21 +9,27 @@ import (
 
 // struct reponse of User stats
 type UserResponseContract struct {
-	Name          string   `json:"name"`
-	Login         string   `json:"login"`
-	AvatarUrl     string   `json:"avatarUrl"`
-	Company       string   `json:"company"`
-	Organizations []string `json:"organizations"`
-	Amount        amount   `json:"amount"`
+	Name                    string                 `json:"name"`
+	Login                   string                 `json:"login"`
+	AvatarUrl               string                 `json:"avatarUrl"`
+	Company                 string                 `json:"company"`
+	Organizations           []string               `json:"organizations"`
+	ContributedRepositories []nameOwnerContributed `json:"contributedRepositories"`
+	Amount                  amount                 `json:"amount"`
 }
 
 type amount struct {
-	RepositoryContribution int `json:"contributedRepositories"`
-	Commits                int `json:"commits"`
-	PullRequests           int `json:"pullRequests"`
-	Issues                 int `json:"issuesOpened"`
-	StarsReceived          int `json:"starsReceived"`
-	Followers              int `json:"followers"`
+	TotalReposContributed int `json:"totalReposContributed"`
+	Commits               int `json:"commits"`
+	PullRequests          int `json:"pullRequests"`
+	Issues                int `json:"issuesOpened"`
+	StarsReceived         int `json:"starsReceived"`
+	Followers             int `json:"followers"`
+}
+
+type nameOwnerContributed struct {
+	Name  string `json:"name"`
+	Owner string `json:"owner"`
 }
 
 func (d *defaultContract) GetUserStats(login string, accessToken string, provider string) (*UserResponseContract, error) {
@@ -79,22 +85,31 @@ func githubGetUserStats(login string, accessToken string) (*UserResponseContract
 		organizations = append(organizations, u.Login)
 	}
 
+	nameOwnercontributions := []nameOwnerContributed{}
+	for _, r := range data.User.RepositoriesContributedTo.PathOfRepositoriesContributed {
+		nameOwnercontributions = append(nameOwnercontributions, nameOwnerContributed{
+			Owner: r.Owner.Login,
+			Name:  r.Name,
+		})
+	}
+
 	amount := &amount{
-		RepositoryContribution: data.User.RepositoriesContributedTo.TotalCount,
-		Commits:                (data.User.ContributionsCollection.TotalCommits + data.User.ContributionsCollection.RestrictedContributionsCount),
-		PullRequests:           data.User.PullRequests.TotalCount,
-		Issues:                 data.User.Issues.TotalCount,
-		StarsReceived:          totalStarsReceived,
-		Followers:              data.User.Followers.TotalCount,
+		TotalReposContributed: data.User.RepositoriesContributedTo.TotalCount,
+		Commits:               (data.User.ContributionsCollection.TotalCommits + data.User.ContributionsCollection.RestrictedContributionsCount),
+		PullRequests:          data.User.PullRequests.TotalCount,
+		Issues:                data.User.Issues.TotalCount,
+		StarsReceived:         totalStarsReceived,
+		Followers:             data.User.Followers.TotalCount,
 	}
 
 	result := &UserResponseContract{
-		Name:          data.User.Name,
-		Login:         data.User.Login,
-		Company:       data.User.Company,
-		Organizations: organizations,
-		AvatarUrl:     data.User.AvatarUrl,
-		Amount:        *amount,
+		Name:                    data.User.Name,
+		Login:                   data.User.Login,
+		Company:                 data.User.Company,
+		Organizations:           organizations,
+		AvatarUrl:               data.User.AvatarUrl,
+		ContributedRepositories: nameOwnercontributions,
+		Amount:                  *amount,
 	}
 
 	return result, nil
