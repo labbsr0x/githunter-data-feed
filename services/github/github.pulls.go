@@ -14,6 +14,7 @@ type pullNode struct {
 	Number       int          `json:"number"`
 	State        string       `json:"state"`
 	CreatedAt    string       `json:"createdAt"`
+	UpdatedAt    string       `json:"updatedAt"`
 	Merged       bool         `json:"merged"`
 	MergedAt     string       `json:"mergedAt"`
 	ClosedAt     string       `json:"closedAt"`
@@ -45,6 +46,7 @@ func GetPulls(owner string, name string, accessToken string, closed bool) (*Resp
 						number
 						state
 						createdAt
+						updatedAt
 						closedAt
 						merged
 						mergedAt
