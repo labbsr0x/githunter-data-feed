@@ -20,6 +20,7 @@ type pull struct {
 	Number       int          `json:"number"`
 	State        string       `json:"state"`
 	CreatedAt    string       `json:"createdAt"`
+	UpdatedAt    string       `json:"updatedAt"`
 	ClosedAt     string       `json:"closedAt"`
 	Merged       bool         `json:"merged"`
 	MergedAt     string       `json:"mergedAt"`
@@ -99,6 +100,7 @@ func formatContract4Github(response *github.Response) []pull {
 		theData.State = v.State
 		theData.Author = v.Author.Login
 		theData.CreatedAt = v.CreatedAt
+		theData.UpdatedAt = v.UpdatedAt
 		theData.ClosedAt = v.ClosedAt
 		theData.Merged = v.Merged
 		theData.MergedAt = v.MergedAt
