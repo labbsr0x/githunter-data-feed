@@ -4,12 +4,13 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/labbsr0x/githunter-api/services"
 	"io/ioutil"
 	"net/http/httptest"
 	"net/url"
 	"reflect"
 	"testing"
+
+	"github.com/labbsr0x/githunter-api/services"
 
 	"github.com/gofiber/fiber"
 )
@@ -171,8 +172,7 @@ func TestCodeController_GetCommentsHandler_Error_GetComments_Invalid_BodyContent
    {
 		"ids":
 			[
-				"a",
-				"b"
+				"a"
 			]
 		
    }`
@@ -209,7 +209,6 @@ func TestCodeController_GetCommentsHandler_Success(t *testing.T) {
 		}`
 	mockResponse := &services.CommentsResponseContract{}
 	json.Unmarshal([]byte(responseJSONStr), mockResponse)
-
 
 	mockIds := []string{}
 	mockIds = append(mockIds, "a")
