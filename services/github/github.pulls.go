@@ -12,6 +12,7 @@ type pulls struct {
 
 type pullNode struct {
 	Number       int          `json:"number"`
+	Repository   pathRepo     `json:"repository"`
 	State        string       `json:"state"`
 	CreatedAt    string       `json:"createdAt"`
 	UpdatedAt    string       `json:"updatedAt"`

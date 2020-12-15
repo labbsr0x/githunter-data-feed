@@ -15,6 +15,7 @@ type Contract interface {
 	GetPulls(string, string, string, string) (*PullsResponseContract, error)
 	GetMembers(string, string, string) (*OrganizationResponseContract, error)
 	GetUserStats(string, string, string) (*UserResponseContract, error)
+	GetUserScore(string, string, string) (*UserScoreResponseContract, error)
 	GetComments([]string, string, string) (*CommentsResponseContract, error)
 }
 
