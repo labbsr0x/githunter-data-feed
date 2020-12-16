@@ -24,22 +24,33 @@ type userInfo struct {
 }
 
 type contributionsCollection struct {
-	TotalCommits                 int `json:"totalCommitContributions"`
-	RestrictedContributionsCount int `json:"restrictedContributionsCount"`
+	TotalCommits                 int                      `json:"totalCommitContributions"`
+	RestrictedContributionsCount int                      `json:"restrictedContributionsCount"`
+	PullRequestContributions     pullRequestContributions `json:"pullRequestContributions"`
+	IssueContributions           issueContributions       `json:"issueContributions"`
+}
+
+type pullRequestContributions struct {
+	TotalCount int                `json:"totalCount"`
+	Nodes      []pullContribution `json:"nodes"`
+}
+
+type pullContribution struct {
+	Pull pullNode `json:"pullRequest"`
+}
+
+type issueContributions struct {
+	TotalCount int                 `json:"totalCount"`
+	Nodes      []issueContribution `json:"nodes"`
+}
+
+type issueContribution struct {
+	Issue issueNode `json:"issue"`
 }
 
 type repositoriesContributedTo struct {
-	PathOfRepositoriesContributed []pathRepoContributed `json:"nodes"`
-	TotalCount                    int                   `json:"totalCount"`
-}
-
-type pathRepoContributed struct {
-	Name  string `json:"name"`
-	Owner owner  `json:"owner"`
-}
-
-type owner struct {
-	Login string `json:"login"`
+	PathOfRepositoriesContributed []pathRepo `json:"nodes"`
+	TotalCount                    int        `json:"totalCount"`
 }
 
 type organizations struct {
@@ -51,7 +62,10 @@ type repos struct {
 }
 
 type stargazers struct {
-	Stargazers count `json:"stargazers"`
+	Name       string `json:"name"`
+	Owner      owner  `json:"owner"`
+	CreatedAt  string `json:"createdAt"`
+	Stargazers count  `json:"stargazers"`
 }
 
 func GetUserStats(login string, accessToken string) (*UserResponse, error) {

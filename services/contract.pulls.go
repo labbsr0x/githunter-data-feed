@@ -18,6 +18,8 @@ type PullsResponseContract struct {
 
 type pull struct {
 	Number       int          `json:"number"`
+	Name         string       `json:"name"`
+	Owner        string       `json:"owner"`
 	State        string       `json:"state"`
 	CreatedAt    string       `json:"createdAt"`
 	UpdatedAt    string       `json:"updatedAt"`

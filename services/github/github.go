@@ -75,3 +75,12 @@ type byteSize struct {
 type language struct {
 	Name string `json:"language"`
 }
+
+type pathRepo struct {
+	Name  string `json:"name"`
+	Owner owner  `json:"owner"`
+}
+
+type owner struct {
+	Login string `json:"login"`
+}
