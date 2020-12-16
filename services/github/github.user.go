@@ -17,7 +17,7 @@ type userInfo struct {
 	Organizations             organizations             `json:"organizations"`
 	ContributionsCollection   contributionsCollection   `json:"contributionsCollection"`
 	RepositoriesContributedTo repositoriesContributedTo `json:"repositoriesContributedTo"`
-	PullRequests              pulls                     `json:"pullRequests"`
+	PullRequests              count                     `json:"pullRequests"`
 	Issues                    count                     `json:"issues"`
 	Followers                 count                     `json:"followers"`
 	Repositories              repos                     `json:"repositories"`

@@ -42,9 +42,6 @@ func (d *defaultContract) GetUserScore(login string, accessToken string, provide
 		gitlabClient = gitlabNewClient(accessToken)
 		theContract, err = gitlabGetUserScore(login)
 		break
-	case ``:
-		//TODO: Call all providers
-		break
 	default:
 		return nil, fmt.Errorf("GetUserScore unknown provider: %s", provider)
 	}
