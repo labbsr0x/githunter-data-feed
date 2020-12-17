@@ -4,8 +4,8 @@ import (
 	"github.com/gofiber/cors"
 	"github.com/gofiber/fiber"
 	"github.com/gofiber/logger"
-	"github.com/labbsr0x/githunter-api/infra/env"
-	"github.com/labbsr0x/githunter-api/routes"
+	"github.com/labbsr0x/githunter-data-feed/infra/env"
+	"github.com/labbsr0x/githunter-data-feed/routes"
 	"github.com/sirupsen/logrus"
 )
 

@@ -10,7 +10,7 @@ import (
 	"testing"
 
 	"github.com/gofiber/fiber"
-	"github.com/labbsr0x/githunter-api/services"
+	"github.com/labbsr0x/githunter-data-feed/services"
 )
 
 func TestUserController_GetUserHandler_Error_GetUserStats_Invalid_Login(t *testing.T) {

@@ -1,8 +1,8 @@
 package github
 
 import (
-	"github.com/labbsr0x/githunter-api/infra/env"
-	"github.com/labbsr0x/githunter-api/services/graphql"
+	"github.com/labbsr0x/githunter-data-feed/infra/env"
+	"github.com/labbsr0x/githunter-data-feed/services/graphql"
 )
 
 type UserResponse struct {

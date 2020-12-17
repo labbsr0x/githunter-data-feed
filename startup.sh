@@ -2,7 +2,7 @@
 set -e
 set -x
 
-echo "Starting GitHunter API..."
+echo "Starting GitHunter Data Feed..."
 githunter \
     --log-level=$GH_LOG_LEVEL \
     --graphql-github-url=$GH_GRAPHQL_GITHUB_URL \

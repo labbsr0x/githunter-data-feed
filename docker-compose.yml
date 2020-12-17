@@ -1,10 +1,9 @@
 version: '3'
 
 services:
-
-  api:
+  data-feed:
     build: .
-    image: githunter-api:1.0
+    image: githunter-data-feed:1.0
     restart: always
     environment:
       GH_LOG_LEVEL: debug

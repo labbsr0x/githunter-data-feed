@@ -1,4 +1,4 @@
-# GitHunter-API
+# GitHunter-Data-Feed
 This project consumes the API of GitHub, GitLab and, in the future, another providers.
 
 ## Installation

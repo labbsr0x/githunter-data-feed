@@ -10,7 +10,7 @@ import (
 	"testing"
 
 	"github.com/gofiber/fiber"
-	"github.com/labbsr0x/githunter-api/services"
+	"github.com/labbsr0x/githunter-data-feed/services"
 )
 
 func TestReposController_GetReposHandler_Error_GetRepos_Invalid_AccessToken(t *testing.T) {

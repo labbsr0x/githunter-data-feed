@@ -2,7 +2,7 @@ package routes
 
 import (
 	"github.com/gofiber/fiber"
-	"github.com/labbsr0x/githunter-api/controllers"
+	"github.com/labbsr0x/githunter-data-feed/controllers"
 )
 
 //Register routes

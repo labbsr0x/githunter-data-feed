@@ -10,7 +10,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/labbsr0x/githunter-api/services"
+	"github.com/labbsr0x/githunter-data-feed/services"
 
 	"github.com/gofiber/fiber"
 )

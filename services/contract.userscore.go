@@ -3,7 +3,7 @@ package services
 import (
 	"fmt"
 
-	"github.com/labbsr0x/githunter-api/services/github"
+	"github.com/labbsr0x/githunter-data-feed/services/github"
 	"github.com/sirupsen/logrus"
 )
 

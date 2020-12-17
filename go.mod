@@ -1,4 +1,4 @@
-module github.com/labbsr0x/githunter-api
+module github.com/labbsr0x/githunter-data-feed
 
 go 1.14
 

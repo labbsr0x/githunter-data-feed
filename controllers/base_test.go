@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/labbsr0x/githunter-api/services/mock"
+	"github.com/labbsr0x/githunter-data-feed/services/mock"
 )
 
 func GetMockContractServiceAndController(t *testing.T) (m *mock.MockContract, c *Controller) {

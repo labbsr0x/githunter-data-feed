@@ -1,8 +1,8 @@
 package services
 
 import (
-	"github.com/labbsr0x/githunter-api/infra/env"
-	gitlabService "github.com/labbsr0x/githunter-api/services/gitlab"
+	"github.com/labbsr0x/githunter-data-feed/infra/env"
+	gitlabService "github.com/labbsr0x/githunter-data-feed/services/gitlab"
 	"github.com/xanzy/go-gitlab"
 )
 

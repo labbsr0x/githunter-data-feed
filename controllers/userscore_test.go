@@ -10,7 +10,7 @@ import (
 	"testing"
 
 	"github.com/gofiber/fiber"
-	"github.com/labbsr0x/githunter-api/services"
+	"github.com/labbsr0x/githunter-data-feed/services"
 )
 
 func TestUserScoreController_GetUserScoreHandler_Error_GetUserScore_Invalid_Login(t *testing.T) {
@@ -32,7 +32,7 @@ func TestUserScoreController_GetUserScoreHandler_Error_GetUserScore_Invalid_Logi
 	q.Add("provider", "provider")
 
 	// http.Request
-	req := httptest.NewRequest(fiber.MethodGet, "/userscore?" + q.Encode(), nil)
+	req := httptest.NewRequest(fiber.MethodGet, "/userscore?"+q.Encode(), nil)
 	req.Header.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSON)
 
 	// http.Response
@@ -65,7 +65,7 @@ func TestUserScoreController_GetUserScoreHandler_Error_GetUserScore_Invalid_Acce
 	q.Add("provider", "provider")
 
 	// http.Request
-	req := httptest.NewRequest(fiber.MethodGet, "/userscore?" + q.Encode(), nil)
+	req := httptest.NewRequest(fiber.MethodGet, "/userscore?"+q.Encode(), nil)
 	req.Header.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSON)
 
 	// http.Response
@@ -98,7 +98,7 @@ func TestUserScoreController_GetUserScoreHandler_Error_GetUserScore_Unknown_Prov
 	q.Add("provider", "")
 
 	// http.Request
-	req := httptest.NewRequest(fiber.MethodGet, "/userscore?" + q.Encode(), nil)
+	req := httptest.NewRequest(fiber.MethodGet, "/userscore?"+q.Encode(), nil)
 	req.Header.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSON)
 
 	// http.Response
@@ -199,7 +199,7 @@ func TestUserScoreController_GetUserScoreHandler_Success(t *testing.T) {
 	q.Add("provider", "provider")
 
 	// http.Request
-	req := httptest.NewRequest(fiber.MethodGet, "/userscore?" + q.Encode(), nil)
+	req := httptest.NewRequest(fiber.MethodGet, "/userscore?"+q.Encode(), nil)
 	req.Header.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSON)
 
 	// http.Response
