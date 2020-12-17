@@ -3,13 +3,14 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/gofiber/fiber"
-	"github.com/labbsr0x/githunter-api/services"
 	"io/ioutil"
 	"net/http/httptest"
 	"net/url"
 	"reflect"
 	"testing"
+
+	"github.com/gofiber/fiber"
+	"github.com/labbsr0x/githunter-data-feed/services"
 )
 
 func TestController_GetMembersHandler_Error_GetMembers_Unknown_Provider(t *testing.T) {

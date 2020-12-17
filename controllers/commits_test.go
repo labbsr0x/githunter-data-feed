@@ -10,7 +10,7 @@ import (
 	"testing"
 
 	"github.com/gofiber/fiber"
-	"github.com/labbsr0x/githunter-api/services"
+	"github.com/labbsr0x/githunter-data-feed/services"
 )
 
 func TestCodeController_GetCommitsHandler_Error_GetCommitsRepo_Invalid_NameAndOwner(t *testing.T) {

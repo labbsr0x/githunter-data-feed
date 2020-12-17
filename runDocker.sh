@@ -1,4 +1,4 @@
 
-docker build --tag githunter-api:1.0 .
+docker build --tag githunter-data-feed:1.0 .
 
 docker-compose up -d

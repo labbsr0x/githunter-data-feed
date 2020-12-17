@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/labbsr0x/githunter-api/infra/env"
-	"github.com/labbsr0x/githunter-api/services/github"
+	"github.com/labbsr0x/githunter-data-feed/infra/env"
+	"github.com/labbsr0x/githunter-data-feed/services/github"
 	"github.com/sirupsen/logrus"
 )
 

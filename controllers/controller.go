@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"github.com/labbsr0x/githunter-api/services"
+	"github.com/labbsr0x/githunter-data-feed/services"
 )
 
 type Controller struct {

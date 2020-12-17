@@ -10,7 +10,7 @@ import (
 	"testing"
 
 	"github.com/gofiber/fiber"
-	"github.com/labbsr0x/githunter-api/services"
+	"github.com/labbsr0x/githunter-data-feed/services"
 )
 
 func TestIssuesController_GetIssuesHandler_Error_GetIssues_Unknown_Provider(t *testing.T) {
