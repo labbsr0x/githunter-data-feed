@@ -109,6 +109,12 @@ func GetUserScore(login string, accessToken string) (*UserScoreResponse, error) 
 						nodes{
 							issue{
 								number
+								repository{
+									name
+									owner {
+										login
+									}
+								}
 								state
 								createdAt
 								updatedAt
