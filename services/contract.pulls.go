@@ -190,12 +190,14 @@ func formatContract4Gitlab(mergeRequests []*gitlabLib.MergeRequest) []pull {
 		if v.CreatedAt != nil {
 			theData.CreatedAt = v.CreatedAt.Format(strFormatDate)
 		}
-
 		if v.ClosedAt != nil {
 			theData.ClosedAt = v.ClosedAt.Format(strFormatDate)
 		}
 		if v.MergedAt != nil {
 			theData.MergedAt = v.MergedAt.Format(strFormatDate)
+		}
+		if v.UpdatedAt != nil {
+			theData.UpdatedAt = v.UpdatedAt.Format(strFormatDate)
 		}
 
 		theData.Merged = false
