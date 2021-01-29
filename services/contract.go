@@ -10,7 +10,7 @@ import (
 type Contract interface {
 	GetLastRepos(string, string) (*ReposResponseContract, error)
 	GetInfoCodePage(string, string, string, string) (*CodeResponseContract, error)
-	GetCommitsRepo(string, string, string, string) (*CommitsResponseContract, error)
+	GetCommitsRepo(string, string, string, string, string) (*CommitsResponseContract, error)
 	GetIssues(string, string, string, string) (*IssuesResponseContract, error)
 	GetPulls(string, string, string, string) (*PullsResponseContract, error)
 	GetMembers(string, string, string) (*OrganizationResponseContract, error)

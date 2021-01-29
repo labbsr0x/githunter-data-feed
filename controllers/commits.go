@@ -11,10 +11,11 @@ func (c *Controller) GetCommitsHandler(ctx *fiber.Ctx) {
 	// param passed by param URL
 	name := ctx.Query("name")
 	owner := ctx.Query("owner")
+	authorID := ctx.Query("authorID")
 	accessToken := ctx.Query("access_token")
 	provider := ctx.Query("provider")
 
-	data, err := c.Contract.GetCommitsRepo(name, owner, accessToken, provider)
+	data, err := c.Contract.GetCommitsRepo(name, owner, authorID, accessToken, provider)
 	if err != nil {
 		logrus.Warn("Error requesting github")
 		ctx.Next(fiber.NewError(fiber.StatusInternalServerError, "Error requesting github"))
