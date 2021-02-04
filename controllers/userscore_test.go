@@ -120,6 +120,12 @@ func TestUserScoreController_GetUserScoreHandler_Success(t *testing.T) {
 			"name": "Name",
 			"login": "login",
 			"id": "id",
+			"followers": [
+				"tovarlds",
+			],
+			"organizations": [
+				"ibm"
+			],
 			"contributedRepositories": [
 				{
 					"name": "opensource.guide",

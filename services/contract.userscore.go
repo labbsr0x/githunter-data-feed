@@ -12,6 +12,10 @@ type UserScoreResponseContract struct {
 	Name                    string                 `json:"name"`
 	Login                   string                 `json:"login"`
 	ID                      string                 `json:"id"`
+	AvatarUrl               string                 `json:"avatarUrl"`
+	Followers               []string               `json:"followers"`
+	Organizations           []string               `json:"organizations"`
+	Company                 string                 `json:"company"`
 	ContributedRepositories []nameOwnerContributed `json:"contributedRepositories"`
 	Pulls                   []pull                 `json:"pulls"`
 	Issues                  []issue                `json:"issues"`
@@ -155,10 +159,24 @@ func githubGetUserScore(login string, accessToken string) (*UserScoreResponseCon
 		})
 	}
 
+	followers := []string{}
+	for _, l := range data.User.Followers.Follower {
+		followers = append(followers, l.Login)
+	}
+
+	organizations := []string{}
+	for _, l := range data.User.Organizations.Organization {
+		organizations = append(organizations, l.Login)
+	}
+
 	result := &UserScoreResponseContract{
 		Name:                    data.User.Name,
 		Login:                   data.User.Login,
 		ID:                      data.User.ID,
+		AvatarUrl:               data.User.AvatarUrl,
+		Followers:               followers,
+		Organizations:           organizations,
+		Company:                 data.User.Company,
 		ContributedRepositories: nameOwnercontributions,
 		Pulls:                   pulls,
 		Issues:                  issues,
