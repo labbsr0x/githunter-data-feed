@@ -2,6 +2,7 @@ package services
 
 import (
 	"fmt"
+
 	"github.com/labbsr0x/githunter-data-feed/infra/env"
 	"github.com/labbsr0x/githunter-data-feed/services/github"
 	"github.com/sirupsen/logrus"
@@ -20,7 +21,7 @@ type commit struct {
 	Author        string `json:"author"`
 }
 
-func (d *defaultContract) GetCommitsRepo(nameRepo string, ownerRepo string, accessToken string, provider string) (*CommitsResponseContract, error) {
+func (d *defaultContract) GetCommitsRepo(nameRepo string, ownerRepo string, authorID string, accessToken string, provider string) (*CommitsResponseContract, error) {
 	theContract := &CommitsResponseContract{}
 	var err error
 
@@ -30,11 +31,11 @@ func (d *defaultContract) GetCommitsRepo(nameRepo string, ownerRepo string, acce
 
 	switch provider {
 	case `github`:
-		theContract, err = githubGetCommitsRepo(nameRepo, ownerRepo, accessToken)
+		theContract, err = githubGetCommitsRepo(nameRepo, ownerRepo, authorID, accessToken)
 		break
 	case `gitlab`:
 		gitlabClient = gitlabNewClient(accessToken)
-		theContract, err = gitlabGetCommits(nameRepo, ownerRepo, accessToken)
+		theContract, err = gitlabGetCommits(nameRepo, ownerRepo, authorID, accessToken)
 		break
 	case ``:
 		//TODO: Call all providers
@@ -56,8 +57,8 @@ func (d *defaultContract) GetCommitsRepo(nameRepo string, ownerRepo string, acce
 	return theContract, nil
 }
 
-func githubGetCommitsRepo(nameRepo string, ownerRepo string, accessToken string) (*CommitsResponseContract, error) {
-	commits, err := github.GetCommitsRepo(nameRepo, ownerRepo, accessToken)
+func githubGetCommitsRepo(nameRepo string, ownerRepo string, authorID string, accessToken string) (*CommitsResponseContract, error) {
+	commits, err := github.GetCommitsRepo(nameRepo, ownerRepo, authorID, accessToken)
 	if err != nil {
 		return nil, err
 	}
@@ -79,7 +80,7 @@ func githubGetCommitsRepo(nameRepo string, ownerRepo string, accessToken string)
 	return result, nil
 }
 
-func gitlabGetCommits(name string, owner string, accessToken string) (*CommitsResponseContract, error) {
+func gitlabGetCommits(name string, owner string, authorID string, accessToken string) (*CommitsResponseContract, error) {
 
 	projectName := owner + "/" + name
 	project, _, err := gitlabClient.Projects.GetProject(projectName, nil)

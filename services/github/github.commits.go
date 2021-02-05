@@ -32,7 +32,7 @@ type commit struct {
 	Author        author `json:"author"`
 }
 
-func GetCommitsRepo(nameRepo string, ownerRepo string, accessToken string) (*CommitsResponse, error) {
+func GetCommitsRepo(nameRepo string, ownerRepo string, authorID string, accessToken string) (*CommitsResponse, error) {
 	client, err := graphql.New(env.Get().GithubGraphQLURL, accessToken)
 	if err != nil {
 		return nil, err
@@ -41,14 +41,46 @@ func GetCommitsRepo(nameRepo string, ownerRepo string, accessToken string) (*Com
 	quantity := env.Get().Counters.NumberOfLastItens
 
 	respData := &CommitsResponse{}
+
 	variables := map[string]interface{}{
 		"name":     nameRepo,
 		"owner":    ownerRepo,
 		"quantity": quantity,
+		"authorID": authorID,
 	}
 
-	err = client.Query(
-		`query getInfoCommitsPage($name:String!, $owner:String!, $quantity:Int!) {
+	var query string
+
+	if authorID != "" {
+		query = `query getInfoCommitsPage($name:String!, $owner:String!, $quantity:Int!, $authorID:ID!) {
+			repository(name: $name, owner: $owner) {
+				...RepoFragmentCommits,
+			}
+		}
+		
+		fragment RepoFragmentCommits on Repository {
+			defaultBranchRef {
+				target {
+					... on Commit {
+						commits: history(first: $quantity, author: {id: $authorID}) { 
+							nodes {
+								oid,
+								message,
+								committedDate,
+								author{
+									user {
+										login
+										id
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}`
+	} else {
+		query = `query getInfoCommitsPage($name:String!, $owner:String!, $quantity:Int!) {
 			repository(name: $name, owner: $owner) {
 				...RepoFragmentCommits,
 			}
@@ -64,16 +96,19 @@ func GetCommitsRepo(nameRepo string, ownerRepo string, accessToken string) (*Com
 								message,
 								committedDate,
 								author{
-								  user {
+									user {
 									login
-								  }
+									}
 								}
 							}
 						}
 					}
 				}
 			}
-		}`, variables, respData)
+		}`
+	}
+
+	err = client.Query(query, variables, respData)
 
 	if err != nil {
 		return nil, err
