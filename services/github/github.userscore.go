@@ -13,6 +13,10 @@ type userScoreInfo struct {
 	Name                      string                    `json:"name"`
 	Login                     string                    `json:"login"`
 	ID                        string                    `json:"id"`
+	AvatarUrl                 string                    `json:"avatarUrl"`
+	Followers                 followers                 `json:"followers"`
+	Organizations             organizations             `json:"organizations"`
+	Company                   string                    `json:"company"`
 	RepositoriesContributedTo repositoriesContributedTo `json:"repositoriesContributedTo"`
 	ContributionsCollection   contributionsCollection   `json:"contributionsCollection"`
 	Repositories              repos                     `json:"repositories"`
@@ -29,6 +33,8 @@ func GetUserScore(login string, accessToken string) (*UserScoreResponse, error) 
 
 	numberCount := env.Get().Counters.NumberOfLastItens
 	numberQuantity := env.Get().Counters.NumberOfQuantityItens
+	maxQuantityFollowers := env.Get().Counters.NumberOfMaxQuantityItens
+	maxQuantityOrganizations := env.Get().Counters.NumberOfMaxQuantityItens
 	maxQuantityReposStars := env.Get().Counters.NumberOfMaxQuantityItens
 	maxQuantityReposContributed := env.Get().Counters.NumberOfMaxQuantityItens
 	maxQuantityPullRequests := env.Get().Counters.NumberOfMaxQuantityItens
@@ -38,6 +44,8 @@ func GetUserScore(login string, accessToken string) (*UserScoreResponse, error) 
 		"login":                       login,
 		"numberCount":                 numberCount,
 		"numberQuantity":              numberQuantity,
+		"maxQuantityFollowers":        maxQuantityFollowers,
+		"maxQuantityOrganizations":    maxQuantityOrganizations,
 		"maxQuantityPullRequests":     maxQuantityPullRequests,
 		"maxQuantityIssues":           maxQuantityIssues,
 		"maxQuantityReposStars":       maxQuantityReposStars,
@@ -45,11 +53,23 @@ func GetUserScore(login string, accessToken string) (*UserScoreResponse, error) 
 	}
 
 	err = client.Query(
-		`query userScore($login:String!, $numberCount:Int!, $numberQuantity:Int!, $maxQuantityReposStars:Int!, $maxQuantityReposContributed:Int!, $maxQuantityPullRequests:Int!, $maxQuantityIssues:Int!) {
+		`query userScore($login:String!, $numberCount:Int!, $maxQuantityFollowers:Int!, $maxQuantityOrganizations:Int!, $numberQuantity:Int!, $maxQuantityReposStars:Int!, $maxQuantityReposContributed:Int!, $maxQuantityPullRequests:Int!, $maxQuantityIssues:Int!) {
 			user(login: $login) {
 				name
 				login
 				id
+				avatarUrl
+    			followers(first:$maxQuantityFollowers) {
+					nodes {
+						login
+					}
+				},
+				organizations(first:$maxQuantityOrganizations) {
+					nodes {
+						login
+					}
+				},
+				company,
 				repositoriesContributedTo(last: $maxQuantityReposContributed, contributionTypes: [COMMIT]){
 					nodes{
 						name
@@ -57,7 +77,7 @@ func GetUserScore(login string, accessToken string) (*UserScoreResponse, error) 
 							login
 						}
 					}
-				}
+				},
 				contributionsCollection{
 					pullRequestContributions(last: $maxQuantityPullRequests) {
 						totalCount

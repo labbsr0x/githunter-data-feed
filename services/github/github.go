@@ -84,3 +84,11 @@ type pathRepo struct {
 type owner struct {
 	Login string `json:"login"`
 }
+
+type followers struct {
+	Follower []loginUser `json:"nodes"`
+}
+
+type loginUser struct {
+	Login string `json:"login"`
+}
