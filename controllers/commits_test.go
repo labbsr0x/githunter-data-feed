@@ -20,6 +20,7 @@ func TestCodeController_GetCommitsHandler_Error_GetCommitsRepo_Invalid_NameAndOw
 	mockContractService.EXPECT().GetCommitsRepo(
 		"",
 		"",
+		"id",
 		"token",
 		"provider",
 	).Return(nil, fmt.Errorf("GetCommitsRepo invalid path of repository."))
@@ -30,6 +31,7 @@ func TestCodeController_GetCommitsHandler_Error_GetCommitsRepo_Invalid_NameAndOw
 	q := url.Values{}
 	q.Add("name", "")
 	q.Add("owner", "")
+	q.Add("authorID", "id")
 	q.Add("access_token", "token")
 	q.Add("provider", "provider")
 
@@ -55,6 +57,7 @@ func TestCodeController_GetCommitsHandler_Error_GetCommitsRepo_Invalid_AccessTok
 	mockContractService.EXPECT().GetCommitsRepo(
 		"name",
 		"owner",
+		"id",
 		"",
 		"provider",
 	).Return(nil, fmt.Errorf("GetCommitsRepo invalid token auth code."))
@@ -65,6 +68,7 @@ func TestCodeController_GetCommitsHandler_Error_GetCommitsRepo_Invalid_AccessTok
 	q := url.Values{}
 	q.Add("name", "name")
 	q.Add("owner", "owner")
+	q.Add("authorID", "id")
 	q.Add("access_token", "")
 	q.Add("provider", "provider")
 
@@ -90,6 +94,7 @@ func TestCodeController_GetCommitsHandler_Error_GetCommitsRepo_Unknown_Provider(
 	mockContractService.EXPECT().GetCommitsRepo(
 		"name",
 		"owner",
+		"id",
 		"token",
 		"",
 	).Return(nil, fmt.Errorf("GetCommitsRepo unknown provider."))
@@ -100,6 +105,7 @@ func TestCodeController_GetCommitsHandler_Error_GetCommitsRepo_Unknown_Provider(
 	q := url.Values{}
 	q.Add("name", "name")
 	q.Add("owner", "owner")
+	q.Add("authorID", "id")
 	q.Add("access_token", "token")
 	q.Add("provider", "")
 
@@ -137,6 +143,7 @@ func TestCodeController_GetCommitsHandler_Success(t *testing.T) {
 	mockContractService.EXPECT().GetCommitsRepo(
 		"name",
 		"owner",
+		"id",
 		"token",
 		"provider",
 	).Return(mockResponse, nil)
@@ -147,6 +154,7 @@ func TestCodeController_GetCommitsHandler_Success(t *testing.T) {
 	q := url.Values{}
 	q.Add("name", "name")
 	q.Add("owner", "owner")
+	q.Add("authorID", "id")
 	q.Add("access_token", "token")
 	q.Add("provider", "provider")
 

@@ -12,7 +12,7 @@ github.com/gofiber/logger
 # github.com/gofiber/utils v0.0.9
 github.com/gofiber/utils
 github.com/gofiber/utils/memory
-# github.com/golang/mock v1.4.3
+# github.com/golang/mock v1.4.4
 ## explicit
 github.com/golang/mock/gomock
 # github.com/golang/protobuf v1.2.0
@@ -80,3 +80,5 @@ google.golang.org/appengine/internal/log
 google.golang.org/appengine/internal/remote_api
 google.golang.org/appengine/internal/urlfetch
 google.golang.org/appengine/urlfetch
+# rsc.io/quote/v3 v3.1.0
+## explicit
